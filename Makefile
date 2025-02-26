@@ -10,7 +10,9 @@ CFLAGS = -Wall -Werror -Wextra -std=c++98
 
 RM = rm -rf
 
-FILES =
+FILES = main.cpp \
+Server.cpp \
+Client.cpp \
 
 SRC = $(addprefix src/, $(FILES))
 

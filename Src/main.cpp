@@ -24,5 +24,7 @@ int main(int argc, char **argv)
         std::cout << "Error: Introduce number between 1024 and 65535" << std::endl;
         return(1);
     }
-    
+    Server server(std::atoi(argv[1]),argv[2]);
+    server.setupServer();
+    server.handleConnections();
 }

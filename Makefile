@@ -6,7 +6,8 @@ FLAGS = -Wall -Werror -Wextra -std=c++98 -g
 
 RM = rm -rf
 
-SRC = main.cpp
+SRC = 	main.cpp \
+		Server.cpp \
 
 SRC_DIR = Src/
 

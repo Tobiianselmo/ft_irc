@@ -11,12 +11,13 @@ class Client
 		int _clientSocket;
 		std::string _nickName;
 		std::string _userName;
+		bool	isAuth;
 
 		Server *_server;
 	public:
 		Client(const std::string &nick, const std::string &user, const Server &server);
+		Client(int socket);
 		~Client();
-
 		void	setupClient();
 };
 

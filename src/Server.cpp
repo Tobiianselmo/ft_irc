@@ -30,6 +30,7 @@ Server &Server::operator=(const Server &data)
 
 void Server::setupServer()
 {
+    struct pollfd fd;
     // Crear el socket
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket == -1)
@@ -64,56 +65,83 @@ void Server::setupServer()
         close(_serverSocket);
         throw std::runtime_error("Error al escuchar en el socket: ");
     }
-
     std::cout << "Servidor escuchando en el puerto " << _port << std::endl;
+    fd.fd = _serverSocket;
+    fd.events = POLLIN;
+    fd.revents = 0;
+    _fds.push_back(fd);
 }
 
 void Server::handleConnections()
 {
-    struct pollfd fds[1];
-    fds[0].fd = _serverSocket;
-    fds[0].events = POLLIN; // Esperar eventos de lectura
-    
-    Client _client("testnick", "testuser", *this);
-
-    _client.setupClient();
+   // int i = 0;
+    /*         Client _client("testnick", "testuser", *this);
+        
+            _client.setupClient(); */
     while (true)
 	{
-        int ret = poll(fds, 1, -1); // Esperar indefinidamente
+        int ret = poll(&_fds[0], _fds.size(), -1); // Esperar indefinidamente
         if (ret == -1)
             throw std::runtime_error("Error en poll(): ");
-
+        
         // Verificar si hay una nueva conexión
-        if (fds[0].revents & POLLIN)
-		{
-            struct sockaddr_in clientAddress;
-            socklen_t clientAddressLength = sizeof(clientAddress);
-            int clientSocket = accept(_serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLength);
-            if (clientSocket == -1)
-			{
-                std::cerr << "Error al aceptar la conexión: "<< std::endl;
-                continue;
+        for(size_t i = 0; i < _fds.size() ; i++)
+        {
+            if (_fds[i].revents & POLLIN) //GESTIONO LOS EVENTOS
+            {
+                if(_fds[i].fd == _serverSocket) // ES UN EVENTO DEL SERVIDOR OSEA I == 0 SE TRATA DE UNA NUEVA CONECCION
+                    newConnections();
+                else
+                    eventMsg(_fds[i].fd);
+               
+    
+                // Aquí puedes agregar el cliente a una lista de clientes conectados
+                // y manejar su autenticación y comandos.
             }
-
-            char buffer[1024] = {0};
-
-            memset(buffer, 0, sizeof(buffer));
-			int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
-			if (bytes <= 0)
-			{
-				std::cout << "desconectado" << std::endl;
-				break ;
-			}
-			std::cout << "Message from client: " << buffer << std::endl;
-            
-            std::cout << "Nuevo cliente conectado" << std::endl;
-
-            // Aquí puedes agregar el cliente a una lista de clientes conectados
-            // y manejar su autenticación y comandos.
         }
     }
 }
 
+void Server::newConnections()
+{
+    struct pollfd newuser;
+    struct sockaddr_in clientAddress;
+    int error;
+    socklen_t clientAddressLength = sizeof(clientAddress);
+    int clientSocket = accept(_serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLength);
+    if (clientSocket == -1)
+        std::cerr << "Error al aceptar la conexión: "<< std::endl;
+    error = fcntl(clientSocket, F_GETFL, 0);
+	if (error == -1 || fcntl(clientSocket, F_SETFL, error | O_NONBLOCK) == -1)
+	{
+		//perror("fcntl");
+		close(clientSocket);
+		return;
+	}
+    std::cout << "Message from client: " << std::endl;
+        
+    std::cout << "Nuevo cliente conectado" << std::endl;
+    newuser.fd = clientSocket;
+    Client *user = new Client(clientSocket);
+    newuser.events = POLLIN | POLLOUT;
+    newuser.revents = 0;
+    _fds.push_back(newuser);
+    _client.push_back(user);
+}
+    
+void Server::eventMsg(int clientSocket)
+{
+/*  std::string buffer = "";
+    read(clientSocket,&buffer,buffer.size()); */
+    char buffer[1024] = {0};
+    
+    std::memset(buffer, 0, sizeof(buffer));
+    int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
+    if (bytes <= 0)
+        std::cout << "desconectado" << std::endl;
+    std::cout << buffer << std::endl;
+    
+}
 // int main()
 // {
 // 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);

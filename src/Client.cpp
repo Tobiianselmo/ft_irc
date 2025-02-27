@@ -4,14 +4,21 @@ Client::~Client()
 {
 	delete _server;
 }
-
+Client::Client(int socket)
+{
+	this->isAuth = false;
+	this->_nickName = "";
+	this->_userName = "";
+	this->_clientSocket = socket;
+	this->_server = NULL;
+}
 Client::Client(const std::string &nick, const std::string &user, const Server &server)
 {
 	this->_nickName = nick;
 	this->_userName = user;
-	_server = new Server(server.getPort(), server.getPassword());
+	//_server = new Server(server.getPort(), server.getPassword());
+	*_server = server;
 }
-
 void Client::setupClient()
 {
 	_clientSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -28,7 +35,7 @@ void Client::setupClient()
 	connect(_clientSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
 
 	// Enviar la informacion
-	while (true) {
+/* 	while (true) {
         std::string message;
         std::getline(std::cin, message);
 
@@ -38,7 +45,7 @@ void Client::setupClient()
         }
 
         send(_clientSocket, message.c_str(), message.size(), 0);
-    }
+    } */
 	// const char * message = "Hello, server!";
 	// send(_clientSocket, message, strlen(message), 0);
 

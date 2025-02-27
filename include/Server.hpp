@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <cstring>
 #include <poll.h>
+#include <vector>
 #include "Client.hpp"
 
 class Client;
@@ -24,6 +25,8 @@ class Server
 		std::string _password;
 		Server();
 		Server(const Server &data);
+		std::vector <struct pollfd >_fds; //añadir cuantos clientes vamos a manejar
+		std::vector<Client *> _client;
 	public:
 		Server(int port, const std::string &password);
 		~Server();
@@ -34,6 +37,8 @@ class Server
 
 		void	setupServer();
 		void	handleConnections();
+		void	newConnections();
+		void 	eventMsg(int clientSocket);
 };
 
 #endif

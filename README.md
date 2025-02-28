@@ -5,8 +5,8 @@ Parsear los comandos:
 la mayoria de los comandos necesitan que el usuario este autenticado.
 Hay tres estados, No-autenticado, Autenticado y registrado.
 
-##Comandos:
-##Mensajes del cliente
+## Comandos:
+## Mensajes del cliente
 
 Los mensajes son de cliente a servidor a menos que sea especificamente dicho. Si un mensaje es enviado desde el servidor al cliente conectado, tiene que notarse en la descripcion del mensaje. 
 
@@ -16,7 +16,7 @@ En la descripcion de los mensajes pueden estar:
          - "Ejemplos de mensajes" representa ejemplos de mensajes enviados *al cliente por el servidor*. 
         Si un comando es enviado por un cliente a un servidor con menos parametros de los que un comando necesia para ser procesado, el servidor para contestar con un error numero y fallará.
 
-###CHANEL OPERATIONS:
+### CHANEL OPERATIONS:
   Este tipo de mesajes se refiere a todo lo que tenga que ver con manipular canales, sus propiedades y contenidos.
   *Son pedidos al servidor, quien tiene que aprobar o desaprovar la peticion*, si es aprobada se envia un mensaje conteniendo la misma informacion al cliente.
 
@@ -49,7 +49,7 @@ En la descripcion de los mensajes pueden estar:
   Ejemplos:
      - KICK #Finish Matthew
      
-  ###INVITE message
+  ### INVITE message
   Command: INVITE
   Parameters: <nickname> <channel>
   Es usado para invitar un usuario al canal.
@@ -66,7 +66,7 @@ En la descripcion de los mensajes pueden estar:
   El servidor tal vez permita la invitacion con ningun parametro y que conteste con una lista de canales al que el usuario está invitado/incluido.
   (Servers MAY allow the INVITE with no parameter, and reply with a list of channels the sender is invited to as RPL_INVITELIST (336) numerics, ending with a RPL_ENDOFINVITELIST (337) numeric. *esto es de donde lo saqué pero no estoy segura de la traducción asi que consultenlo*)
 
-  ###TOPIC Message
+  ### TOPIC Message
   Command: TOPIC
   Parameters: <channel> [<topic>]
   El comando topic es usafo para cambiar o mirar el _tema_ del canal recibido por parametros. Si no se da un <topic>, puede retornar RPL_TOPIC o RPL_NOTOPIC especificando el tema del canal actual o si no hay uno. Si se da un <topic> vacio se va a eliminar el tema del canal.
@@ -76,7 +76,7 @@ En la descripcion de los mensajes pueden estar:
   Si el argumento <topic> viene igual al tema ya declarado, el servidor puede enviar un mensaje igualmente al autor y/o a los otros usuarios.
   *Cuando los clientes se unan al canal van a recibir un número RPL_TOPIC (o si no lo hay) de manera apropiada.
 
-  ###JOIN message
+  ### JOIN message
   Command: JOIN
   Parameters: <channel>{,<channel>} [<key>{,<key>}]
   Alt Params: 0

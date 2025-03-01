@@ -1,7 +1,15 @@
+<<<<<<< HEAD
+=======
+GREEN = \033[0;32m
+RED = \033[0;31m
+RST = \033[0m
+
+>>>>>>> dev
 NAME = ircserv
 
 CC = c++
 
+<<<<<<< HEAD
 FLAGS = -Wall -Werror -Wextra -std=c++98 -g
 
 RM = rm -rf
@@ -39,3 +47,36 @@ fclean: clean
 re : fclean all
 
 .PHONY: all re fclean clean
+=======
+CFLAGS = -Wall -Werror -Wextra -std=c++98
+
+RM = rm -rf
+
+FILES = main.cpp \
+Server.cpp \
+Client.cpp \
+
+SRC = $(addprefix src/, $(FILES))
+
+OBJ = $(SRC:.cpp=.o)
+
+all: $(NAME)
+
+%.o: %.cpp
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(OBJ)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+	@echo "$(GREEN)  ✔  FT_IRC  is successfully compiled!$(RST)"
+
+clean:
+	@$(RM) $(OBJ)
+	@echo "$(RED)Object files removed!$(RST)"
+
+fclean: clean
+	@$(RM) $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re
+>>>>>>> dev

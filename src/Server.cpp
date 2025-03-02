@@ -89,10 +89,10 @@ void Server::handleConnections()
         {
             if (_fds[i].revents & POLLIN) //GESTIONO LOS EVENTOS
             {
-                if(_fds[i].fd == _serverSocket) // ES UN EVENTO DEL SERVIDOR OSEA I == 0 SE TRATA DE UNA NUEVA CONECCION
+                if(_fds[i].fd == _serverSocket) // ES UN EVENTO DEL SERVIDOR OSEA I == 0 SE TRATA DE UNA NUEVA CONEXION
                     newConnections();
                 else
-                    eventMsg(_fds[i].fd);
+                    eventMsg(_fds, i);
                
     
                 // Aquí puedes agregar el cliente a una lista de clientes conectados
@@ -118,28 +118,44 @@ void Server::newConnections()
 		close(clientSocket);
 		return;
 	}
-    std::cout << "Message from client: " << std::endl;
-        
+
     std::cout << "Nuevo cliente conectado" << std::endl;
     newuser.fd = clientSocket;
-    Client *user = new Client(clientSocket);
+    // Client *user = new Client(clientSocket);
     newuser.events = POLLIN | POLLOUT;
     newuser.revents = 0;
     _fds.push_back(newuser);
-    _client.push_back(user);
+    // _client.push_back(user);
+    // send(clientSocket, , message.size(), 0);
 }
     
-void Server::eventMsg(int clientSocket)
+void Server::eventMsg(std::vector<struct pollfd> &fds, int i)
 {
 /*  std::string buffer = "";
     read(clientSocket,&buffer,buffer.size()); */
+    int clientSocket = fds[i].fd;
     char buffer[1024] = {0};
     
     std::memset(buffer, 0, sizeof(buffer));
     int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
+    std::cout << "bytes: " << bytes << std::endl;
     if (bytes <= 0)
+    {
+        close (fds[i].fd);
+        fds.erase(fds.begin() + i);
         std::cout << "desconectado" << std::endl;
-    std::cout << buffer << std::endl;
+        // int j = 0;
+        // std::cout << i << std::endl;
+        // for (std::vector<struct pollfd>::iterator it = fds.begin();it != fds.end(); it++)
+        // {
+        //     std::cout << "posicion i: " << j++ << std::endl;
+        //     std::cout << it->events << std::endl;
+        //     std::cout << it->revents << std::endl;
+        //     std::cout << it->fd << std::endl;
+        // }
+    }
+    
+    std::cout << buffer;
     
 }
 // int main()

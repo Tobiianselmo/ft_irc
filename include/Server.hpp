@@ -38,7 +38,7 @@ class Server
 		void	setupServer();
 		void	handleConnections();
 		void	newConnections();
-		void 	eventMsg(int clientSocket);
+		void 	eventMsg(std::vector<struct pollfd> &fds, int i);
 };
 
 #endif

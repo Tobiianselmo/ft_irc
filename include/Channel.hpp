@@ -5,12 +5,6 @@
 
 class Client;
 
-// typedef enum channelType
-// {
-// 	REGULAR_CH,
-// 	LOCAL_CH
-// };
-
 class Channel
 {
 	private:
@@ -27,14 +21,19 @@ class Channel
 		bool _hasLimit;
 		bool _hasPassword;
 
-		std::vector<Client *> _clients;
-
-		// channelType _type;
+		std::vector<Client> _clients;
 	public:
 		Channel();
 		~Channel();
-		Channel &operator=(const Channel &other);
-		Channel(const Channel &other);
+		Channel(const std::string &name, const std::string &topic);
+
+		void	setName(std::string name);
+		void	setPassword(std::string password);
+		void	setTopic(std::string topic);
+		
+		std::string getName() const;
+		std::string getPassword() const;	
+		std::string getTopic() const;
 };
 
 #endif

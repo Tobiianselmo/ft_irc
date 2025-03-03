@@ -25,11 +25,11 @@ class Server
 		int _port;
 		int _serverSocket;
 		std::string _password;
-		Server();
 		Server(const Server &data);
 		std::vector <struct pollfd >_fds; //añadir cuantos clientes vamos a manejar
 		std::vector<Client *> _client;
 	public:
+		Server();
 		Server(int port, const std::string &password);
 		~Server();
 		Server &operator=(const Server &data);
@@ -44,6 +44,7 @@ class Server
 		void	parsedInput(std::string str);
 		void	checkCommand(std::vector<std::string> arr);
 };
-std::vector<std::string> split(const std::string &str, char delimiter);
-void removeCarriageReturn(std::string &str);
+std::vector<std::string>	split(const std::string &str, char delimiter);
+void						removeCarriageReturn(std::string &str);
+void						checkNick(std::string str);
 #endif

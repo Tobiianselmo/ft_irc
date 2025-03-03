@@ -16,3 +16,67 @@ std::vector<std::string> split(const std::string &str, char delimiter)
     tokens.push_back(str.substr(start));
     return tokens;
 }
+
+void    checkNick(std::string str)
+{
+    int i = 0;
+    while(str[i])
+    {
+        if(str[0] == '$')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[0] == ':')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[0] == '#')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[0] == '&')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[i] == ' ')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[i] == ',')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[i] == '*')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[i] == '?')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[i] == '!')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[i] == '@')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        if(str[i] == '.')
+        {
+            std::cout << "error\n";
+            return ;
+        }
+        i++;
+    }
+}

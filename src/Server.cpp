@@ -1,5 +1,7 @@
 #include "../include/Server.hpp"
 
+Server::Server(){}
+
 Server::~Server()
 {
 	if (_serverSocket != -1)
@@ -141,9 +143,7 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i)
         fds.erase(fds.begin() + i);
         std::cout << "desconectado" << std::endl;
     }
-    std::cout << buffer;
     this->parsedInput(buffer);
-    
 }
 
 void Server::parsedInput(std::string str)
@@ -161,21 +161,45 @@ void removeCarriageReturn(std::string &str)
 }
 void Server::checkCommand(std::vector<std::string> arr)
 {
-    size_t i = 0;
-    std::vector<std::string> aux;
-    size_t j = 0;
-    while(i < arr.size())
+	std::vector<std::string> aux;
+    if(!std::strncmp(arr[0].c_str(),"PASS ",5))
     {
-        aux = split(arr[i],' ');
-        while(j < aux.size())
-        {
-            if(aux[j] == "NICK")
-                std::cout << "llega\n";
-            j++;
-        }
-        i++;
+        if(arr[0].c_str() + 5 != this->getPassword())
+        std::cout << "ERR_PASSWDMISMATCH (464): Password incorrect" << std::endl;
+        return ;
     }
-
+	if(arr.size() > 1) // First input with client data.
+	{
+		size_t j = 0;
+		size_t i = 0;
+        if(!std::strncmp(arr[0].c_str(),"NICK ",5))
+            checkNick(arr[0].c_str() + 5);
+		while (i < arr.size())
+		{
+			aux = split(arr[i], ' ');
+			while (j < aux.size())
+			{
+				if (aux[0] == "NICK")
+					
+				j++;
+			}
+			i++;
+		}
+	}
+	else
+	{
+		aux = split(arr[0],' ');
+		if (aux[0] == "JOIN")
+		{
+			std::cout << "Entra al JOIN\n";
+		}
+		else if (aux[0] == "MODE")
+		{
+			std::cout << "Entra al MODE\n";
+		}
+/* 		else
+			std::cout << "Command not valid." << std::endl; */
+	}
 }
 // int main()
 // {

@@ -131,77 +131,67 @@ void Server::newConnections()
     
 void Server::eventMsg(std::vector<struct pollfd> &fds, int i)
 {
-/*  std::string buffer = "";
-    read(clientSocket,&buffer,buffer.size()); */
-    int clientSocket = fds[i].fd;
-    char buffer[1024] = {0};
-    
-    std::memset(buffer, 0, sizeof(buffer));
-    int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
-    std::cout << "bytes: " << bytes << std::endl;
-    if (bytes <= 0)
-    {
-        close (fds[i].fd);
-        fds.erase(fds.begin() + i);
-        std::cout << "desconectado" << std::endl;
-        // int j = 0;
-        // std::cout << i << std::endl;
-        // for (std::vector<struct pollfd>::iterator it = fds.begin();it != fds.end(); it++)
-        // {
-        //     std::cout << "posicion i: " << j++ << std::endl;
-        //     std::cout << it->events << std::endl;
-        //     std::cout << it->revents << std::endl;
-        //     std::cout << it->fd << std::endl;
-        // }
-    }
-    
-    std::cout << buffer;
-    
+	int clientSocket = fds[i].fd;
+	char buffer[1024] = {0};
+
+	std::memset(buffer, 0, sizeof(buffer));
+	int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
+	if (bytes <= 0)
+	{
+		close (fds[i].fd);
+		fds.erase(fds.begin() + i);
+		std::cout << "Client disconected." << std::endl;
+	}
+	std::cout << buffer;
+	parsedInput(buffer);
 }
-// int main()
-// {
-// 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-// 	// Es el tipo de dato que se utiliza para almacenar la direccion del socket.
-// 	sockaddr_in serverAddress;
-	
-// 	serverAddress.sin_family = AF_INET;
-	
-// 	// esta función se utiliza para convertir el entero sin signo del
-// 	// orden de bytes de la máquina al orden de bytes de la red.
-// 	serverAddress.sin_port = htons(8080);
-	
-// 	// Se utiliza cuando no queremos vincular nuestro socket a ninguna IP en
-// 	// particular y en su lugar hacer que escuche todas las IP disponibles.
-// 	serverAddress.sin_addr.s_addr = INADDR_ANY;
+static void removeCarriageReturn(std::string &str)
+{
+	str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
+}
 
+void Server::parsedInput(std::string str)
+{
+    std::vector<std::string> ret;
+    ret = split(str,'\n');
+    for (std::vector<std::string>::iterator it = ret.begin(); it != ret.end(); ++it)
+        removeCarriageReturn(*it);
+    ret.pop_back(); //deja un NULL al final por eso lo borramos
+    this->checkCommand(ret);
+}
+void Server::checkCommand(std::vector<std::string> arr)
+{
+	std::vector<std::string> aux;
 
-// 	// Vinculacion del socket del servidor
-// 	bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
-	
-// 	listen(serverSocket, 1);
-
-// 	// Aceptar la conexion del cliente
-// 	while (true)
-// 	{
-// 		int clientSocket = accept(serverSocket, nullptr, nullptr);
-		
-// 		// Recibir datos del cliente
-// 		char buffer[1024] = {0};
-// 		while (true)
-// 		{
-// 			memset(buffer, 0, sizeof(buffer));
-// 			int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
-// 			if (bytes <= 0)
-// 			{
-// 				std::cout << "desconectado" << std::endl;
-// 				break ;
-// 			}
-// 			std::cout << "Message from client: " << buffer << std::endl;
-// 		}
-// 		close(clientSocket);
-// 	}
-// 	// Cerramos el socket del servidor
-// 	close(serverSocket);
-// 	return (0);
-// }
+	if (aux.size() > 1) // First input with client data.
+	{
+		size_t j = 0;
+		size_t i = 0;
+		while (i < arr.size())
+		{
+			aux = split(arr[i], ' ');
+			while (j < aux.size())
+			{
+				if (aux[0] == "NICK")
+					std::cout << "llega\n";
+				j++;
+			}
+			i++;
+		}
+	}
+	else
+	{
+		aux = split(arr[0],' ');
+		if (aux[0] == "JOIN")
+		{
+			std::cout << "Entra al JOIN\n";
+		}
+		else if (aux[0] == "MODE")
+		{
+			std::cout << "Entra al MODE\n";
+		}
+		else
+			std::cout << "Command not valid." << std::endl;
+	}
+}

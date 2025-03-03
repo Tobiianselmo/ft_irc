@@ -19,64 +19,18 @@ std::vector<std::string> split(const std::string &str, char delimiter)
 
 void    checkNick(std::string str)
 {
-    int i = 0;
-    while(str[i])
+
+    if(str[0] == '$' || str[0] == ':' || str[0] == '#' || str[0] == '&')
     {
-        if(str[0] == '$')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[0] == ':')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[0] == '#')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[0] == '&')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[i] == ' ')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[i] == ',')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[i] == '*')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[i] == '?')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[i] == '!')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[i] == '@')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        if(str[i] == '.')
-        {
-            std::cout << "error\n";
-            return ;
-        }
-        i++;
+        std::cout << "error\n";
+        return;
+    }
+    if( std::strchr(str.c_str(),' ')    || std::strchr(str.c_str(),',')
+        || std::strchr(str.c_str(),'*') || std::strchr(str.c_str(),'?')
+        || std::strchr(str.c_str(),'!') || std::strchr(str.c_str(),'@')
+        || std::strchr(str.c_str(),'.'))
+    {
+        std::cout << "error\n";
+        return;
     }
 }

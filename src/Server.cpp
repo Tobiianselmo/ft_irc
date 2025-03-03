@@ -122,11 +122,11 @@ void Server::newConnections()
 	}
     std::cout << "Nuevo cliente conectado" << std::endl;
     newuser.fd = clientSocket;
-    // Client *user = new Client(clientSocket);
+    Client *user = new Client(clientSocket);
     newuser.events = POLLIN | POLLOUT;
     newuser.revents = 0;
     _fds.push_back(newuser);
-    // _client.push_back(user);
+    _client.push_back(user);
     // send(clientSocket, , message.size(), 0);
 }
     

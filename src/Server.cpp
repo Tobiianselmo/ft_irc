@@ -160,11 +160,24 @@ void Server::parsedInput(std::string str)
     ret.pop_back(); //deja un NULL al final por eso lo borramos
     this->checkCommand(ret);
 }
+
+void Server::joinChannel(std::vector<std::string> arr)
+{
+	if (arr.size() > 1)
+	{
+		
+	}
+	else
+	{
+		std::cout << "Error ERR_NEEDMOREPARAMS(461)" << std::endl;
+	}
+}
+
 void Server::checkCommand(std::vector<std::string> arr)
 {
 	std::vector<std::string> aux;
 
-	if (aux.size() > 1) // First input with client data.
+	if (arr.size() > 1) // First input with client data.
 	{
 		size_t j = 0;
 		size_t i = 0;
@@ -184,9 +197,7 @@ void Server::checkCommand(std::vector<std::string> arr)
 	{
 		aux = split(arr[0],' ');
 		if (aux[0] == "JOIN")
-		{
-			std::cout << "Entra al JOIN\n";
-		}
+			joinChannel(aux);
 		else if (aux[0] == "MODE")
 		{
 			std::cout << "Entra al MODE\n";

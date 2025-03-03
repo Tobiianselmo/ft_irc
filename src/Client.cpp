@@ -1,12 +1,34 @@
 #include "../include/Client.hpp"
 
+Client::Client() {}
+
 Client::~Client()
 {
-	delete _server;
+	if (_server)
+		delete _server;
 }
+
+Client::Client(const Client &other)
+{
+	*this = other;
+}
+
+Client &Client::operator=(const Client &other)
+{
+	if (this != &other)
+	{
+		this->_clientSocket = other._clientSocket;
+		this->_isAuth = other._isAuth;
+		this->_nickName = other._nickName;
+		this->_server = other._server;
+		this->_userName = other._userName;
+	}
+	return *this;
+}
+
 Client::Client(int socket)
 {
-	this->isAuth = false;
+	this->_isAuth = false;
 	this->_nickName = "";
 	this->_userName = "";
 	this->_clientSocket = socket;

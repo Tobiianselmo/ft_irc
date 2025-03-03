@@ -13,6 +13,7 @@ RM = rm -rf
 FILES = main.cpp \
 Server.cpp \
 Client.cpp \
+utils.cpp \
 
 SRC = $(addprefix src/, $(FILES))
 

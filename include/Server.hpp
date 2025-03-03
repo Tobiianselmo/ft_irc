@@ -1,6 +1,8 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+
+#include <algorithm>
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -39,6 +41,9 @@ class Server
 		void	handleConnections();
 		void	newConnections();
 		void 	eventMsg(std::vector<struct pollfd> &fds, int i);
+		void	parsedInput(std::string str);
+		void	checkCommand(std::vector<std::string> arr);
 };
-
+std::vector<std::string> split(const std::string &str, char delimiter);
+void removeCarriageReturn(std::string &str);
 #endif

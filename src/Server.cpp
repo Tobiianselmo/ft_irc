@@ -118,7 +118,6 @@ void Server::newConnections()
 		close(clientSocket);
 		return;
 	}
-
     std::cout << "Nuevo cliente conectado" << std::endl;
     newuser.fd = clientSocket;
     // Client *user = new Client(clientSocket);
@@ -131,32 +130,52 @@ void Server::newConnections()
     
 void Server::eventMsg(std::vector<struct pollfd> &fds, int i)
 {
-/*  std::string buffer = "";
-    read(clientSocket,&buffer,buffer.size()); */
     int clientSocket = fds[i].fd;
     char buffer[1024] = {0};
     
     std::memset(buffer, 0, sizeof(buffer));
     int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
-    std::cout << "bytes: " << bytes << std::endl;
     if (bytes <= 0)
     {
         close (fds[i].fd);
         fds.erase(fds.begin() + i);
         std::cout << "desconectado" << std::endl;
-        // int j = 0;
-        // std::cout << i << std::endl;
-        // for (std::vector<struct pollfd>::iterator it = fds.begin();it != fds.end(); it++)
-        // {
-        //     std::cout << "posicion i: " << j++ << std::endl;
-        //     std::cout << it->events << std::endl;
-        //     std::cout << it->revents << std::endl;
-        //     std::cout << it->fd << std::endl;
-        // }
     }
-    
     std::cout << buffer;
+    this->parsedInput(buffer);
     
+}
+
+void Server::parsedInput(std::string str)
+{
+    std::vector<std::string> ret;
+    ret = split(str,'\n');
+    for (std::vector<std::string>::iterator it = ret.begin(); it != ret.end(); ++it)
+        removeCarriageReturn(*it);
+    ret.pop_back(); //deja un NULL al final por eso lo borramos
+    this->checkCommand(ret);
+}
+void removeCarriageReturn(std::string &str)
+{
+    str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
+}
+void Server::checkCommand(std::vector<std::string> arr)
+{
+    size_t i = 0;
+    std::vector<std::string> aux;
+    size_t j = 0;
+    while(i < arr.size())
+    {
+        aux = split(arr[i],' ');
+        while(j < aux.size())
+        {
+            if(aux[j] == "NICK")
+                std::cout << "llega\n";
+            j++;
+        }
+        i++;
+    }
+
 }
 // int main()
 // {

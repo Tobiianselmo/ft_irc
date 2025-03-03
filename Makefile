@@ -9,6 +9,7 @@ RM = rm -rf
 SRC = 	main.cpp \
 		Server.cpp \
 		Client.cpp \
+		Utils.cpp \
 
 SRC_DIR = src/
 

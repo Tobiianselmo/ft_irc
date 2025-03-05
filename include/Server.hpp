@@ -25,6 +25,7 @@ class Server
 		std::map<NUMERICS, std::string> _errors;
 	public:
 		~Server();
+		Server();
 		Server(int port, const std::string &password);
 
 		int	getPort() const;
@@ -40,7 +41,5 @@ class Server
 		void	checkCommand(std::vector<std::string> arr);
 		int		joinCommand(std::vector<std::string> arr);
 };
-std::vector<std::string>	split(const std::string &str, char delimiter);
-void						removeCarriageReturn(std::string &str);
-void						checkNick(std::string str);
+
 #endif

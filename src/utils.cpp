@@ -35,3 +35,7 @@ void    checkNickName(std::string str)
 		}
 	}
 }
+void removeCarriageReturn(std::string &str)
+{
+	str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
+}

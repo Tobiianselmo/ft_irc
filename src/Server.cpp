@@ -127,11 +127,6 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i)
 	parsedInput(buffer);
 }
 
-static void removeCarriageReturn(std::string &str)
-{
-	str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
-}
-
 void Server::parsedInput(std::string str)
 {
     std::vector<std::string> ret;
@@ -164,19 +159,25 @@ int Server::joinCommand(std::vector<std::string> arr)
 void Server::checkCommand(std::vector<std::string> arr)
 {
 	std::vector<std::string> aux;
-
-	if (arr.size() > 1) // First input with client data.
+    if(!std::strncmp(arr[0].c_str(),"PASS ",5))
+    {
+        if(arr[0].c_str() + 5 != this->getPassword())
+            std::cout << "ERR_PASSWDMISMATCH (464): Password incorrect" << std::endl;
+        return ;
+    }
+	if(arr.size() > 1) // First input with client data.
 	{
 		size_t j = 0;
 		size_t i = 0;
+        if(!std::strncmp(arr[0].c_str(),"NICK ",5))
+            checkNickName(arr[0].c_str() + 5);
 		while (i < arr.size())
 		{
 			aux = split(arr[i], ' ');
 			while (j < aux.size())
 			{
 				if (aux[0] == "NICK")
-					// std::cout << "llega\n";
-					;
+					
 				j++;
 			}
 			i++;
@@ -186,12 +187,14 @@ void Server::checkCommand(std::vector<std::string> arr)
 	{
 		aux = split(arr[0],' ');
 		if (aux[0] == "JOIN")
-			std::cout << "El output del join es: " << joinCommand(aux) << std::endl;
+		{
+			std::cout << "Entra al JOIN\n";
+		}
 		else if (aux[0] == "MODE")
 		{
 			std::cout << "Entra al MODE\n";
 		}
-		else
-			std::cout << "Command not valid." << std::endl;
+/* 		else
+			std::cout << "Command not valid." << std::endl; */
 	}
 }

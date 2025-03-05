@@ -1,4 +1,4 @@
-#include "../include/Server.hpp"
+#include "../include/irc.hpp"
 
 std::vector<std::string> split(const std::string &str, char delimiter)
 {
@@ -17,4 +17,21 @@ std::vector<std::string> split(const std::string &str, char delimiter)
 		tokens.push_back(str.substr(start));
 	}
 	return tokens;
+}
+
+void    checkNickName(std::string str)
+{
+	if (!std::strchr("$:#&", str[0]) || std::isdigit(str[0])) // If NickName begins with "$:#&"
+	{
+		std::cout << "Error " << ERR_ERRONEUSNICKNAME << std::endl; 
+		return ;
+	}
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		if (!std::strchr(" ,*?!@.", str[i]))
+		{
+			std::cout << "Error " << ERR_ERRONEUSNICKNAME << std::endl; 
+			return ;
+		}
+	}
 }

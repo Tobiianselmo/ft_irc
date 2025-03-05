@@ -66,7 +66,7 @@ void Server::handleConnections()
 	{
 		int ret = poll(&_fds[0], _fds.size(), -1);
 		if (ret == -1)
-			throw std::runtime_error("Error en poll(): ");
+			throw std::runtime_error("Error in poll(): ");
 		for (size_t i = 0; i < _fds.size() ; i++)
 		{
 			if (_fds[i].revents & POLLIN)
@@ -115,13 +115,13 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i)
 	int clientSocket = fds[i].fd;
 
 	int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
-	if (bytes <= 0)
+	if (bytes <= 0) // Comprobar el error en 0 y -1 por separado.
 	{
 		close (fds[i].fd);
 		fds.erase(fds.begin() + i);
 		std::cout << "Client disconected." << std::endl;
 	}
-	std::cout << "El buffer es: " << buffer << "\n";
+	//std::cout << "El buffer es: " << buffer << "\n";
 	parsedInput(buffer);
 }
 
@@ -145,16 +145,18 @@ void Server::parsedInput(std::string str)
 	this->checkCommand(ret);
 }
 
-void Server::joinChannel(std::vector<std::string> arr)
+int Server::joinCommand(std::vector<std::string> arr)
 {
 	if (arr.size() > 1)
 	{
-		
+		if (!std::strchr("#&", arr[1][0]))
+			return (476); // Bad channel mask
+		std::cout << "Client " << _client[0].getNickName() << " has joined to server " <<
+		arr[1] << std::endl;
 	}
 	else
-	{
-		std::cout << "Error ERR_NEEDMOREPARAMS(461)" << std::endl;
-	}
+		return (461); // Needs more params
+	return (0);
 }
 
 void Server::checkCommand(std::vector<std::string> arr)
@@ -171,7 +173,8 @@ void Server::checkCommand(std::vector<std::string> arr)
 			while (j < aux.size())
 			{
 				if (aux[0] == "NICK")
-					std::cout << "llega\n";
+					// std::cout << "llega\n";
+					;
 				j++;
 			}
 			i++;
@@ -181,7 +184,7 @@ void Server::checkCommand(std::vector<std::string> arr)
 	{
 		aux = split(arr[0],' ');
 		if (aux[0] == "JOIN")
-			joinChannel(aux);
+			std::cout << "El output del join es: " << joinCommand(aux) << std::endl;
 		else if (aux[0] == "MODE")
 		{
 			std::cout << "Entra al MODE\n";

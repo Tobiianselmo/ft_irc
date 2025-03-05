@@ -6,10 +6,11 @@ FLAGS = -Wall -Werror -Wextra -std=c++98 -g
 
 RM = rm -rf
 
-SRC = 	main.cpp \
-		Server.cpp \
-		Client.cpp \
-		Utils.cpp \
+FILES = main.cpp \
+Server.cpp \
+Client.cpp \
+Channel.cpp \
+utils.cpp \
 
 SRC_DIR = src/
 

@@ -19,6 +19,7 @@ class Server
 		std::vector<struct pollfd >_fds;
 		std::vector<Client> _client;
 		std::vector<Channel> _channels;
+		std::map<int, Client> _clientsMap;
 
 		sockaddr_in _serverAddress;
 
@@ -35,11 +36,11 @@ class Server
 		void	setupServer();
 		void	handleConnections();
 		void	newConnections();
-		void 	eventMsg(std::vector<struct pollfd> &fds, int i);
+		void 	eventMsg(std::vector<struct pollfd> &fds, int i, Client &client);
 
-		void	parsedInput(std::string str);
-		void	checkCommand(std::vector<std::string> arr);
-		int		joinCommand(std::vector<std::string> arr);
+		void	checkCommand(std::vector<std::string> arr,Client &client);
+		int		joinCommand(std::vector<std::string> arr, Client &client);
+		std::vector<std::string>	parsedInput(std::string str);
 };
 
 #endif

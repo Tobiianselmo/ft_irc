@@ -19,21 +19,23 @@ std::vector<std::string> split(const std::string &str, char delimiter)
 	return tokens;
 }
 
-void    checkNickName(std::string str)
+std::string    checkNickName(std::string str)
 {
-	if (!std::strchr("$:#&", str[0]) || std::isdigit(str[0])) // If NickName begins with "$:#&"
+	std::cout << "STR :" << str << std::endl;
+	if (std::strchr("$:#&", str[0]) || std::isdigit(str[0])) // If NickName begins with "$:#&"
 	{
-		std::cout << "Error " << ERR_ERRONEUSNICKNAME << std::endl; 
-		return ;
+		std::cout << "Error AAAAAAAAAAAA" << ERR_ERRONEUSNICKNAME << std::endl; 
+		return NULL;
 	}
 	for (size_t i = 0; i < str.size(); i++)
 	{
-		if (!std::strchr(" ,*?!@.", str[i]))
+		if (std::strchr(" ,*?!@.", str[i]))
 		{
-			std::cout << "Error " << ERR_ERRONEUSNICKNAME << std::endl; 
-			return ;
+			std::cout << "Error " << ERR_ERRONEUSNICKNAME << std::endl;
+			return NULL;
 		}
 	}
+	return(str);
 }
 void removeCarriageReturn(std::string &str)
 {

@@ -20,7 +20,7 @@ class Client
 		Client &operator=(const Client &other);
 		Client(const Client &other);
 		Client(const std::string &nick, const std::string &user, const Server &server);
-		Client(int socket);
+		Client(int socket,Server &server);
 
 		void	setNickName(std::string nickname);
 		void	setUserName(std::string username);

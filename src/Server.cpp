@@ -98,15 +98,16 @@ void Server::newConnections()
 	}
 
 	std::cout << "New client conected" << std::endl;
-
-	Client newClient(clientSocket);
+	
+	Client newClient(clientSocket,*this);
 	_client.push_back(newClient);
-
+	
 	struct pollfd newPoll;
-
+	
 	newPoll.fd = clientSocket;
 	newPoll.events = POLLIN | POLLOUT;
 	newPoll.revents = 0;
+	std::cout << "conexion nueva fd: " << clientSocket << std::endl;
 	_clientsMap[clientSocket] = newClient;
 	_fds.push_back(newPoll);
 }
@@ -116,16 +117,17 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i, Client &client)
 	std::vector<std::string> arr;
 	char buffer[1024];
 	std::memset(buffer, 0, sizeof(buffer));
-
-	int bytes = recv(client.getClientSocket(), buffer, sizeof(buffer), 0);
+	// std::cout << "llega fd :" << client.getClientSocket() << std::endl;
+	int bytes = recv(fds[i].fd, buffer, sizeof(buffer), 0);
 	if (bytes <= 0) // Comprobar el error en 0 y -1 por separado.
 	{
-		close (client.getClientSocket());
+		close(fds[i].fd);
 		fds.erase(fds.begin() + i);
-		_clientsMap.erase(client.getClientSocket());
+		//_clientsMap.erase(client.getClientSocket());
 		std::cout << "Client disconected." << std::endl;
+		return ;
 	}
-	//std::cout << "El buffer es: " << buffer << "\n";
+	std::cout << "El buffer es: " << buffer << "\n";
 	arr = parsedInput(buffer);
 	if(arr.size() == 0)
 	{
@@ -133,11 +135,6 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i, Client &client)
 		return ;
 	}
 	this->checkCommand(arr, client);
-}
-
-static void removeCarriageReturn(std::string &str)
-{
-	str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
 }
 
 std::vector<std::string> Server::parsedInput(std::string str)
@@ -174,26 +171,39 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
     if(!std::strncmp(arr[0].c_str(),"PASS ",5))
     {
         if(arr[0].c_str() + 5 != this->getPassword())
-            std::cout << "ERR_PASSWDMISMATCH (464): Password incorrect" << std::endl;
-        return ;
+		{
+			send(client.getClientSocket(),"Error: Incorrect Password\r\n",28,0);
+			return ;
+		}
     }
 	if(arr.size() > 1) // First input with client data.
 	{
 		size_t j = 0;
 		size_t i = 0;
         if(!std::strncmp(arr[0].c_str(),"NICK ",5))
-            checkNickName(arr[0].c_str() + 5);
-		while (i < arr.size())
+		{
+			std::string nick = checkNickName(arr[0].c_str() + 5);
+			if (nick.c_str() == NULL)
+				return ;
+			for(size_t i = 1; i < this->_fds.size(); i++)
+			{
+				if(nick == _clientsMap[_fds[i].fd].getNickName())
+				{
+					std::cout << "error nick repetido y exit\n";
+					exit(1);
+				}
+			}
+			client.setNickName(nick);
+		}
+/* 		while (i < arr.size())
 		{
 			aux = split(arr[i], ' ');
 			while (j < aux.size())
-			{
-				if (aux[0] == "NICK")
-					
+			{		
 				j++;
 			}
 			i++;
-		}
+		} */
 	}
 	else
 	{

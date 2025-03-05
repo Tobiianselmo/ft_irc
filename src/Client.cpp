@@ -4,8 +4,8 @@ Client::Client() {}
 
 Client::~Client()
 {
-	if (_server)
-		delete _server;
+/* 	if (_server)
+		delete _server; */
 }
 
 Client::Client(const Client &other)
@@ -26,13 +26,13 @@ Client &Client::operator=(const Client &other)
 	return *this;
 }
 
-Client::Client(int socket)
+Client::Client(int socket,Server &server)
 {
 	this->_isAuth = false;
 	this->_nickName = "";
 	this->_userName = "";
 	this->_clientSocket = socket;
-	this->_server = NULL;
+	this->_server = &server;
 }
 
 Client::Client(const std::string &nick, const std::string &user, const Server &server)

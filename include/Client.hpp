@@ -27,6 +27,7 @@ class Client
 
 		const std::string &getNickName() const;
 		const std::string &getUserName() const;
+		int	getClientSocket() const;
 };
 
 // std::ostream &operator<<(std::ostream &output, const Client &other);

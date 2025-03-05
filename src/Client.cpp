@@ -51,6 +51,7 @@ void	Client::setUserName(std::string username) { this->_userName = username; }
 
 const std::string &Client::getNickName() const { return this->_nickName; }
 const std::string &Client::getUserName() const { return this->_userName; }
+int	Client::getClientSocket() const { return this->_clientSocket; }
 
 // std::ostream &operator<<(std::ostream &output, const Client &other)
 // {

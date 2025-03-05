@@ -74,7 +74,7 @@ void Server::handleConnections()
 				if (_fds[i].fd == _serverSocket)
 					newConnections();
 				else
-					eventMsg(_fds, i);
+					eventMsg(_fds, i, _clientsMap[_fds[i].fd]);
 			}
 		}
 	}
@@ -105,24 +105,32 @@ void Server::newConnections()
 	newPoll.fd = clientSocket;
 	newPoll.events = POLLIN | POLLOUT;
 	newPoll.revents = 0;
+	_clientsMap[clientSocket] = newClient;
 	_fds.push_back(newPoll);
 }
     
-void Server::eventMsg(std::vector<struct pollfd> &fds, int i)
+void Server::eventMsg(std::vector<struct pollfd> &fds, int i, Client &client)
 {
+	std::vector<std::string> arr;
 	char buffer[1024];
 	std::memset(buffer, 0, sizeof(buffer));
-	int clientSocket = fds[i].fd;
 
-	int bytes = recv(clientSocket, buffer, sizeof(buffer), 0);
+	int bytes = recv(client.getClientSocket(), buffer, sizeof(buffer), 0);
 	if (bytes <= 0) // Comprobar el error en 0 y -1 por separado.
 	{
-		close (fds[i].fd);
+		close (client.getClientSocket());
 		fds.erase(fds.begin() + i);
+		_clientsMap.erase(client.getClientSocket());
 		std::cout << "Client disconected." << std::endl;
 	}
 	//std::cout << "El buffer es: " << buffer << "\n";
-	parsedInput(buffer);
+	arr = parsedInput(buffer);
+	if(arr.size() == 0)
+	{
+		std::cout << "Error splitting buffer" << std::endl;
+		return ;
+	}
+	this->checkCommand(arr, client);
 }
 
 static void removeCarriageReturn(std::string &str)
@@ -130,23 +138,22 @@ static void removeCarriageReturn(std::string &str)
 	str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
 }
 
-void Server::parsedInput(std::string str)
+std::vector<std::string> Server::parsedInput(std::string str)
 {
-    std::vector<std::string> ret;
-    ret = split(str,'\n');
+	std::vector<std::string> ret;
+
+	ret = split(str,'\n');
 	if (ret.size() == 0) // We need to handle this error.
-	{
-		std::cout << "Error splitting buffer" << std::endl;
-		return ;
-	}
+		return (ret);
 	for (std::vector<std::string>::iterator it = ret.begin(); it != ret.end(); ++it)
 		removeCarriageReturn(*it);
 	ret.pop_back();
-	this->checkCommand(ret);
+	return(ret);
 }
 
-int Server::joinCommand(std::vector<std::string> arr)
+int Server::joinCommand(std::vector<std::string> arr, Client &client)
 {
+	(void)client;
 	if (arr.size() > 1)
 	{
 		if (!std::strchr("#&", arr[1][0]))
@@ -159,7 +166,7 @@ int Server::joinCommand(std::vector<std::string> arr)
 	return (0);
 }
 
-void Server::checkCommand(std::vector<std::string> arr)
+void Server::checkCommand(std::vector<std::string> arr, Client &client)
 {
 	std::vector<std::string> aux;
 
@@ -184,7 +191,7 @@ void Server::checkCommand(std::vector<std::string> arr)
 	{
 		aux = split(arr[0],' ');
 		if (aux[0] == "JOIN")
-			std::cout << "El output del join es: " << joinCommand(aux) << std::endl;
+			std::cout << "El output del join es: " << joinCommand(aux, client) << std::endl;
 		else if (aux[0] == "MODE")
 		{
 			std::cout << "Entra al MODE\n";

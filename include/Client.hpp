@@ -21,7 +21,14 @@ class Client
 		Client(const Client &other);
 		Client(const std::string &nick, const std::string &user, const Server &server);
 		Client(int socket);
-		void	setupClient();
+
+		void	setNickName(std::string nickname);
+		void	setUserName(std::string username);
+
+		const std::string &getNickName() const;
+		const std::string &getUserName() const;
 };
+
+// std::ostream &operator<<(std::ostream &output, const Client &other);
 
 #endif

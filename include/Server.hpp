@@ -22,8 +22,6 @@ class Server
 		std::map<int, Client> _clientsMap;
 
 		sockaddr_in _serverAddress;
-
-		std::map<NUMERICS, std::string> _errors;
 	public:
 		~Server();
 		Server(int port, const std::string &password);

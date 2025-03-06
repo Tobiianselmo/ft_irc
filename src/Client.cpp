@@ -4,8 +4,7 @@ Client::Client() {}
 
 Client::~Client()
 {
-	if (_server)
-		delete _server;
+	std::cout << "Client default destructor called." << std::endl;
 }
 
 Client::Client(const Client &other)
@@ -32,7 +31,7 @@ Client::Client(int socket)
 	this->_nickName = "";
 	this->_userName = "";
 	this->_clientSocket = socket;
-	this->_server = NULL;
+	// this->_server = NULL;
 }
 
 Client::Client(const std::string &nick, const std::string &user, const Server &server)

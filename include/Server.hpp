@@ -29,15 +29,16 @@ class Server
 		int	getPort() const;
 		int	getServerSocket() const;
 		const std::string &getPassword() const;
+		Channel *getChannel(std::string name);
 
 		void	setupServer();
 		void	handleConnections();
 		void	newConnections();
 		void 	eventMsg(std::vector<struct pollfd> &fds, int i, Client &client);
-
 		void	checkCommand(std::vector<std::string> arr,Client &client);
-		int		joinCommand(std::vector<std::string> arr, Client &client);
 		std::vector<std::string>	parsedInput(std::string str);
+
+		int		joinCommand(std::string line, Client &client);
 };
 
 #endif

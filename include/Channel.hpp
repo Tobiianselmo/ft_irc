@@ -34,6 +34,7 @@ class Channel
 		std::string getName() const;
 		std::string getPassword() const;	
 		std::string getTopic() const;
+		std::vector<Client> getArrClients() const;
 };
 
 #endif

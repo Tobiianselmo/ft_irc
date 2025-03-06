@@ -41,6 +41,7 @@ class Server
 
 		void	checkCommand(std::vector<std::string> arr,Client &client);
 		int		joinCommand(std::vector<std::string> arr, Client &client);
+		void	kickCommand(std::vector<std::string> arr,Client &client);
 		std::vector<std::string>	parsedInput(std::string str);
 };
 

@@ -164,7 +164,35 @@ int Server::joinCommand(std::vector<std::string> arr, Client &client)
 		return (461); // Needs more params
 	return (0);
 }
+void Server::kickCommand(std::vector<std::string> arr,Client &client)
+{
+	std::vector<std::string> split_users;
+	std::string channel = arr[1];
+	size_t i = 0;
+	while(i < this->_channels.size())
+	{
+		if(this->_channels[i].getName() == channel)
+			break;
+		i++;
+	}
+	if(i == this->_channels.size())
+		std::cout << "Channel not found\n";
+	split_users = split(arr[2],',');
+	std::vector<Client> aux = this->_channels[i].getArrClients();
+	size_t j = 0;
+	size_t k;
+	while(j < split_users.size())
+	{
+		k = 0;
+		while(k < aux.size())
+		{
+			if(split_users[j] == aux[k].getNickName())
 
+			k++;
+		}
+		j++;
+	}
+}
 void Server::checkCommand(std::vector<std::string> arr, Client &client)
 {
 	std::vector<std::string> aux;
@@ -178,8 +206,8 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
     }
 	if(arr.size() > 1) // First input with client data.
 	{
-		size_t j = 0;
-		size_t i = 0;
+/* 		size_t j = 0;
+		size_t i = 0; */
         if(!std::strncmp(arr[0].c_str(),"NICK ",5))
 		{
 			std::string nick = checkNickName(arr[0].c_str() + 5);
@@ -190,7 +218,7 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 				if(nick == _clientsMap[_fds[i].fd].getNickName())
 				{
 					std::cout << "error nick repetido y exit\n";
-					exit(1);
+					return ;
 				}
 			}
 			client.setNickName(nick);
@@ -210,8 +238,10 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 		aux = split(arr[0],' ');
 		if (aux[0] == "JOIN")
 			std::cout << "El output del join es: " << joinCommand(aux, client) << std::endl;
+		else if(aux[0] == "KICK")
+			kickCommand(aux,client);
 		else if (aux[0] == "MODE")
-		{
+		{	
 			std::cout << "Entra al MODE\n";
 		}
 /* 		else

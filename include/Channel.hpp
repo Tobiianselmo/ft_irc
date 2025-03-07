@@ -22,10 +22,12 @@ class Channel
 		bool _hasPassword;
 
 		std::vector<Client> _clients;
+		std::vector<Client> _operators;
+
 	public:
 		Channel();
 		~Channel();
-		Channel(const std::string &name, const std::string &topic);
+		Channel(const std::string &name);
 
 		void	setName(std::string name);
 		void	setPassword(std::string password);
@@ -35,6 +37,10 @@ class Channel
 		std::string getPassword() const;	
 		std::string getTopic() const;
 		std::vector<Client> getArrClients() const;
+
+		bool	isClient(const Client &client);
+		void	addClient(const Client &client);
+		void	addOperator(const Client &client);
 };
 
 #endif

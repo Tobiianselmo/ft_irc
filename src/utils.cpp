@@ -16,15 +16,16 @@ std::vector<std::string> split(const std::string &str, char delimiter)
 		}
 		tokens.push_back(str.substr(start));
 	}
+	else
+		tokens.push_back(str);
 	return tokens;
 }
 
 std::string    checkNickName(std::string str)
 {
-	std::cout << "STR :" << str << std::endl;
 	if (std::strchr("$:#&", str[0]) || std::isdigit(str[0])) // If NickName begins with "$:#&"
 	{
-		std::cout << "Error AAAAAAAAAAAA" << ERR_ERRONEUSNICKNAME << std::endl; 
+		std::cout << "Error " << ERR_ERRONEUSNICKNAME << std::endl; 
 		return NULL;
 	}
 	for (size_t i = 0; i < str.size(); i++)

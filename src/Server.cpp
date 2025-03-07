@@ -17,6 +17,15 @@ Server::Server(int port,const std::string &password)
 int Server::getPort() const { return this->_port; }
 int	Server::getServerSocket() const { return this->_serverSocket; }
 const std::string &Server::getPassword() const { return this->_password; }
+Channel *Server::getChannel(std::string name)
+{
+	for (size_t i = 0; i < _channels.size(); i++)
+	{
+		if (_channels[i].getName() == name)
+			return (&_channels[i]);
+	}
+	return (NULL);
+}
 
 void Server::setupServer()
 {
@@ -150,49 +159,7 @@ std::vector<std::string> Server::parsedInput(std::string str)
 	return(ret);
 }
 
-int Server::joinCommand(std::vector<std::string> arr, Client &client)
-{
-	(void)client;
-	if (arr.size() > 1)
-	{
-		if (!std::strchr("#&", arr[1][0]))
-			return (476); // Bad channel mask
-		std::cout << "Client " << _client[0].getNickName() << " has joined to server " <<
-		arr[1] << std::endl;
-	}
-	else
-		return (461); // Needs more params
-	return (0);
-}
-void Server::kickCommand(std::vector<std::string> arr,Client &client)
-{
-	std::vector<std::string> split_users;
-	std::string channel = arr[1];
-	size_t i = 0;
-	while(i < this->_channels.size())
-	{
-		if(this->_channels[i].getName() == channel)
-			break;
-		i++;
-	}
-	if(i == this->_channels.size())
-		std::cout << "Channel not found\n";
-	split_users = split(arr[2],',');
-	std::vector<Client> aux = this->_channels[i].getArrClients();
-	size_t j = 0;
-	size_t k;
-	while(j < split_users.size())
-	{
-		k = 0;
-		while(k < aux.size())
-		{
-			if(split_users[j] == aux[k].getNickName())
 
-			k++;
-		}
-		j++;
-	}
-}
 void Server::checkCommand(std::vector<std::string> arr, Client &client)
 {
 	std::vector<std::string> aux;
@@ -237,9 +204,9 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 	{
 		aux = split(arr[0],' ');
 		if (aux[0] == "JOIN")
-			std::cout << "El output del join es: " << joinCommand(aux, client) << std::endl;
+			std::cout << "El output del join es: " << joinCommand(arr[0], client) << std::endl;
 		else if(aux[0] == "KICK")
-			kickCommand(aux,client);
+			std::cout << "El output del kick es: " << kickCommand(aux,client) << std::endl;
 		else if (aux[0] == "MODE")
 		{	
 			std::cout << "Entra al MODE\n";

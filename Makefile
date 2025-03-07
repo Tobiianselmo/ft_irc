@@ -11,6 +11,8 @@ SRC = 	main.cpp \
 		Client.cpp \
 		utils.cpp \
 		Channel.cpp \
+		join.cpp \
+		kick.cpp \
 
 SRC_DIR = src/
 

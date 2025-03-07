@@ -22,12 +22,12 @@ Channel::~Channel()
 	std::cout << "Channel default destructor called." << std::endl;
 }
 
-Channel::Channel(const std::string &name, const std::string &topic)
+Channel::Channel(const std::string &name)
 {
 	std::cout << "Channel constructor with name and topic called." << std::endl;
 	_name = name;
 	_password = "";
-	_topic = topic;
+	_topic = "";
 	_users = 0;
 	_usersLimit = 10;
 	_inviteOnly = false;
@@ -52,3 +52,32 @@ std::string Channel::getPassword() const { return this->_password; }
 std::string Channel::getTopic() const { return this->_topic; }
 std::vector<Client> Channel::getArrClients() const {return this->_clients;}
 
+bool Channel::isClient(const Client &client)
+{
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (_clients[i].getClientSocket() == client.getClientSocket())
+			return true;
+	}
+	return false;
+}
+
+void Channel::addClient(const Client &client)
+{
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (_clients[i].getClientSocket() == client.getClientSocket())
+			return ;
+	}
+	_clients.push_back(client);
+}
+
+void Channel::addOperator(const Client &client)
+{
+	for (size_t i = 0; i < _operators.size(); i++)
+	{
+		if (_operators[i].getClientSocket() == client.getClientSocket())
+			return ;
+	}
+	_operators.push_back(client);
+}

@@ -17,9 +17,9 @@ class Server
 		std::string _password;
 
 		std::vector<struct pollfd >_fds;
-		std::vector<Client> _client;
+		// std::vector<Client> _client;
 		std::vector<Channel> _channels;
-		std::map<int, Client> _clientsMap;
+		std::map<int, Client *> _clientsMap;
 
 		sockaddr_in _serverAddress;
 	public:
@@ -28,13 +28,16 @@ class Server
 
 		int	getPort() const;
 		int	getServerSocket() const;
-		const std::string &getPassword() const;
-		Channel *getChannel(std::string name);
+		const std::string	&getPassword() const;
+		bool	isDuplicated(std::string name);
+		Channel	*getChannel(std::string name);
+
 
 		void	setupServer();
 		void	handleConnections();
 		void	newConnections();
 		void 	eventMsg(std::vector<struct pollfd> &fds, int i, Client &client);
+		void	authClient(std::vector<std::string> arr, Client &client);
 		void	checkCommand(std::vector<std::string> arr,Client &client);
 		std::vector<std::string>	parsedInput(std::string str);
 

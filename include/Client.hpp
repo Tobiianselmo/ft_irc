@@ -19,17 +19,16 @@ class Client
 		~Client();
 		Client &operator=(const Client &other);
 		Client(const Client &other);
-		Client(const std::string &nick, const std::string &user, const Server &server);
-		Client(int socket);
+		Client(int socket, Server &server);
 
 		void	setNickName(std::string nickname);
 		void	setUserName(std::string username);
+		void	setAuth(bool val);
 
-		const std::string &getNickName() const;
-		const std::string &getUserName() const;
+		const std::string	&getNickName() const;
+		const std::string	&getUserName() const;
 		int	getClientSocket() const;
+		bool	isAuth() const;
 };
-
-// std::ostream &operator<<(std::ostream &output, const Client &other);
 
 #endif

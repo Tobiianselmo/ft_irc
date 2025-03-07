@@ -2,6 +2,7 @@
 #define CHANNEL_HPP
 
 #include "Server.hpp"
+#include <set>
 
 class Client;
 

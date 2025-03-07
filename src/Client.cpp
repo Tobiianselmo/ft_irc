@@ -25,35 +25,24 @@ Client &Client::operator=(const Client &other)
 	return *this;
 }
 
-Client::Client(int socket)
+Client::Client(int socket, Server &server)
 {
 	this->_isAuth = false;
 	this->_nickName = "";
 	this->_userName = "";
 	this->_clientSocket = socket;
-	// this->_server = NULL;
-}
-
-Client::Client(const std::string &nick, const std::string &user, const Server &server)
-{
-	this->_nickName = nick;
-	this->_userName = user;
-	*_server = server;
+	this->_server = &server;
 }
 
 // Setters
 
 void	Client::setNickName(std::string nickname) { this->_nickName = nickname; }
 void	Client::setUserName(std::string username) { this->_userName = username; }
+void	Client::setAuth(bool val) { this->_isAuth = val; }
 
 // Getters
 
 const std::string &Client::getNickName() const { return this->_nickName; }
 const std::string &Client::getUserName() const { return this->_userName; }
 int	Client::getClientSocket() const { return this->_clientSocket; }
-
-// std::ostream &operator<<(std::ostream &output, const Client &other)
-// {
-
-// 	return output;
-// }
+bool Client::isAuth() const { return this->_isAuth; }

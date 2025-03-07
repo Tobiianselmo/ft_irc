@@ -3,6 +3,15 @@
 Server::~Server()
 {
 	close(this->_serverSocket);
+	std::map<int, Client *>::iterator it_beg = _clientsMap.begin();
+	std::map<int, Client *>::iterator it_end = _clientsMap.end();
+	std::cout << it_beg->second->getNickName() << std::endl;
+	while (it_beg != it_end)
+	{
+		delete it_beg->second;
+		it_beg++;
+	}
+	_clientsMap.clear();
 }
 
 Server::Server(int port,const std::string &password)
@@ -15,6 +24,16 @@ Server::Server(int port,const std::string &password)
 int Server::getPort() const { return this->_port; }
 int	Server::getServerSocket() const { return this->_serverSocket; }
 const std::string &Server::getPassword() const { return this->_password; }
+
+bool Server::isDuplicated(std::string name)
+{
+	for (size_t i = 1; i < _fds.size(); i++)
+	{
+		if (_clientsMap[_fds[i].fd]->getNickName() == name)
+			return true;
+	}
+	return false;
+}
 
 Channel *Server::getChannel(std::string name)
 {
@@ -84,7 +103,7 @@ void Server::handleConnections()
 				if (_fds[i].fd == _serverSocket)
 					newConnections();
 				else
-					eventMsg(_fds, i, _clientsMap[_fds[i].fd]);
+					eventMsg(_fds, i, *_clientsMap[_fds[i].fd]);
 			}
 		}
 	}
@@ -107,9 +126,8 @@ void Server::newConnections()
 
 	std::cout << "New client conected" << std::endl;
 
-	Client newClient(clientSocket);
+	Client *newClient = new Client(clientSocket, *this);
 	_clientsMap[clientSocket] = newClient;
-	// _client.push_back(newClient);
 
 	struct pollfd newPoll;
 
@@ -124,7 +142,6 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i, Client &client)
 	std::vector<std::string> arr;
 	char buffer[1024];
 	std::memset(buffer, 0, sizeof(buffer));
-
 	int bytes = recv(client.getClientSocket(), buffer, sizeof(buffer), 0);
 	if (bytes <= 0) // Comprobar el error en 0 y -1 por separado.
 	{
@@ -140,7 +157,10 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i, Client &client)
 		std::cout << "Error splitting buffer" << std::endl;
 		return ;
 	}
-	this->checkCommand(arr, client);
+	if (client.isAuth() == false)
+		authClient(arr, client);
+	else
+		checkCommand(arr, client);
 }
 
 static void removeCarriageReturn(std::string &str)
@@ -161,33 +181,50 @@ std::vector<std::string> Server::parsedInput(std::string str)
 	return(ret);
 }
 
-void Server::checkCommand(std::vector<std::string> arr, Client &client)
+void Server::authClient(std::vector<std::string> arr, Client &client)
 {
 	std::vector<std::string> aux;
 
-	if (arr.size() > 1) // First input with client data.
+	if (!std::strncmp(arr[0].c_str(), "PASS ", 5))
 	{
-		size_t j = 0;
-		size_t i = 0;
-		while (i < arr.size())
+		if (arr[0].c_str() + 5 != this->getPassword())
 		{
-			aux = split(arr[i], ' ');
-			while (j < aux.size())
-			{
-				if (aux[0] == "NICK")
-					// std::cout << "llega\n";
-					return ;
-				j++;
-			}
-			i++;
+			send(client.getClientSocket(), "Error: Incorrect Password\r\n", 28, 0);
+			return ;
 		}
 	}
-	else
+	else if (!std::strncmp(arr[0].c_str(), "NICK ", 5))
 	{
-		std::string cmd = arr[0].substr(0, arr[0].find(" "));
-		if (cmd == "JOIN")
-			std::cout << joinCommand(arr[0], client) << std::endl;
-		else
-			std::cout << "Command not valid." << std::endl;
+		std::string nick = checkNickName(arr[0].c_str() + 5);
+		if (nick.c_str() == NULL)
+			return ;
+		if (isDuplicated(nick) == true)
+		{
+			std::cout << "Error: NickName duplicated." << std::endl;
+			return ;
+		}
+		client.setNickName(nick);
+		client.setAuth(true);
 	}
+}
+
+void Server::checkCommand(std::vector<std::string> arr, Client &client)
+{
+	std::string cmd = arr[0].substr(0, arr[0].find(" "));
+	if (cmd == "JOIN")
+		std::cout << joinCommand(arr[0], client) << std::endl;
+	else if (cmd == "NICK") // Made only for a test
+	{
+		std::string nick = checkNickName(arr[0].c_str() + 5);
+		if (nick.c_str() == NULL)
+			return ;
+		if (isDuplicated(nick) == true)
+		{
+			std::cout << "Error: NickName duplicated." << std::endl;
+			return ;
+		}
+		client.setNickName(nick);
+	}
+	else
+		std::cout << "Command not valid." << std::endl;
 }

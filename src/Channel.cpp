@@ -24,7 +24,7 @@ Channel::~Channel()
 
 Channel::Channel(const std::string &name)
 {
-	std::cout << "Channel constructor with name and topic called." << std::endl;
+	std::cout << "Channel constructor with name called." << std::endl;
 	_name = name;
 	_password = "";
 	_topic = "";

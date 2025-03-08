@@ -38,21 +38,21 @@ class Channel
 		std::string getName() const;
 		std::string getPassword() const;	
 		std::string getTopic() const;
-		bool		getInvite() const;
-		void		getMode() const;
-		Client		*getClients(std::string nick);
+		bool		getInvite() const;//delif
+		void		getMode() const;//delfi
+		Client		*getClients(std::string nick);//delfi
 
 		bool	isClient(const Client &client);
 		void	addClient(const Client &client);
-		bool	isOperator(std::string nick) const;
+		bool	isOperator(std::string nick) const;//delfi
 		void	addOperator(const Client &client);
-		void	deleteOperators(const Client &client);
+		void	deleteOperators(const Client &client);//delfi
 		
-		void	printClients();
-		void	addInvite(const Client &client);
-		bool	isInvited(std::string nick) const;
-		void	printInvited();
-		void	printOperators();
+		void	printClients();//delfi
+		void	addInvite(const Client &client);//delfi
+		bool	isInvited(std::string nick) const;//delfi
+		void	printInvited();//delfi
+		void	printOperators();//delfi
 };
 
 #endif

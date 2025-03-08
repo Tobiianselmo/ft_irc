@@ -31,7 +31,7 @@ class Server
 		const std::string	&getPassword() const;
 		bool	isDuplicated(std::string name);
 		Channel	*getChannel(std::string name);
-		Client	*getClient(std::string nick);
+		Client	*getClient(std::string nick);//delfi
 
 		void	setupServer();
 		void	handleConnections();
@@ -42,11 +42,11 @@ class Server
 		std::vector<std::string>	parsedInput(std::string str);
 
 		int		joinCommand(std::string line, Client &client);
-		int		inviteCommand(std::string line, Client &client);
+		int		inviteCommand(std::string line, Client &client);//delfi
 
-		int		modes(std::string &line, Client &client);
-		int		addMode(std::vector<std::string> &line, Client &client);
-		int		delMode(std::vector<std::string> &line, Client &client);
+		int		modes(std::string &line, Client &client);//delif
+		int		addMode(std::vector<std::string> &line, Client &client);//delfi
+		int		delMode(std::vector<std::string> &line, Client &client);//delfi
 };
 
 #endif

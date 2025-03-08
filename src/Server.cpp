@@ -225,6 +225,10 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 		}
 		client.setNickName(nick);
 	}
+	else if (cmd == "MODE")
+		this->modes(arr[0], client);
+	else if (cmd == "INVITE")
+		this->inviteCommand(arr[0], client);
 	else
 		std::cout << "Command not valid." << std::endl;
 }

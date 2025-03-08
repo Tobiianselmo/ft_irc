@@ -16,6 +16,8 @@ Client.cpp \
 Channel.cpp \
 utils.cpp \
 join.cpp \
+mode.cpp \
+invite.cpp
 
 SRC = $(addprefix src/, $(FILES))
 

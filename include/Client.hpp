@@ -27,8 +27,8 @@ class Client
 
 		const std::string	&getNickName() const;
 		const std::string	&getUserName() const;
-		int	getClientSocket() const;
-		bool	isAuth() const;
+		int					getClientSocket() const;
+		bool				isAuth() const;
 };
 
 #endif

@@ -41,6 +41,21 @@ void	Channel::addInvite(const Client &client)
 	this->_invites.push_back(client);
 }
 
+void	Channel::printChannel()
+{
+	std::cout << "Channel: " << this->getName() << std::endl;
+	std::cout << "- Password: " << this->getPassword() << std::endl;
+	std::cout << "- Topic: " << this->getTopic() << std::endl;
+	std::cout << "- Invite mode: ";
+	this->getMode();
+	std::cout << "Clients List: " << std::endl;
+	this->printClients();
+	std::cout << "Operators List: " << std::endl;
+	this->printOperators();
+	std::cout << "Invited List: " << std::endl;
+	this->printInvited();
+}
+
 void	Channel::printClients()
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)

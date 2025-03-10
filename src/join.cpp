@@ -33,16 +33,38 @@ int Server::joinCommand(std::string line, Client &client)
 		}
 		else
 		{
-			if (tmp->isClient(client) == true)
+			if (tmp->isClient(client.getNickName()) == true)
 				break ;
-			if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || tmp->getInvite() == false)//para verificar si el canal es invite only y si el cliente esta invitado o si no es invite only asi puede joinearse
+			if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false)) //para verificar si el canal es invite only y si el cliente esta invitado o si no es invite only asi puede joinearse
+			{
 				tmp->addClient(client);
+				std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
+			}
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
 			{
 				std::cerr << "Channel " << tmp->getName() << " is an Invite Only Channel." << std::endl; //chequear error y eliminar mensaje
 				return (ERR_INVITEONLYCHAN);
 			}
-			std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
+			else if (tmp->hasPassword() == true) // verificar si el canal es privado y le ha pasado la contraseña correcta.
+			{
+				bool added = false;
+				for (size_t i = 0; i < keyList.size(); i++)
+				{
+					if (tmp->getPassword() == keyList[i])
+					{
+						tmp->addClient(client);
+						added = true;
+					}
+				}
+				if (added == false)
+				{
+					std::cout << "Error: client has not the correct key" << std::endl;
+					return (ERR_BADCHANNELKEY);
+				}
+				else
+					std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
+				}
+			tmp->printChannel();
 		}
 	}
 	return (0);

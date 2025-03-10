@@ -34,20 +34,24 @@ class Channel
 		void	setPassword(std::string password);
 		void	setTopic(std::string topic);
 		void	setMode(std::string mode, bool choice);
+		void	setHasPassword(bool value);
 		
 		std::string getName() const;
 		std::string getPassword() const;	
 		std::string getTopic() const;
+		bool		hasPassword() const;
 		bool		getInvite() const;//delif
 		void		getMode() const;//delfi
 		Client		*getClients(std::string nick);//delfi
 
 		bool	isClient(const Client &client);
+		bool	isClient(const std::string &name);
 		void	addClient(const Client &client);
 		bool	isOperator(std::string nick) const;//delfi
 		void	addOperator(const Client &client);
 		void	deleteOperators(const Client &client);//delfi
 		
+		void	printChannel();
 		void	printClients();//delfi
 		void	addInvite(const Client &client);//delfi
 		bool	isInvited(std::string nick) const;//delfi

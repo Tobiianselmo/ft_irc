@@ -44,6 +44,7 @@ Channel::Channel(const std::string &name)
 void Channel::setName(std::string name) { this->_name = name; }
 void Channel::setPassword(std::string password) { this->_password = password; }
 void Channel::setTopic(std::string topic) { this->_topic = topic; }
+void Channel::setHasPassword(bool value) { this->_hasPassword = value; }
 
 // Getters
 
@@ -51,11 +52,23 @@ std::string Channel::getName() const { return this->_name; }
 std::string Channel::getPassword() const { return this->_password; }
 std::string Channel::getTopic() const { return this->_topic; }
 
+bool Channel::hasPassword() const { return this->_hasPassword; }
+
 bool Channel::isClient(const Client &client)
 {
 	for (size_t i = 0; i < _clients.size(); i++)
 	{
 		if (_clients[i].getClientSocket() == client.getClientSocket())
+			return true;
+	}
+	return false;
+}
+
+bool Channel::isClient(const std::string &name)
+{
+	for (size_t i = 0; i < _clients.size(); i++)
+	{
+		if (_clients[i].getNickName() == name)
 			return true;
 	}
 	return false;

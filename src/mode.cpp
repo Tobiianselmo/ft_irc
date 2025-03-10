@@ -44,6 +44,19 @@ int	Server::addMode(std::vector<std::string> &line, Client &client)
 		tmp->addOperator(*clientTmp);
 		tmp->printOperators();
 	}
+	else if (line[2] == "+k") // hecho para testear el join (tobi)
+	{
+		if (line.size() < 4)
+			return (ERR_NEEDMOREPARAMS);
+		else if (line.size() > 4) // si la password tenia espacios
+			return (ERR_INVALIDMODEPARAM);
+		if (tmp->isOperator(client.getNickName()) == true)
+		{
+			tmp->setHasPassword(true);
+			tmp->setPassword(line[3]);
+			std::cout << "Password has changed to " << line[3] << std::endl;
+		}
+	}
 	return (0);
 }
 

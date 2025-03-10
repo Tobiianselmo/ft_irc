@@ -38,6 +38,7 @@ class Channel
 		std::string getName() const;
 		std::string getPassword() const;	
 		std::string getTopic() const;
+		std::vector<Client> getArrClients() const;
 		bool		getInvite() const;//delif
 		void		getMode() const;//delfi
 		Client		*getClients(std::string nick);//delfi
@@ -47,6 +48,7 @@ class Channel
 		bool	isOperator(std::string nick) const;//delfi
 		void	addOperator(const Client &client);
 		void	deleteOperators(const Client &client);//delfi
+		void	deleteClient(const Client &client);
 		
 		void	printClients();//delfi
 		void	addInvite(const Client &client);//delfi

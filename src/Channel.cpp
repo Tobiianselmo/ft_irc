@@ -50,6 +50,7 @@ void Channel::setTopic(std::string topic) { this->_topic = topic; }
 std::string Channel::getName() const { return this->_name; }
 std::string Channel::getPassword() const { return this->_password; }
 std::string Channel::getTopic() const { return this->_topic; }
+std::vector<Client> Channel::getArrClients() const {return this->_clients;}
 
 bool Channel::isClient(const Client &client)
 {

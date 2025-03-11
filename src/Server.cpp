@@ -23,7 +23,10 @@ Server::Server(int port,const std::string &password)
 
 int Server::getPort() const { return this->_port; }
 int	Server::getServerSocket() const { return this->_serverSocket; }
-const std::string &Server::getPassword() const { return this->_password; }
+const std::string	&Server::getPassword() const { return this->_password; }
+const std::string	&Server::getHostName() const { return this->_hostName; }
+
+void	Server::setHostName(std::string hostname) { this->_hostName = hostname; }
 
 bool Server::isDuplicated(std::string name)
 {
@@ -47,6 +50,11 @@ Channel *Server::getChannel(std::string name)
 
 void Server::setupServer()
 {
+	std::vector<char> buffer(100);
+	gethostname(buffer.data(), buffer.size());
+	this->setHostName(buffer.data());
+
+	std::cout << "hostname:" << buffer.data() << std::endl;
 	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_serverSocket == -1)
 		throw std::runtime_error("Error creating server socket");

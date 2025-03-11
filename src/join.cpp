@@ -29,7 +29,8 @@ int Server::joinCommand(std::string line, Client &client)
 			newChannel.addClient(client);
 			newChannel.addOperator(client);
 			_channels.push_back(newChannel);
-			std::cout << client.getNickName() << " has correctly join " << newChannel.getName() << std::endl;
+			// std::cout << client.getNickName() << " has correctly join " << newChannel.getName() << std::endl;
+			this->createResponse(RPL_NAMREPLY, client, newChannel.getName());
 		}
 		else
 		{
@@ -39,6 +40,7 @@ int Server::joinCommand(std::string line, Client &client)
 			{
 				tmp->addClient(client);
 				std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
+				this->createResponse(RPL_NAMREPLY, client, tmp->getName());
 			}
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
 			{
@@ -64,7 +66,7 @@ int Server::joinCommand(std::string line, Client &client)
 				else
 					std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
 				}
-			tmp->printChannel();
+			// tmp->printChannel();
 		}
 	}
 	return (0);

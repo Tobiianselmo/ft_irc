@@ -14,7 +14,7 @@ void	Channel::getMode() const
 
 bool	Channel::getInvite() const { return this->_inviteOnly; }
 
-Client	*Channel::getClients(std::string nick)
+Client	*Channel::getClient(std::string nick)
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
 	{
@@ -38,7 +38,7 @@ int	Server::addMode(std::vector<std::string> &line, Client &client)
 	{
 		if (line.size() != 4)
 			return (ERR_NEEDMOREPARAMS);
-		Client *clientTmp = tmp->getClients(line[3]);//si el cliente que se quiere hacer operador es del canal
+		Client *clientTmp = tmp->getClient(line[3]);//si el cliente que se quiere hacer operador es del canal
 		if (!clientTmp)
 			return (ERR_NOSUCHNICK);//poner mensaje de error
 		tmp->addOperator(*clientTmp);
@@ -86,7 +86,7 @@ int	Server::delMode(std::vector<std::string> &line, Client &client)
 			return (ERR_NEEDMOREPARAMS);
 		if (tmp->isOperator(client.getNickName()) == false)//si el cliente que lo pide es operador
 			return (ERR_NOOPERHOST);
-		Client *clientTmp = tmp->getClients(line[3]);
+		Client *clientTmp = tmp->getClient(line[3]);
 		if (!clientTmp)
 			return (ERR_NOSUCHNICK);
 		if (tmp->isOperator(clientTmp->getNickName()))

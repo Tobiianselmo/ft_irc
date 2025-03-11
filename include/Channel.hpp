@@ -43,7 +43,7 @@ class Channel
 		std::vector<Client> getArrClients() const;
 		bool		getInvite() const;//delif
 		void		getMode() const;//delfi
-		Client		*getClients(std::string nick);//delfi
+		Client		*getClient(std::string nick);//delfi
 
 		bool	isClient(const Client &client);
 		bool	isClient(const std::string &name);

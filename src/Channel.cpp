@@ -51,7 +51,7 @@ void Channel::setHasPassword(bool value) { this->_hasPassword = value; }
 std::string Channel::getName() const { return this->_name; }
 std::string Channel::getPassword() const { return this->_password; }
 std::string Channel::getTopic() const { return this->_topic; }
-std::vector<Client> Channel::getArrClients() const {return this->_clients;}
+std::vector<Client> Channel::getArrClients() const { return this->_clients; }
 
 bool Channel::hasPassword() const { return this->_hasPassword; }
 

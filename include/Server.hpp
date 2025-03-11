@@ -16,6 +16,8 @@ class Server
 		int _serverSocket;
 		std::string _password;
 
+		std::string _hostName;
+
 		std::vector<struct pollfd >_fds;
 		// std::vector<Client> _client;
 		std::vector<Channel> _channels;
@@ -29,11 +31,17 @@ class Server
 		int	getPort() const;
 		int	getServerSocket() const;
 		const std::string	&getPassword() const;
+		const std::string	&getHostName() const;
 		bool	isDuplicated(std::string name);
 		Channel	*getChannel(std::string name);
 		Client	*getClient(std::string nick);//delfi
 
+		void	createResponse(int err, Client &client, const std::string &channelName);
+		std::string	rpl_namreply(Client &client, Channel *channel);
+		std::string	rpl_endofnames(Client &client, Channel *channel);
+
 		void	setupServer();
+		void	setHostName(std::string hostname);
 		void	handleConnections();
 		void	newConnections();
 		void 	eventMsg(std::vector<struct pollfd> &fds, int i, Client &client);

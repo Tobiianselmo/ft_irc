@@ -11,7 +11,7 @@ int Server::kickCommand(std::string str,Client &client)
 		return(ERR_NOSUCHCHANNEL);
 	if(!tmp->isOperator(client.getNickName()))
 		return(ERR_CHANOPRIVSNEEDED);
-	Client *clientTmp = tmp->getClients(client.getNickName());
+	Client *clientTmp = tmp->getClient(client.getNickName());
 	if(!clientTmp)
 		return(ERR_NOTONCHANNEL);
 	std::vector<std::string> split_users = split(arr[3].c_str() + 1,',');
@@ -27,7 +27,7 @@ int Server::kickCommand(std::string str,Client &client)
 	}
 	for(size_t i = 0;i < split_users.size(); i++)
 	{
-		clientTmp = tmp->getClients(split_users[i]);
+		clientTmp = tmp->getClient(split_users[i]);
 		if(!clientTmp)
 			std::cout << "ERR_USERNOTINCHANNEL\n";
 		else

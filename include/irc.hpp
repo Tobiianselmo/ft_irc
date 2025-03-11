@@ -151,6 +151,6 @@ typedef enum
 } NUMERICS;
 
 std::vector<std::string> split(const std::string &str, char delimiter);
-std::string	checkNickName(std::string str);
+const char *checkNickName(const char *str);
 
 #endif

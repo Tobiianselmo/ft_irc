@@ -21,14 +21,14 @@ std::vector<std::string> split(const std::string &str, char delimiter)
 	return tokens;
 }
 
-std::string checkNickName(std::string str)
+const char *checkNickName(const char *str)
 {
 	if (std::strchr("$:#&", str[0]) || std::isdigit(str[0]))
 	{
 		std::cout << "Error " << ERR_ERRONEUSNICKNAME << std::endl; 
 		return NULL;
 	}
-	for (size_t i = 0; i < str.size(); i++)
+	for (size_t i = 0; i < std::strlen(str); i++)
 	{
 		if (std::strchr(" ,*?!@.", str[i]))
 		{

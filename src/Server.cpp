@@ -195,8 +195,8 @@ void Server::authClient(std::vector<std::string> arr, Client &client)
 	}
 	else if (!std::strncmp(arr[0].c_str(), "NICK ", 5))
 	{
-		std::string nick = checkNickName(arr[0].c_str() + 5);
-		if (nick.c_str() == NULL)
+		const char *nick = checkNickName(arr[0].c_str() + 5);
+		if (nick == NULL)
 			return ;
 		if (isDuplicated(nick) == true)
 		{

@@ -211,9 +211,7 @@ void Server::authClient(std::vector<std::string> arr, Client &client)
 void Server::checkCommand(std::vector<std::string> arr, Client &client)
 {
 	std::string cmd = arr[0].substr(0, arr[0].find(" "));
-	if (cmd == "JOIN")
-		std::cout << joinCommand(arr[0], client) << std::endl;
-	else if (cmd == "NICK") // Made only for a test
+	if (cmd == "NICK") // Made only for a test
 	{
 		std::string nick = checkNickName(arr[0].c_str() + 5);
 		if (nick.c_str() == NULL)
@@ -225,6 +223,8 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 		}
 		client.setNickName(nick);
 	}
+	else if (cmd == "JOIN")
+		std::cout << joinCommand(arr[0], client) << std::endl;
 	else if (cmd == "MODE")
 		this->modes(arr[0], client);
 	else if (cmd == "INVITE")

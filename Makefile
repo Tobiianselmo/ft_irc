@@ -17,7 +17,9 @@ Channel.cpp \
 utils.cpp \
 join.cpp \
 mode.cpp \
-invite.cpp
+invite.cpp \
+kick.cpp \
+topic.cpp \
 
 SRC = $(addprefix src/, $(FILES))
 

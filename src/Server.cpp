@@ -225,6 +225,8 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 	}
 	else if (cmd == "JOIN")
 		std::cout << joinCommand(arr[0], client) << std::endl;
+	else if (cmd == "KICK")
+		std::cout << kickCommand(arr[0],client);
 	else if (cmd == "MODE")
 		this->modes(arr[0], client);
 	else if (cmd == "INVITE")

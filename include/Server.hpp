@@ -41,6 +41,7 @@ class Server
 		void	checkCommand(std::vector<std::string> arr,Client &client);
 		std::vector<std::string>	parsedInput(std::string str);
 		int		kickCommand(std::string str,Client &client);
+		int		topicCommand(std::string str,Client &client);
 
 		int		joinCommand(std::string line, Client &client);
 		int		inviteCommand(std::string line, Client &client);//delfi

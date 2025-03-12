@@ -184,12 +184,12 @@ std::vector<std::string> Server::parsedInput(std::string str)
 void Server::authClient(std::vector<std::string> arr, Client &client)
 {
 	std::vector<std::string> aux;
-
 	if (!std::strncmp(arr[0].c_str(), "PASS ", 5))
 	{
 		if (arr[0].c_str() + 5 != this->getPassword())
 		{
-			send(client.getClientSocket(), "Error: Incorrect Password\r\n", 28, 0);
+			sendClient(client,"Error: Incorrect Password\r\n");
+			//send(client.getClientSocket(), "Error: Incorrect Password\r\n", 28, 0);
 			return ;
 		}
 	}
@@ -205,6 +205,11 @@ void Server::authClient(std::vector<std::string> arr, Client &client)
 		}
 		client.setNickName(nick);
 		client.setAuth(true);
+		if (!std::strncmp(arr[1].c_str(),"USER ", 5))
+		{
+			std::vector<std::string> split_user = split(arr[1],' ');
+			client.setUserName(split_user[1]);
+		}
 	}
 }
 
@@ -227,6 +232,8 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 	}
 	else if (cmd == "KICK")
 		std::cout << kickCommand(arr[0],client);
+	else if (cmd == "TOPIC")
+		std::cout << topicCommand(arr[0],client);
 	else if (cmd == "MODE")
 		this->modes(arr[0], client);
 	else if (cmd == "INVITE")

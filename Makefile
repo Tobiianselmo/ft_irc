@@ -20,6 +20,7 @@ mode.cpp \
 invite.cpp \
 kick.cpp \
 topic.cpp \
+send.cpp \
 
 SRC = $(addprefix src/, $(FILES))
 

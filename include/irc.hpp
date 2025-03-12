@@ -16,6 +16,9 @@
 #include <vector>
 #include <map>
 
+class Channel;
+class Client;
+
 typedef enum
 {
 	RPL_WELCOME = 001,
@@ -152,5 +155,8 @@ typedef enum
 
 std::vector<std::string> split(const std::string &str, char delimiter);
 std::string	checkNickName(std::string str);
-
+std::string join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
+std::string makeString(std::string channel,std::string client,std::string str,int err,std::string username);
+void		sendClient(Client &client,const char *str);
+void		sendChannel(Channel &channel,std::string str);
 #endif

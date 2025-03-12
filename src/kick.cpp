@@ -3,33 +3,42 @@
 
 int Server::kickCommand(std::string str,Client &client)
 {
+	std::string msg;
 	std::vector<std::string> arr = split(str,' ');
-	if (arr.size() != 3)
+	if (arr.size() <= 3)
 		return (ERR_NEEDMOREPARAMS);
 	Channel *tmp = getChannel(arr[2]);
 	if(!tmp)
+	{
+		msg = makeString(arr[2],client.getUserName(),"No such channel\r\n",ERR_NOSUCHCHANNEL,".");
+		sendClient(client, msg.c_str());
 		return(ERR_NOSUCHCHANNEL);
+	}
 	if(!tmp->isOperator(client.getNickName()))
+	{
+		msg = makeString(arr[2],client.getUserName(),":You're not channel operator\r\n",ERR_CHANOPRIVSNEEDED,".");
+		sendClient(client, msg.c_str());
 		return(ERR_CHANOPRIVSNEEDED);
+	}
 	Client *clientTmp = tmp->getClients(client.getNickName());
 	if(!clientTmp)
+	{
+		msg = makeString(arr[2],client.getUserName(),":You're not on that channel\r\n",ERR_NOTONCHANNEL,".");
+		sendClient(client, msg.c_str());
 		return(ERR_NOTONCHANNEL);
+	}
 	std::vector<std::string> split_users = split(arr[3].c_str() + 1,',');
 	std::string reason;
 	if(arr[4].c_str())
-	{
-		for(size_t i = 4; i < arr.size(); i++)
-		{
-			reason += arr[i];
-			if (i != arr.size() - 1)
-				reason += ' ';
-		}
-	}
+		reason = join(arr.begin() + 4, " ", arr.size() - 4);
 	for(size_t i = 0;i < split_users.size(); i++)
 	{
 		clientTmp = tmp->getClients(split_users[i]);
 		if(!clientTmp)
-			std::cout << "ERR_USERNOTINCHANNEL\n";
+		{
+			msg = makeString(arr[2],client.getUserName(),":They aren't on that channel\r\n",ERR_USERNOTINCHANNEL,client.getNickName());
+			sendClient(client,msg.c_str());
+		}
 		else
 		{
 			if(reason.c_str())

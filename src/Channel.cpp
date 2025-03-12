@@ -35,6 +35,7 @@ Channel::Channel(const std::string &name)
 	_externMessages = false;
 	_hasLimit = false;
 	_hasPassword = false;
+	_hasTopic = false;
 
 	// Falta inicializar _clients
 }
@@ -43,8 +44,8 @@ Channel::Channel(const std::string &name)
 
 void Channel::setName(std::string name) { this->_name = name; }
 void Channel::setPassword(std::string password) { this->_password = password; }
-void Channel::setTopic(std::string topic) { this->_topic = topic; }
 void Channel::setHasPassword(bool value) { this->_hasPassword = value; }
+void Channel::setTopic(std::string topic,bool val) { this->_topic = topic; this->_hasTopic = val; }
 
 // Getters
 
@@ -54,6 +55,8 @@ std::string Channel::getTopic() const { return this->_topic; }
 std::vector<Client> Channel::getArrClients() const { return this->_clients; }
 
 bool Channel::hasPassword() const { return this->_hasPassword; }
+
+bool Channel::isTopic() const {return this->_hasTopic;}
 
 bool Channel::isClient(const Client &client)
 {

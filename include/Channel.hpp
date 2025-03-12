@@ -21,6 +21,7 @@ class Channel
 		bool _externMessages;
 		bool _hasLimit;
 		bool _hasPassword;
+		bool _hasTopic;
 
 		std::vector<Client>	_invites;
 		std::vector<Client> _clients;
@@ -32,7 +33,7 @@ class Channel
 
 		void	setName(std::string name);
 		void	setPassword(std::string password);
-		void	setTopic(std::string topic);
+		void	setTopic(std::string topic,bool val);
 		void	setMode(std::string mode, bool choice);
 		void	setHasPassword(bool value);
 		
@@ -44,6 +45,7 @@ class Channel
 		bool		getInvite() const;//delif
 		void		getMode() const;//delfi
 		Client		*getClient(std::string nick);//delfi
+		bool		isTopic() const;
 
 		bool	isClient(const Client &client);
 		bool	isClient(const std::string &name);

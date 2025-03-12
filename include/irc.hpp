@@ -16,6 +16,9 @@
 #include <vector>
 #include <map>
 
+class Channel;
+class Client;
+
 typedef enum
 {
 	RPL_SUCCESS = 000,
@@ -110,7 +113,7 @@ typedef enum
 	ERR_ERRONEUSNICKNAME = 432,
 	// ERR_NICKNAMEINUSE = 433,
 	// ERR_NICKCOLLISION = 436,
-	// ERR_USERNOTINCHANNEL = 441,
+	ERR_USERNOTINCHANNEL = 441,
 	ERR_NOTONCHANNEL = 442,
 	// ERR_USERONCHANNEL = 443,
 	// ERR_NOTREGISTERED = 451,
@@ -158,4 +161,9 @@ const char *checkNickName(const char *str);
 std::string rpl_namreply(Server *server, Client &client, Channel *channel);
 std::string rpl_endofnames(Server *server, Client &client, Channel *channel);
 
+std::string	checkNickName(std::string str);
+std::string join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
+std::string makeString(std::string channel,std::string client,std::string str,int err,std::string username);
+void		sendClient(Client &client,const char *str);
+void		sendChannel(Channel &channel,std::string str);
 #endif

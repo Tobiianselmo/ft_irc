@@ -51,10 +51,10 @@ Channel *Server::getChannel(std::string name)
 void Server::setupServer()
 {
 	std::vector<char> buffer(100);
-	gethostname(buffer.data(), buffer.size());
+	if (gethostname(buffer.data(), buffer.size()) == -1)
+		throw std::runtime_error("Error getting hostname");
 	this->setHostName(buffer.data());
 
-	std::cout << "hostname:" << buffer.data() << std::endl;
 	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_serverSocket == -1)
 		throw std::runtime_error("Error creating server socket");

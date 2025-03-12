@@ -1,12 +1,11 @@
 #include "../include/Server.hpp"
 
-std::string Server::rpl_namreply(Client &client, Channel *channel)
+std::string rpl_namreply(Server *server, Client &client, Channel *channel)
 {
-	std::string symbol = "=";
+	// std::string symbol = "=";
 	std::string response;
 	std::string clientsList;
 	std::vector<Client> clients;
-	// std::cout << &channel << std::endl;
 	clients = channel->getArrClients();
 	
 	for (size_t i = 0; i < clients.size(); i++)
@@ -16,16 +15,15 @@ std::string Server::rpl_namreply(Client &client, Channel *channel)
 		else
 			clientsList += clients[i].getNickName() + " ";
 	}
-	response += ":" + this->getHostName() + " 353 " + client.getNickName() + " " + symbol + " " + channel->getName() + " :" + clientsList + "\r\n";
-	// std::cout << response << std::endl;
+	response += ":" + server->getHostName() + " 353 " + client.getNickName() + " = " + channel->getName() + " :" + clientsList + "\r\n";
 	return response;
 }
 
-std::string Server::rpl_endofnames(Client &client, Channel *channel)
+std::string rpl_endofnames(Server *server, Client &client, Channel *channel)
 {
 	std::string response;
 
-	response += ":" + this->getHostName() + " 366 " + client.getNickName() + " " + channel->getName() + " :" + channel->getTopic() + "\r\n";
+	response = ":" + server->getHostName() + " 366 " + client.getNickName() + " " + channel->getName() + " :End of /NAMES list\r\n";
 	return response;
 }
 
@@ -33,21 +31,23 @@ void Server::createResponse(int err, Client &client, const std::string &channelN
 {
 	std::string clientNickName = client.getNickName();
 	std::string response;
-	std::string second;
 
 	switch (err)
 	{
-		case RPL_NAMREPLY:
-		{
-			// std::cout << "llega" << std::endl;
-			response = this->rpl_namreply(client, this->getChannel(channelName));
-			send(client.getClientSocket(), response.c_str(), response.size(), 0);
-			// std::cout << response << std::endl;
-			second = this->rpl_endofnames(client, this->getChannel(channelName));
-			send(client.getClientSocket(), second.c_str(), second.size(), 0);
+		case RPL_WELCOME:
+			response = "";
 			break ;
-		}	
+		case RPL_SUCCESS:
+			response = "";
+			break ;
+		case RPL_NAMREPLY:
+			response = rpl_namreply(this, client, this->getChannel(channelName));
+			break ;
+		case RPL_ENDOFNAMES:
+			response = rpl_endofnames(this, client, this->getChannel(channelName));
+			break ;
 		default:
 			std::cout << "Ningun error correcto\n";
 	}
+	send(client.getClientSocket(), response.c_str(), response.size(), 0);
 }

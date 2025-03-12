@@ -37,8 +37,6 @@ class Server
 		Client	*getClient(std::string nick);//delfi
 
 		void	createResponse(int err, Client &client, const std::string &channelName);
-		std::string	rpl_namreply(Client &client, Channel *channel);
-		std::string	rpl_endofnames(Client &client, Channel *channel);
 
 		void	setupServer();
 		void	setHostName(std::string hostname);

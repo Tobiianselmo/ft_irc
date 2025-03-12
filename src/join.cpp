@@ -5,7 +5,7 @@ int Server::joinCommand(std::string line, Client &client)
 	std::vector<std::string> parameters = split(line, ' ');
 
 	if (parameters.size() < 2)
-		return (461); // ERR_NEEDMOREPARAMS
+		this->createResponse(ERR_NEEDMOREPARAMS, client, NULL);
 
 	std::vector<std::string> channelList = split(parameters[1], ',');
 	std::vector<std::string> keyList;
@@ -20,7 +20,7 @@ int Server::joinCommand(std::string line, Client &client)
 		std::string channelName = channelList[i];
 
 		if (channelName.empty() || !std::strchr("#&", channelName[0]))
-			return (476); // ERR_BADCHANMASK
+			this->createResponse(ERR_BADCHANMASK, client, tmp->getName());
 		
 		tmp = this->getChannel(channelName);
 		if (!tmp)
@@ -30,7 +30,9 @@ int Server::joinCommand(std::string line, Client &client)
 			newChannel.addOperator(client);
 			_channels.push_back(newChannel);
 			// std::cout << client.getNickName() << " has correctly join " << newChannel.getName() << std::endl;
+			this->createResponse(RPL_SUCCESS, client, newChannel.getName());
 			this->createResponse(RPL_NAMREPLY, client, newChannel.getName());
+			this->createResponse(RPL_ENDOFNAMES, client, newChannel.getName());
 		}
 		else
 		{
@@ -40,12 +42,14 @@ int Server::joinCommand(std::string line, Client &client)
 			{
 				tmp->addClient(client);
 				std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
+				this->createResponse(RPL_SUCCESS, client, tmp->getName());
 				this->createResponse(RPL_NAMREPLY, client, tmp->getName());
+				this->createResponse(RPL_ENDOFNAMES, client, tmp->getName());
 			}
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
 			{
 				std::cerr << "Channel " << tmp->getName() << " is an Invite Only Channel." << std::endl; //chequear error y eliminar mensaje
-				return (ERR_INVITEONLYCHAN);
+				this->createResponse(ERR_INVITEONLYCHAN, client, tmp->getName());
 			}
 			else if (tmp->hasPassword() == true) // verificar si el canal es privado y le ha pasado la contraseña correcta.
 			{
@@ -54,19 +58,21 @@ int Server::joinCommand(std::string line, Client &client)
 				{
 					if (tmp->getPassword() == keyList[i])
 					{
-						tmp->addClient(client);
 						added = true;
+						tmp->addClient(client);
+						this->createResponse(RPL_SUCCESS, client, tmp->getName());
+						this->createResponse(RPL_NAMREPLY, client, tmp->getName());
+						this->createResponse(RPL_ENDOFNAMES, client, tmp->getName());
 					}
 				}
 				if (added == false)
 				{
 					std::cout << "Error: client has not the correct key" << std::endl;
-					return (ERR_BADCHANNELKEY);
+					this->createResponse(ERR_BADCHANNELKEY, client, tmp->getName());
 				}
 				else
 					std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
 				}
-			// tmp->printChannel();
 		}
 	}
 	return (0);

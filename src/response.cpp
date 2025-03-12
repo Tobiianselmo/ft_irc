@@ -15,7 +15,7 @@ std::string rpl_namreply(Server *server, Client &client, Channel *channel)
 		else
 			clientsList += clients[i].getNickName() + " ";
 	}
-	response += ":" + server->getHostName() + " 353 " + client.getNickName() + " = " + channel->getName() + " :" + clientsList + "\r\n";
+	response = ":" + server->getHostName() + " 353 " + client.getNickName() + " = " + channel->getName() + " :" + clientsList + "\r\n";
 	return response;
 }
 
@@ -34,11 +34,11 @@ void Server::createResponse(int err, Client &client, const std::string &channelN
 
 	switch (err)
 	{
-		case RPL_WELCOME:
+		case ERR_NEEDMOREPARAMS:
 			response = "";
 			break ;
-		case RPL_SUCCESS:
-			response = "";
+		case RPL_JOIN:
+			response = ":" + client.getNickName() + " JOIN " + channelName + "\r\n";
 			break ;
 		case RPL_NAMREPLY:
 			response = rpl_namreply(this, client, this->getChannel(channelName));
@@ -47,7 +47,7 @@ void Server::createResponse(int err, Client &client, const std::string &channelN
 			response = rpl_endofnames(this, client, this->getChannel(channelName));
 			break ;
 		default:
-			std::cout << "Ningun error correcto\n";
+			response = "";
 	}
 	send(client.getClientSocket(), response.c_str(), response.size(), 0);
 }

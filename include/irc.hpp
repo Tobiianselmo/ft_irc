@@ -16,12 +16,13 @@
 #include <vector>
 #include <map>
 
+class Server;
 class Channel;
 class Client;
 
 typedef enum
 {
-	RPL_SUCCESS = 000,
+	RPL_JOIN = 000,
 	RPL_WELCOME = 001,
 	// RPL_YOURHOST = 002,
 	// RPL_CREATED = 003,
@@ -66,9 +67,9 @@ typedef enum
 	// RPL_CHANNELMODEIS = 324,
 	// RPL_CREATIONTIME = 329,
 	// RPL_WHOISACCOUNT = 330,
-	// RPL_NOTOPIC = 331,
-	// RPL_TOPIC = 332,
-	// RPL_TOPICWHOTIME = 333,
+	RPL_NOTOPIC = 331,
+	RPL_TOPIC = 332,
+	RPL_TOPICWHOTIME = 333,
 	// RPL_INVITELIST = 336,
 	// RPL_ENDOFINVITELIST = 337,
 	// RPL_WHOISACTUALLY = 338,
@@ -157,13 +158,14 @@ typedef enum
 std::vector<std::string> split(const std::string &str, char delimiter);
 const char *checkNickName(const char *str);
 
+
+std::string join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
+std::string makeString(std::string channel,std::string client,std::string str,int err,std::string username);
+
 // RESPONSES
+void		sendClient(Client &client,const char *str);
+void		sendMsgToChannel(Channel *channel, std::string msg);
 std::string rpl_namreply(Server *server, Client &client, Channel *channel);
 std::string rpl_endofnames(Server *server, Client &client, Channel *channel);
 
-std::string	checkNickName(std::string str);
-std::string join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
-std::string makeString(std::string channel,std::string client,std::string str,int err,std::string username);
-void		sendClient(Client &client,const char *str);
-void		sendChannel(Channel &channel,std::string str);
 #endif

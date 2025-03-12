@@ -15,7 +15,7 @@ int Server::topicCommand(std::string str,Client &client)
 		else
 			return(RPL_NOTOPIC);
 	}
-	Client *clientTmp = tmp->getClients(client.getNickName());
+	Client *clientTmp = tmp->getClient(client.getNickName());
 	if(!clientTmp)
 		return(ERR_NOTONCHANNEL);
 	std::string topic;

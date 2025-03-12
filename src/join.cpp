@@ -30,7 +30,7 @@ int Server::joinCommand(std::string line, Client &client)
 			newChannel.addOperator(client);
 			_channels.push_back(newChannel);
 			// std::cout << client.getNickName() << " has correctly join " << newChannel.getName() << std::endl;
-			this->createResponse(RPL_SUCCESS, client, newChannel.getName());
+			this->createResponse(RPL_JOIN, client, newChannel.getName());
 			this->createResponse(RPL_NAMREPLY, client, newChannel.getName());
 			this->createResponse(RPL_ENDOFNAMES, client, newChannel.getName());
 		}
@@ -38,41 +38,29 @@ int Server::joinCommand(std::string line, Client &client)
 		{
 			if (tmp->isClient(client.getNickName()) == true)
 				break ;
-			if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false)) //para verificar si el canal es invite only y si el cliente esta invitado o si no es invite only asi puede joinearse
+			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
+				this->createResponse(ERR_INVITEONLYCHAN, client, tmp->getName());
+			else if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false))
 			{
 				tmp->addClient(client);
-				std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
-				this->createResponse(RPL_SUCCESS, client, tmp->getName());
+				sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + tmp->getName() + "\r\n");
 				this->createResponse(RPL_NAMREPLY, client, tmp->getName());
 				this->createResponse(RPL_ENDOFNAMES, client, tmp->getName());
 			}
-			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
+			else if (tmp->hasPassword() == true)
 			{
-				std::cerr << "Channel " << tmp->getName() << " is an Invite Only Channel." << std::endl; //chequear error y eliminar mensaje
-				this->createResponse(ERR_INVITEONLYCHAN, client, tmp->getName());
-			}
-			else if (tmp->hasPassword() == true) // verificar si el canal es privado y le ha pasado la contraseña correcta.
-			{
-				bool added = false;
-				for (size_t i = 0; i < keyList.size(); i++)
+				if (tmp->getPassword() == keyList[0])
 				{
-					if (tmp->getPassword() == keyList[i])
-					{
-						added = true;
-						tmp->addClient(client);
-						this->createResponse(RPL_SUCCESS, client, tmp->getName());
-						this->createResponse(RPL_NAMREPLY, client, tmp->getName());
-						this->createResponse(RPL_ENDOFNAMES, client, tmp->getName());
-					}
-				}
-				if (added == false)
-				{
-					std::cout << "Error: client has not the correct key" << std::endl;
-					this->createResponse(ERR_BADCHANNELKEY, client, tmp->getName());
+					tmp->addClient(client);
+					this->createResponse(RPL_JOIN, client, tmp->getName());
+					this->createResponse(RPL_NAMREPLY, client, tmp->getName());
+					this->createResponse(RPL_ENDOFNAMES, client, tmp->getName());
 				}
 				else
-					std::cout << client.getNickName() << " has correctly join " << tmp->getName() << std::endl;
-				}
+					this->createResponse(ERR_BADCHANNELKEY, client, tmp->getName());
+				if (!keyList.empty())
+					keyList.erase(keyList.begin());
+			}
 		}
 	}
 	return (0);

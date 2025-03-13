@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
+#include <sstream>
 #include <cctype>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -20,6 +21,17 @@
 class Server;
 class Channel;
 class Client;
+
+typedef struct s_data
+{
+	std::string msg;
+	std::string	user;
+	std::string	channelName;
+	std::string cmdType;
+
+	Client		*client;
+	Channel		*channel;
+} t_data;
 
 typedef enum
 {
@@ -156,16 +168,15 @@ typedef enum
 	// RPL_SASLMECHS = 908,
 } NUMERICS;
 
-std::vector<std::string> split(const std::string &str, char delimiter);
-const char *checkNickName(const char *str);
+std::vector<std::string>	split(const std::string &str, char delimiter);
+const char					*checkNickName(const char *str);
+std::string					intToString(int nbr);
 
-
-std::string join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
-std::string intToString(int number);
+std::string					join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
 
 // RESPONSES
-void		sendMsgToChannel(Channel *channel, std::string msg);
-std::string rpl_namreply(Server *server, Client &client, Channel *channel);
-std::string rpl_endofnames(Server *server, Client &client, Channel *channel);
+void						sendMsgToChannel(Channel *channel, std::string msg);
+std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);
+std::string					rpl_endofnames(Server *server, t_data &cmd, std::string err);
 
 #endif

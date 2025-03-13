@@ -1,12 +1,15 @@
 #include "../include/Server.hpp"
 
-int Server::joinCommand(std::string line, Client &client)
+void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 {
-	t_data data;
+	cmd.cmdType = "JOIN";
 	std::vector<std::string> parameters = split(line, ' ');
 
 	if (parameters.size() < 2)
-		this->createResponse(ERR_NEEDMOREPARAMS, client, NULL);
+	{
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		return ;
+	}
 
 	std::vector<std::string> channelList = split(parameters[1], ',');
 	std::vector<std::string> keyList;
@@ -19,11 +22,11 @@ int Server::joinCommand(std::string line, Client &client)
 	for (size_t i = 0; i < channelList.size(); i++)
 	{
 		std::string channelName = channelList[i];
-		data.Channel = channelName;
+		cmd.channelName = channelName;
 		if (channelName.empty() || !std::strchr("#&", channelName[0]))
 		{
-			this->createResponse(ERR_BADCHANMASK, client, &data);
-			continue;
+			this->createResponse(ERR_BADCHANMASK, cmd);
+			continue ;
 		}
 		tmp = this->getChannel(channelName);
 		if (!tmp)
@@ -32,40 +35,46 @@ int Server::joinCommand(std::string line, Client &client)
 			newChannel.addClient(client);
 			newChannel.addOperator(client);
 			_channels.push_back(newChannel);
-			//data.Channel = newChannel.getName();
-			// std::cout << client.getNickName() << " has correctly join " << newChannel.getName() << std::endl;
-			this->createResponse(RPL_JOIN, client, &data);
-			this->createResponse(RPL_NAMREPLY, client, &data);
-			this->createResponse(RPL_ENDOFNAMES, client, &data);
+			cmd.channel = &newChannel;
+			this->createResponse(RPL_JOIN, cmd);
+			this->createResponse(RPL_NAMREPLY, cmd);
+			this->createResponse(RPL_ENDOFNAMES, cmd);
 		}
 		else
 		{
-			if (tmp->isClient(client.getNickName()) == true)
-				break ;
+			cmd.channel = tmp;
+			if (tmp->isClient(client.getNickName()) == true) // Check the response here
+			break ;
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
-				this->createResponse(ERR_INVITEONLYCHAN, client, &data);
+				this->createResponse(ERR_INVITEONLYCHAN, cmd);
 			else if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false))
 			{
 				tmp->addClient(client);
-				sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + data.Channel + "\r\n");
-				this->createResponse(RPL_NAMREPLY, client, &data);
-				this->createResponse(RPL_ENDOFNAMES, client, &data);
+				sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + cmd.channel->getName() + "\r\n");
+				this->createResponse(RPL_NAMREPLY, cmd);
+				this->createResponse(RPL_ENDOFNAMES, cmd);
 			}
 			else if (tmp->hasPassword() == true)
 			{
-				if (tmp->getPassword() == keyList[0])
+				for (bool added = false; added != true;)
 				{
-					tmp->addClient(client);
-					this->createResponse(RPL_JOIN, client, &data);
-					this->createResponse(RPL_NAMREPLY, client, &data);
-					this->createResponse(RPL_ENDOFNAMES, client, &data);
+					if (keyList.empty())
+					{
+						this->createResponse(ERR_BADCHANNELKEY, cmd);
+						break ;
+					}
+					else if (tmp->getPassword() == keyList[0])
+					{
+						tmp->addClient(client);
+						sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + cmd.channel->getName() + "\r\n");
+						this->createResponse(RPL_NAMREPLY, cmd);
+						this->createResponse(RPL_ENDOFNAMES, cmd);
+						added = true;
+					}
+					if (!keyList.empty())
+						keyList.erase(keyList.begin());
 				}
-				else
-					this->createResponse(ERR_BADCHANNELKEY, client, &data);
-				if (!keyList.empty())
-					keyList.erase(keyList.begin());
 			}
 		}
 	}
-	return (0);
 }

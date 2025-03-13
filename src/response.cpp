@@ -1,35 +1,37 @@
 #include "../include/Server.hpp"
 
-std::string rpl_namreply(Server *server, Client &client, Channel *channel)
+std::string rpl_namreply(Server *server, t_data &cmd, std::string err)
 {
-	// std::string symbol = "=";
 	std::string response;
 	std::string clientsList;
 	std::vector<Client> clients;
-	clients = channel->getArrClients();
-	
+	clients = cmd.channel->getArrClients();
+
 	for (size_t i = 0; i < clients.size(); i++)
 	{
-		if (channel->isOperator(clients[i].getNickName()) == true)
+		if (cmd.channel->isOperator(clients[i].getNickName()) == true)
 			clientsList += "@" + clients[i].getNickName() + " ";
 		else
 			clientsList += clients[i].getNickName() + " ";
 	}
-	response = ":" + server->getHostName() + " 353 " + client.getNickName() + " = " + channel->getName() + " :" + clientsList + "\r\n";
+	response = ":" + server->getHostName() + " " + err + " " + cmd.client->getNickName() + " = " + cmd.channel->getName() + " :" + clientsList + "\r\n";
 	return response;
 }
 
-std::string rpl_endofnames(Server *server, Client &client, Channel *channel)
+std::string rpl_endofnames(Server *server, t_data &cmd, std::string err)
 {
 	std::string response;
 
-	response = ":" + server->getHostName() + " 366 " + client.getNickName() + " " + channel->getName() + " :End of /NAMES list\r\n";
+	response = ":" + server->getHostName() + " " + err + " " + cmd.client->getNickName() + " " + cmd.channel->getName() + " :End of /NAMES list\r\n";
 	return response;
 }
 
-void Server::createResponse(int err, Client &client,t_data *data)
+void Server::createResponse(int err, t_data &cmd)
 {
+
 	std::string clientNickName = client.getNickName();
+	std::string prefix = ":ft_irc " + intToString(err) + " ";
+
 	std::string response;
 
 	switch (err)
@@ -37,17 +39,17 @@ void Server::createResponse(int err, Client &client,t_data *data)
 		case ERR_PASSWDMISMATCH:
 			response = client.getNickName() + " " + ":Password incorrect\r\n";
 			break;
+		case ERR_BADCHANNELKEY:
+			response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " :Cannot join channel (+k)\r\n";
+			break ;
+		case ERR_BADCHANMASK:
+			response = prefix + cmd.channelName + " :Bad channel mask\r\n";
+			break ;
 		case ERR_NEEDMOREPARAMS:
-			response = "";
+			response = ":" + cmd.client->getNickName() + " " + cmd.cmdType + " :Not enough parameters\r\n";
 			break ;
 		case RPL_JOIN:
-			response = ":" + client.getNickName() + " JOIN " + data->Channel + "\r\n";
-			break ;
-		case RPL_NAMREPLY:
-			response = rpl_namreply(this, client, this->getChannel(data->Channel));
-			break ;
-		case RPL_ENDOFNAMES:
-			response = rpl_endofnames(this, client, this->getChannel(data->Channel));
+			response = ":" + cmd.client->getNickName() + " JOIN " + cmd.channel->getName() + "\r\n";
 			break ;
 		case ERR_NOSUCHCHANNEL:
 			response = 	clientNickName + " " + data->Channel + " :No such channel\r\n";
@@ -61,8 +63,14 @@ void Server::createResponse(int err, Client &client,t_data *data)
 		case ERR_USERNOTINCHANNEL:
 			response = ":ft_irc " + intToString(ERR_USERNOTINCHANNEL) + " " + clientNickName + " " + data->user + " " + data->Channel + " :They aren't on that channel\r\n";
 			break;
-/* 		default:
-			response = ""; */
+		case RPL_NAMREPLY:
+			response = rpl_namreply(this, cmd, intToString(err));
+			break ;
+		case RPL_ENDOFNAMES:
+			response = rpl_endofnames(this, cmd, intToString(err));
+			break ;
+		default:
+			response = "";
 	}
-	send(client.getClientSocket(), response.c_str(), response.size(), 0);
+	send(cmd.client->getClientSocket(), response.c_str(), response.size(), 0);
 }

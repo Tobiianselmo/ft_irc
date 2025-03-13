@@ -3,28 +3,33 @@
 
 int Server::kickCommand(std::string str,Client &client)
 {
+	t_data data;
 	std::string msg;
 	std::vector<std::string> arr = split(str,' ');
 	if (arr.size() < 3)
 		return (ERR_NEEDMOREPARAMS);
-	Channel *tmp = getChannel(arr[1]);
+	data.Channel = arr[1];
+	Channel *tmp = getChannel(data.Channel);
 	if(!tmp)
 	{
-		msg = makeString(arr[1],client.getUserName(),"No such channel\r\n",ERR_NOSUCHCHANNEL,".");
-		sendClient(client, msg.c_str());
+		this->createResponse(ERR_NOSUCHCHANNEL,client,&data);
+		//msg = makeString(arr[1],client.getUserName(),"No such channel\r\n",ERR_NOSUCHCHANNEL,".");
+		//sendClient(client, msg.c_str());
 		return(ERR_NOSUCHCHANNEL);
 	}
 	if(!tmp->isOperator(client.getNickName()))
 	{
-		msg = makeString(arr[1],client.getUserName(),":You're not channel operator\r\n",ERR_CHANOPRIVSNEEDED,".");
-		sendClient(client, msg.c_str());
+		this->createResponse(ERR_CHANOPRIVSNEEDED,client,&data);
+	//	msg = makeString(arr[1],client.getUserName(),":You're not channel operator\r\n",ERR_CHANOPRIVSNEEDED,".");
+	//	sendClient(client, msg.c_str());
 		return(ERR_CHANOPRIVSNEEDED);
 	}
 	Client *clientTmp = tmp->getClient(client.getNickName());
 	if(!clientTmp)
 	{
-		msg = makeString(arr[1],client.getUserName(),":You're not on that channel\r\n",ERR_NOTONCHANNEL,".");
-		sendClient(client, msg.c_str());
+		this->createResponse(ERR_NOTONCHANNEL,client,&data);
+		//msg = makeString(arr[1],client.getUserName(),":You're not on that channel\r\n",ERR_NOTONCHANNEL,".");
+		//sendClient(client, msg.c_str());
 		return(ERR_NOTONCHANNEL);
 	}
 	std::vector<std::string> split_users = split(arr[2].c_str(),',');
@@ -37,8 +42,10 @@ int Server::kickCommand(std::string str,Client &client)
 		clientTmp = tmp->getClient(split_users[i]);
 		if(!clientTmp)
 		{
-			msg = makeString(arr[1],client.getUserName(),":They aren't on that channel\r\n",ERR_USERNOTINCHANNEL,client.getNickName());
-			sendClient(client,msg.c_str());
+			data.user = split_users[i];
+			this->createResponse(ERR_USERNOTINCHANNEL,client,&data);
+			//msg = makeString(arr[1],client.getUserName(),":They aren't on that channel\r\n",ERR_USERNOTINCHANNEL,client.getNickName());
+			//sendClient(client,msg.c_str());
 		}
 		else
 		{

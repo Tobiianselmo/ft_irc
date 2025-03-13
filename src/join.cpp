@@ -2,6 +2,7 @@
 
 int Server::joinCommand(std::string line, Client &client)
 {
+	t_data data;
 	std::vector<std::string> parameters = split(line, ' ');
 
 	if (parameters.size() < 2)
@@ -18,10 +19,12 @@ int Server::joinCommand(std::string line, Client &client)
 	for (size_t i = 0; i < channelList.size(); i++)
 	{
 		std::string channelName = channelList[i];
-
+		data.Channel = channelName;
 		if (channelName.empty() || !std::strchr("#&", channelName[0]))
-			this->createResponse(ERR_BADCHANMASK, client, tmp->getName());
-		
+		{
+			this->createResponse(ERR_BADCHANMASK, client, &data);
+			continue;
+		}
 		tmp = this->getChannel(channelName);
 		if (!tmp)
 		{
@@ -29,35 +32,36 @@ int Server::joinCommand(std::string line, Client &client)
 			newChannel.addClient(client);
 			newChannel.addOperator(client);
 			_channels.push_back(newChannel);
+			//data.Channel = newChannel.getName();
 			// std::cout << client.getNickName() << " has correctly join " << newChannel.getName() << std::endl;
-			this->createResponse(RPL_JOIN, client, newChannel.getName());
-			this->createResponse(RPL_NAMREPLY, client, newChannel.getName());
-			this->createResponse(RPL_ENDOFNAMES, client, newChannel.getName());
+			this->createResponse(RPL_JOIN, client, &data);
+			this->createResponse(RPL_NAMREPLY, client, &data);
+			this->createResponse(RPL_ENDOFNAMES, client, &data);
 		}
 		else
 		{
 			if (tmp->isClient(client.getNickName()) == true)
 				break ;
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
-				this->createResponse(ERR_INVITEONLYCHAN, client, tmp->getName());
+				this->createResponse(ERR_INVITEONLYCHAN, client, &data);
 			else if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false))
 			{
 				tmp->addClient(client);
-				sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + tmp->getName() + "\r\n");
-				this->createResponse(RPL_NAMREPLY, client, tmp->getName());
-				this->createResponse(RPL_ENDOFNAMES, client, tmp->getName());
+				sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + data.Channel + "\r\n");
+				this->createResponse(RPL_NAMREPLY, client, &data);
+				this->createResponse(RPL_ENDOFNAMES, client, &data);
 			}
 			else if (tmp->hasPassword() == true)
 			{
 				if (tmp->getPassword() == keyList[0])
 				{
 					tmp->addClient(client);
-					this->createResponse(RPL_JOIN, client, tmp->getName());
-					this->createResponse(RPL_NAMREPLY, client, tmp->getName());
-					this->createResponse(RPL_ENDOFNAMES, client, tmp->getName());
+					this->createResponse(RPL_JOIN, client, &data);
+					this->createResponse(RPL_NAMREPLY, client, &data);
+					this->createResponse(RPL_ENDOFNAMES, client, &data);
 				}
 				else
-					this->createResponse(ERR_BADCHANNELKEY, client, tmp->getName());
+					this->createResponse(ERR_BADCHANNELKEY, client, &data);
 				if (!keyList.empty())
 					keyList.erase(keyList.begin());
 			}

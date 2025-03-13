@@ -27,9 +27,10 @@ std::string rpl_endofnames(Server *server, Client &client, Channel *channel)
 	return response;
 }
 
-void Server::createResponse(int err, Client &client, const std::string &channelName)
+void Server::createResponse(int err, Client &client,t_data *data)
 {
 	std::string clientNickName = client.getNickName();
+	std::string channelName = data->Channel;
 	std::string response;
 
 	switch (err)
@@ -46,6 +47,14 @@ void Server::createResponse(int err, Client &client, const std::string &channelN
 		case RPL_ENDOFNAMES:
 			response = rpl_endofnames(this, client, this->getChannel(channelName));
 			break ;
+		case ERR_NOSUCHCHANNEL:
+			response = 	clientNickName + " " + channelName + " :No such channel\r\n";
+		case ERR_CHANOPRIVSNEEDED:
+			response = clientNickName + " " + channelName + " :You're not channel operator\r\n";
+		case ERR_NOTONCHANNEL:
+			response = clientNickName + " " + channelName + " :You're not on that channel\r\n";
+		case ERR_USERNOTINCHANNEL:
+			response = clientNickName + " " + data->user + channelName + " :They aren't on that channel\r\r";
 		default:
 			response = "";
 	}

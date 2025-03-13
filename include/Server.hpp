@@ -5,6 +5,13 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+typedef struct s_data
+{
+	std::string user;
+	std::string Channel;
+} t_data;
+
+
 class Client;
 
 class Channel;
@@ -36,7 +43,7 @@ class Server
 		Channel	*getChannel(std::string name);
 		Client	*getClient(std::string nick);//delfi
 
-		void	createResponse(int err, Client &client, const std::string &channelName);
+		void	createResponse(int err, Client &client, t_data *data);
 
 		void	setupServer();
 		void	setHostName(std::string hostname);

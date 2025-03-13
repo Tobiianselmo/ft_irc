@@ -59,23 +59,9 @@ std::string join(const std::vector<std::string>::iterator &vec, const std::strin
     }
     return result;
 }
-
-std::string makeString(std::string channel,std::string username,std::string str,int err,std::string client)
+std::string intToString(int number)
 {
-	std::string ret;
-	switch (err)
-	{
-		case ERR_NOSUCHCHANNEL:
-			ret = username + " " + channel + " :" + str;
-			return(ret);
-		case ERR_CHANOPRIVSNEEDED:
-			ret = username + " " + channel + " :" + str;
-			return(ret);
-		case ERR_NOTONCHANNEL:
-			ret = username + " " + channel + " :" + str;
-			return(ret);
-		case ERR_USERNOTINCHANNEL:
-			ret = username + " " +  client + " " + channel + " :" + str;
-	}
-	return(ret);
+    std::stringstream ss;
+    ss << number;
+    return ss.str();
 }

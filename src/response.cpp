@@ -30,33 +30,39 @@ std::string rpl_endofnames(Server *server, Client &client, Channel *channel)
 void Server::createResponse(int err, Client &client,t_data *data)
 {
 	std::string clientNickName = client.getNickName();
-	std::string channelName = data->Channel;
 	std::string response;
 
 	switch (err)
 	{
+		case ERR_PASSWDMISMATCH:
+			response = client.getNickName() + " " + ":Password incorrect\r\n";
+			break;
 		case ERR_NEEDMOREPARAMS:
 			response = "";
 			break ;
 		case RPL_JOIN:
-			response = ":" + client.getNickName() + " JOIN " + channelName + "\r\n";
+			response = ":" + client.getNickName() + " JOIN " + data->Channel + "\r\n";
 			break ;
 		case RPL_NAMREPLY:
-			response = rpl_namreply(this, client, this->getChannel(channelName));
+			response = rpl_namreply(this, client, this->getChannel(data->Channel));
 			break ;
 		case RPL_ENDOFNAMES:
-			response = rpl_endofnames(this, client, this->getChannel(channelName));
+			response = rpl_endofnames(this, client, this->getChannel(data->Channel));
 			break ;
 		case ERR_NOSUCHCHANNEL:
-			response = 	clientNickName + " " + channelName + " :No such channel\r\n";
+			response = 	clientNickName + " " + data->Channel + " :No such channel\r\n";
+			break;
 		case ERR_CHANOPRIVSNEEDED:
-			response = clientNickName + " " + channelName + " :You're not channel operator\r\n";
+			response = clientNickName + " " + data->Channel + " :You're not channel operator\r\n"; ///REVSAR
+			break;
 		case ERR_NOTONCHANNEL:
-			response = clientNickName + " " + channelName + " :You're not on that channel\r\n";
+			response = clientNickName + " " + data->Channel + " :You're not on that channel\r\n";
+			break;
 		case ERR_USERNOTINCHANNEL:
-			response = clientNickName + " " + data->user + channelName + " :They aren't on that channel\r\r";
-		default:
-			response = "";
+			response = ":ft_irc " + intToString(ERR_USERNOTINCHANNEL) + " " + clientNickName + " " + data->user + " " + data->Channel + " :They aren't on that channel\r\n";
+			break;
+/* 		default:
+			response = ""; */
 	}
 	send(client.getClientSocket(), response.c_str(), response.size(), 0);
 }

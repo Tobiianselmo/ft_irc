@@ -196,8 +196,7 @@ void Server::authClient(std::vector<std::string> arr, Client &client)
 	{
 		if (arr[0].c_str() + 5 != this->getPassword())
 		{
-			sendClient(client,"Error: Incorrect Password\r\n");
-			//send(client.getClientSocket(), "Error: Incorrect Password\r\n", 28, 0);
+			this->createResponse(ERR_PASSWDMISMATCH,client,NULL);
 			return ;
 		}
 	}

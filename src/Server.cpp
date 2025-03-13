@@ -38,6 +38,16 @@ bool Server::isDuplicated(std::string name)
 	return false;
 }
 
+t_data Server::initStructure(std::string msg, Client &client)
+{
+	t_data ret;
+
+	ret.msg = msg;
+	ret.client = &client;
+	ret.channel = NULL;
+	return ret;
+}
+
 Channel *Server::getChannel(std::string name)
 {
 	for (size_t i = 0; i < _channels.size(); i++)
@@ -165,10 +175,11 @@ void Server::eventMsg(std::vector<struct pollfd> &fds, int i, Client &client)
 		std::cout << "Error splitting buffer" << std::endl;
 		return ;
 	}
+	t_data cmd = initStructure(buffer, client);
 	if (client.isAuth() == false)
-		authClient(arr, client);
+		authClient(arr, client, cmd);
 	else
-		checkCommand(arr, client);
+		checkCommand(arr, client, cmd);
 }
 
 static void removeCarriageReturn(std::string &str)
@@ -189,15 +200,14 @@ std::vector<std::string> Server::parsedInput(std::string str)
 	return(ret);
 }
 
-void Server::authClient(std::vector<std::string> arr, Client &client)
+void Server::authClient(std::vector<std::string> arr, Client &client, t_data &cmd)
 {
 	std::vector<std::string> aux;
 	if (!std::strncmp(arr[0].c_str(), "PASS ", 5))
 	{
 		if (arr[0].c_str() + 5 != this->getPassword())
 		{
-			sendClient(client,"Error: Incorrect Password\r\n");
-			//send(client.getClientSocket(), "Error: Incorrect Password\r\n", 28, 0);
+			this->createResponse(ERR_PASSWDMISMATCH, cmd);
 			return ;
 		}
 	}
@@ -221,10 +231,10 @@ void Server::authClient(std::vector<std::string> arr, Client &client)
 	}
 }
 
-void Server::checkCommand(std::vector<std::string> arr, Client &client)
+void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &cmd)
 {
-	std::string cmd = arr[0].substr(0, arr[0].find(" "));
-	if (cmd == "NICK") // Made only for a test
+	std::string command = arr[0].substr(0, arr[0].find(" "));
+	if (command == "NICK") // Made only for a test
 	{
 		std::string nick = checkNickName(arr[0].c_str() + 5);
 		if (nick.c_str() == NULL)
@@ -236,15 +246,15 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client)
 		}
 		client.setNickName(nick);
 	}
-	else if (cmd == "JOIN")
-		std::cout << joinCommand(arr[0], client) << std::endl;
-	else if (cmd == "KICK")
-		std::cout << kickCommand(arr[0],client);
-	else if (cmd == "TOPIC")
+	else if (command == "JOIN")
+		this->joinCommand(arr[0], client, cmd);
+	// else if (command == "KICK")
+	// 	std::cout << kickCommand(arr[0],client);
+	else if (command == "TOPIC")
 		std::cout << topicCommand(arr[0],client);
-	else if (cmd == "MODE")
+	else if (command == "MODE")
 		this->modes(arr[0], client);
-	else if (cmd == "INVITE")
+	else if (command == "INVITE")
 		this->inviteCommand(arr[0], client);
 	else
 		std::cout << "Command not valid." << std::endl;

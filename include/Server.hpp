@@ -5,15 +5,8 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
-typedef struct s_data
-{
-	std::string user;
-	std::string Channel;
-} t_data;
-
 
 class Client;
-
 class Channel;
 
 class Server
@@ -43,20 +36,21 @@ class Server
 		Channel	*getChannel(std::string name);
 		Client	*getClient(std::string nick);//delfi
 
-		void	createResponse(int err, Client &client, t_data *data);
+		t_data	initStructure(std::string msg, Client &client);
+		void	createResponse(int err, t_data &cmd);
 
 		void	setupServer();
 		void	setHostName(std::string hostname);
 		void	handleConnections();
 		void	newConnections();
 		void 	eventMsg(std::vector<struct pollfd> &fds, int i, Client &client);
-		void	authClient(std::vector<std::string> arr, Client &client);
-		void	checkCommand(std::vector<std::string> arr,Client &client);
+		void	authClient(std::vector<std::string> arr, Client &client, t_data &cmd);
+		void	checkCommand(std::vector<std::string> arr,Client &client, t_data &cmd);
 		std::vector<std::string>	parsedInput(std::string str);
 		int		kickCommand(std::string str,Client &client);
 		int		topicCommand(std::string str,Client &client);
 
-		int		joinCommand(std::string line, Client &client);
+		void	joinCommand(std::string line, Client &client, t_data &cmd);
 		int		inviteCommand(std::string line, Client &client);//delfi
 
 		int		modes(std::string &line, Client &client);//delif

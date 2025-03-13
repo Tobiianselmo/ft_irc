@@ -79,3 +79,10 @@ std::string makeString(std::string channel,std::string username,std::string str,
 	}
 	return(ret);
 }
+
+std::string intToString(int nbr)
+{
+	std::ostringstream ss;
+	ss << nbr;
+	return ss.str();
+}

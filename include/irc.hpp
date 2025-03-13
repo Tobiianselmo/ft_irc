@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
+#include <sstream>
 #include <cctype>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -19,6 +20,17 @@
 class Server;
 class Channel;
 class Client;
+
+typedef struct s_data
+{
+	std::string msg;
+	std::string	user;
+	std::string	channelName;
+	std::string cmdType;
+
+	Client		*client;
+	Channel		*channel;
+} t_data;
 
 typedef enum
 {
@@ -120,7 +132,7 @@ typedef enum
 	// ERR_NOTREGISTERED = 451,
 	ERR_NEEDMOREPARAMS = 461,
 	// ERR_ALREADYREGISTERED = 462,
-	// ERR_PASSWDMISMATCH = 464,
+	ERR_PASSWDMISMATCH = 464,
 	// ERR_YOUREBANNEDCREEP = 465,
 	// ERR_CHANNELISFULL = 471,
 	// ERR_UNKNOWNMODE = 472,
@@ -155,17 +167,17 @@ typedef enum
 	// RPL_SASLMECHS = 908,
 } NUMERICS;
 
-std::vector<std::string> split(const std::string &str, char delimiter);
-const char *checkNickName(const char *str);
+std::vector<std::string>	split(const std::string &str, char delimiter);
+const char					*checkNickName(const char *str);
+std::string					intToString(int nbr);
 
-
-std::string join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
-std::string makeString(std::string channel,std::string client,std::string str,int err,std::string username);
+std::string					join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
+std::string					makeString(std::string channel,std::string client,std::string str,int err,std::string username);
 
 // RESPONSES
-void		sendClient(Client &client,const char *str);
-void		sendMsgToChannel(Channel *channel, std::string msg);
-std::string rpl_namreply(Server *server, Client &client, Channel *channel);
-std::string rpl_endofnames(Server *server, Client &client, Channel *channel);
+void						sendClient(Client &client,const char *str);
+void						sendMsgToChannel(Channel *channel, std::string msg);
+std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);
+std::string					rpl_endofnames(Server *server, t_data &cmd, std::string err);
 
 #endif

@@ -10,7 +10,7 @@ int Server::topicCommand(std::string str,Client &client)
 		return(ERR_NOSUCHCHANNEL);
 	if(!arr[2].c_str())
 	{
-		if(tmp->isTopic())
+		if(tmp->hasTopic())
 			return(RPL_TOPIC);
 		else
 			return(RPL_NOTOPIC);

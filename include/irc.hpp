@@ -120,11 +120,11 @@ typedef enum
 	// ERR_NORECIPIENT = 411,
 	// ERR_NOTEXTTOSEND = 412,
 	// ERR_INPUTTOOLONG = 417,
-	// ERR_UNKNOWNCOMMAND = 421,
+	ERR_UNKNOWNCOMMAND = 421,
 	// ERR_NOMOTD = 422,
-	// ERR_NONICKNAMEGIVEN = 431,
+	ERR_NONICKNAMEGIVEN = 431,
 	ERR_ERRONEUSNICKNAME = 432,
-	// ERR_NICKNAMEINUSE = 433,
+	ERR_NICKNAMEINUSE = 433,
 	// ERR_NICKCOLLISION = 436,
 	ERR_USERNOTINCHANNEL = 441,
 	ERR_NOTONCHANNEL = 442,
@@ -167,14 +167,13 @@ typedef enum
 	// RPL_SASLMECHS = 908,
 } NUMERICS;
 
+// Utils
 std::vector<std::string>	split(const std::string &str, char delimiter);
 const char					*checkNickName(const char *str);
 std::string					intToString(int nbr);
-
 std::string					join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
-std::string					makeString(std::string channel,std::string client,std::string str,int err,std::string username);
 
-// RESPONSES
+// Responses
 void						sendClient(Client &client,const char *str);
 void						sendMsgToChannel(Channel *channel, std::string msg);
 std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);

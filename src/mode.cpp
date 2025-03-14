@@ -1,29 +1,6 @@
 
 #include "../include/Server.hpp"
 
-void	Channel::setMode(std::string mode, bool choice)
-{
-	if (mode == "+i" || mode == "-i")
-		this->_inviteOnly = choice;
-}
-
-void	Channel::getMode() const
-{
-	std::cout << "Invite only Mode set to = " << this->_inviteOnly << std::endl;
-}
-
-bool	Channel::getInvite() const { return this->_inviteOnly; }
-
-Client	*Channel::getClient(std::string nick)
-{
-	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-		if (this->_clients[i].getNickName() == nick)
-			return (&this->_clients[i]);
-	}
-	return (NULL);
-}
-
 int	Server::addMode(std::vector<std::string> &line, Client &client)
 {
 	Channel *tmp = this->getChannel(line[1]);
@@ -60,18 +37,6 @@ int	Server::addMode(std::vector<std::string> &line, Client &client)
 	return (0);
 }
 
-void	Channel::deleteOperators(const Client &client)
-{
-	int cont;
-
-	for (size_t i = 0; i < this->_operators.size(); i++)
-	{
-		if (this->_operators[i].getNickName() == client.getNickName())
-			cont = i;
-	}
-	this->_operators.erase(this->_operators.begin() + cont);
-}
-
 int	Server::delMode(std::vector<std::string> &line, Client &client)
 {
 	(void)client;
@@ -93,14 +58,6 @@ int	Server::delMode(std::vector<std::string> &line, Client &client)
 			tmp->deleteOperators(*clientTmp);
 	}
 	return (0);
-}
-
-void	Channel::printOperators()
-{
-	for (size_t i = 0; i < this->_operators.size(); i++)
-	{
-		std::cout << "operators " << this->_operators[i].getNickName() << std::endl;
-	}
 }
 
 int	Server::modes(std::string &line, Client &client)

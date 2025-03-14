@@ -1,10 +1,5 @@
 #include "../include/Server.hpp"
 
-void	sendClient(Client &client,const char *str)
-{
-	send(client.getClientSocket(), str, std::strlen(str), 0);
-}
-
 void	sendMsgToChannel(Channel *channel, std::string msg)
 {
 	std::vector<Client> clientsList = channel->getArrClients();

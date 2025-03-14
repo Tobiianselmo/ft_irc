@@ -21,8 +21,8 @@ invite.cpp \
 topic.cpp \
 response.cpp \
 send.cpp \
+kick.cpp \
 clientCommands.cpp \
-# kick.cpp \
 
 SRC = $(addprefix src/, $(FILES))
 

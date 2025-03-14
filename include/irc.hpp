@@ -23,13 +23,13 @@ class Client;
 
 typedef struct s_data
 {
-	std::string msg;
-	std::string	user;
+	std::string msg; // Complete line
+	std::string	destUser; // User who will be affected
 	std::string	channelName;
-	std::string cmdType;
+	std::string cmdType; // ie: JOIN, KICK
 
-	Client		*client;
-	Channel		*channel;
+	Client		*client; // Pointer to the client who send the request
+	Channel		*channel; // Pointer to the Channel
 } t_data;
 
 typedef enum
@@ -174,7 +174,6 @@ std::string					intToString(int nbr);
 std::string					join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
 
 // Responses
-void						sendClient(Client &client,const char *str);
 void						sendMsgToChannel(Channel *channel, std::string msg);
 std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);
 std::string					rpl_endofnames(Server *server, t_data &cmd, std::string err);

@@ -18,10 +18,11 @@ utils.cpp \
 join.cpp \
 mode.cpp \
 invite.cpp \
-kick.cpp \
 topic.cpp \
 response.cpp \
 send.cpp \
+clientCommands.cpp \
+# kick.cpp \
 
 SRC = $(addprefix src/, $(FILES))
 

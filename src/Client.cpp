@@ -28,6 +28,7 @@ Client &Client::operator=(const Client &other)
 Client::Client(int socket, Server &server)
 {
 	this->_isAuth = false;
+	this->_hasCorrectPass = false;
 	this->_nickName = "";
 	this->_userName = "";
 	this->_clientSocket = socket;
@@ -39,10 +40,12 @@ Client::Client(int socket, Server &server)
 void	Client::setNickName(std::string nickname) { this->_nickName = nickname; }
 void	Client::setUserName(std::string username) { this->_userName = username; }
 void	Client::setAuth(bool val) { this->_isAuth = val; }
+void	Client::setCorrectPass(bool val) { this->_hasCorrectPass = val; }
 
 // Getters
 
-const std::string &Client::getNickName() const { return this->_nickName; }
-const std::string &Client::getUserName() const { return this->_userName; }
-int	Client::getClientSocket() const { return this->_clientSocket; }
-bool Client::isAuth() const { return this->_isAuth; }
+const std::string	&Client::getNickName() const { return this->_nickName; }
+const std::string	&Client::getUserName() const { return this->_userName; }
+int					Client::getClientSocket() const { return this->_clientSocket; }
+bool				Client::isAuth() const { return this->_isAuth; }
+bool				Client::hasCorrectPass() const { return this->_hasCorrectPass; }

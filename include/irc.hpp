@@ -176,6 +176,5 @@ std::string					join(const std::vector<std::string>::iterator &vec, const std::s
 // Responses
 void						sendMsgToChannel(Channel *channel, std::string msg);
 std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);
-std::string					rpl_endofnames(Server *server, t_data &cmd, std::string err);
 
 #endif

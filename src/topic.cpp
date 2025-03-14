@@ -1,31 +1,48 @@
 #include "../include/Server.hpp"
 
-int Server::topicCommand(std::string str,Client &client)
+void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 {
-	std::vector<std::string> arr = split(str,' ');
+	cmd.cmdType = "TOPIC";
+	std::vector<std::string> arr = split(str, ' ');
+
 	if (arr.size() != 2)
-		return (ERR_NEEDMOREPARAMS);
-	Channel *tmp = getChannel(arr[1].c_str() + 1);
-	if(!tmp)
-		return(ERR_NOSUCHCHANNEL);
-	if(!arr[2].c_str())
 	{
-		if(tmp->hasTopic())
-			return(RPL_TOPIC);
-		else
-			return(RPL_NOTOPIC);
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		return ;
 	}
-	Client *clientTmp = tmp->getClient(client.getNickName());
-	if(!clientTmp)
-		return(ERR_NOTONCHANNEL);
-	std::string topic;
-	topic = join(arr.begin() + 2, " ", arr.size() - 2);
-	if(tmp->isOperator(client.getNickName()))
+	Channel *tmp = getChannel(arr[1].c_str() + 1);
+	if (!tmp)
 	{
-		tmp->setTopic(topic,true);
-		return(RPL_TOPICWHOTIME);
+		this->createResponse(ERR_NOSUCHCHANNEL, cmd);
+		return ;
+	}
+	if (!arr[2].c_str())
+	{
+		if (tmp->hasTopic())
+		{
+			this->createResponse(RPL_TOPIC, cmd);
+			return ;
+		}
+		else
+		{
+			this->createResponse(RPL_NOTOPIC, cmd);
+			return ;
+		}
+	}
+
+	Client *clientTmp = tmp->getClient(client.getNickName());
+	if (!clientTmp)
+	{
+		this->createResponse(ERR_NOTONCHANNEL, cmd);
+		return ;
+	}
+
+	std::string topic = join(arr.begin() + 2, " ", arr.size() - 2);
+	if (tmp->isOperator(client.getNickName()))
+	{
+		tmp->setTopic(topic, true);
+		this->createResponse(RPL_TOPICWHOTIME, cmd);
 	}
 	else
-		return(ERR_CHANOPRIVSNEEDED);
-	return(0);
+		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd);
 }

@@ -2,7 +2,6 @@
 #define CHANNEL_HPP
 
 #include "Server.hpp"
-#include <set>
 
 class Client;
 
@@ -31,36 +30,44 @@ class Channel
 		~Channel();
 		Channel(const std::string &name);
 
+		// Setters
 		void	setName(std::string name);
 		void	setPassword(std::string password);
+		void	setHasPassword(bool value);
 		void	setTopic(std::string topic,bool val);
 		void	setMode(std::string mode, bool choice);
-		void	setHasPassword(bool value);
 		
+		// Getters
 		std::string getName() const;
 		std::string getPassword() const;	
 		std::string getTopic() const;
 		bool		hasPassword() const;
+		bool		hasTopic() const;
+		bool		getInvite() const;
+		void		getMode() const;
+		Client		*getClient(std::string nick);
 		std::vector<Client> getArrClients() const;
-		bool		getInvite() const;//delif
-		void		getMode() const;//delfi
-		Client		*getClient(std::string nick);//delfi
-		bool		isTopic() const;
 
+		// Bools
 		bool	isClient(const Client &client);
 		bool	isClient(const std::string &name);
+		bool	isOperator(std::string nick) const;
+		bool	isInvited(std::string nick) const;
+
+		// Add
 		void	addClient(const Client &client);
-		bool	isOperator(std::string nick) const;//delfi
 		void	addOperator(const Client &client);
-		void	deleteOperators(const Client &client);//delfi
+		void	addInvite(const Client &client);
+
+		// Deleters
 		void	deleteClient(const Client &client);
-		
+		void	deleteOperators(const Client &client);
+
+		// Prints
 		void	printChannel();
-		void	printClients();//delfi
-		void	addInvite(const Client &client);//delfi
-		bool	isInvited(std::string nick) const;//delfi
-		void	printInvited();//delfi
-		void	printOperators();//delfi
+		void	printClients();
+		void	printInvited();
+		void	printOperators();
 };
 
 #endif

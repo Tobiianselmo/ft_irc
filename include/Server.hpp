@@ -53,13 +53,13 @@ class Server
 		void	nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd);
 		void	userCommand(std::string line, Client &client, t_data &cmd);
 		void	joinCommand(std::string line, Client &client, t_data &cmd);
-		int		topicCommand(std::string str, Client &client);
-		int		kickCommand(std::string str, Client &client, t_data &cmd);
-		int		inviteCommand(std::string line, Client &client);//delfi
-
-		int		modes(std::string &line, Client &client);//delif
-		int		addMode(std::vector<std::string> &line, Client &client);//delfi
-		int		delMode(std::vector<std::string> &line, Client &client);//delfi
+		void	kickCommand(std::string line, Client &client, t_data &cmd);
+		void	topicCommand(std::string line, Client &client, t_data &cmd);
+		void	inviteCommand(std::string line, Client &client, t_data &cmd);
+		
+		void	modes(std::string &line, Client &client, t_data &cmd);
+		int		addMode(std::vector<std::string> &line, Client &client, t_data &cmd);
+		int		delMode(std::vector<std::string> &line, Client &client, t_data &cmd);
 	};
 
 #endif

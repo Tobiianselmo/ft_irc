@@ -16,6 +16,7 @@
 #include <poll.h>
 #include <vector>
 #include <map>
+#include <sstream>
 
 class Server;
 class Channel;
@@ -173,7 +174,7 @@ const char					*checkNickName(const char *str);
 std::string					intToString(int nbr);
 std::string					join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
 
-// Responses
+// RESPONSES
 void						sendMsgToChannel(Channel *channel, std::string msg);
 std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);
 std::string					rpl_endofnames(Server *server, t_data &cmd, std::string err);

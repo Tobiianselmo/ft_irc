@@ -62,6 +62,7 @@ class Channel
 		// Deleters
 		void	deleteClient(const Client &client);
 		void	deleteOperators(const Client &client);
+		void	deleteInvited(const Client &client);
 
 		// Prints
 		void	printChannel();

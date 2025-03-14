@@ -191,6 +191,15 @@ void	Channel::deleteOperators(const Client &client)
 	}
 }
 
+void	Channel::deleteInvited(const Client &client)
+{
+	for (size_t i = 0; i < this->_invites.size(); i++)
+	{
+		if (this->_invites[i].getNickName() == client.getNickName())
+			this->_invites.erase(this->_invites.begin() + i);
+	}
+}
+
 // Prints
 
 void	Channel::printChannel()

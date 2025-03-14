@@ -1,58 +1,50 @@
 
 #include "../include/Server.hpp"
 
-int Server::kickCommand(std::string str, Client &client, t_data &cmd)
+void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 {
+	cmd.cmdType = "KICK";
 	std::string msg;
-	std::vector<std::string> arr = split(str,' ');
+	std::vector<std::string> arr = split(line,' ');
 	if (arr.size() < 3)
-		return (ERR_NEEDMOREPARAMS);
+	{
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		return ;
+	}
 	cmd.channelName = arr[1];
 	Channel *tmp = getChannel(cmd.channelName);
-	if(!tmp)
+	if (!tmp)
 	{
 		this->createResponse(ERR_NOSUCHCHANNEL, cmd);
-		//msg = makeString(arr[1],client.getUserName(),"No such channel\r\n",ERR_NOSUCHCHANNEL,".");
-		//sendClient(client, msg.c_str());
-		return(ERR_NOSUCHCHANNEL);
+		return ;
 	}
-	if(!tmp->isOperator(client.getNickName()))
+	if (!tmp->isOperator(client.getNickName()))
 	{
 		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd);
-	//	msg = makeString(arr[1],client.getUserName(),":You're not channel operator\r\n",ERR_CHANOPRIVSNEEDED,".");
-	//	sendClient(client, msg.c_str());
-		return(ERR_CHANOPRIVSNEEDED);
+		return ;
 	}
 	Client *clientTmp = tmp->getClient(client.getNickName());
-	if(!clientTmp)
+	if (!clientTmp)
 	{
 		this->createResponse(ERR_NOTONCHANNEL, cmd);
-		//msg = makeString(arr[1],client.getUserName(),":You're not on that channel\r\n",ERR_NOTONCHANNEL,".");
-		//sendClient(client, msg.c_str());
-		return(ERR_NOTONCHANNEL);
+		return ;
 	}
-	std::vector<std::string> split_users = split(arr[2].c_str(),',');
-	// std::string reason;
-	// if(arr[3].c_str())
-	// 	reason = join(arr.begin() + 3, " ", arr.size() - 3);
-	std::cout << split_users.size() << std::endl;
-	for(size_t i = 0;i < split_users.size(); i++)
+
+	std::vector<std::string> splitUsers = split(arr[2].c_str(), ',');
+
+	for (size_t i = 0; i < splitUsers.size(); i++)
 	{
-		clientTmp = tmp->getClient(split_users[i]);
-		if(!clientTmp)
+		clientTmp = tmp->getClient(splitUsers[i]);
+		if (!clientTmp)
 		{
-			cmd.destUser = split_users[i];
+			cmd.destUser = splitUsers[i];
 			this->createResponse(ERR_USERNOTINCHANNEL, cmd);
-			//msg = makeString(arr[1],client.getUserName(),":They aren't on that channel\r\n",ERR_USERNOTINCHANNEL,client.getNickName());
-			//sendClient(client,msg.c_str());
 		}
 		else
 		{
-			// if(reason.c_str())
-			// 	std::cout << reason << std::endl;
-			sendMsgToChannel(tmp, ":" + client.getNickName() + " " + str + "\r\n");
+			sendMsgToChannel(tmp, ":" + client.getNickName() + " " + line + "\r\n");
 			tmp->deleteClient(*clientTmp);
 		}
 	}
-	return(0);
+	return ;
 }

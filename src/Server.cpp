@@ -231,14 +231,14 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &
 	}
 	else if (command == "JOIN")
 		this->joinCommand(arr[0], client, cmd);
-	// else if (command == "KICK")
-	// 	std::cout << kickCommand(arr[0],client);
+	else if (command == "KICK")
+		this->kickCommand(arr[0], client, cmd);
 	else if (command == "TOPIC")
-		std::cout << topicCommand(arr[0],client);
-	else if (command == "MODE")
-		this->modes(arr[0], client);
+		this->topicCommand(arr[0], client, cmd);
 	else if (command == "INVITE")
-		this->inviteCommand(arr[0], client);
+		this->inviteCommand(arr[0], client, cmd);
+	else if (command == "MODE")
+		this->modes(arr[0], client, cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd);
 }

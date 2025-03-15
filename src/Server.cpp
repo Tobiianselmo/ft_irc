@@ -213,32 +213,36 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &
 {
 	std::string command = arr[0].substr(0, arr[0].find(" "));
 
-	if (command == "CAP")
+	if (command == "CAP" || command == "cap")
 		return ; // only for a test
-	else if (command == "PASS")
+	else if (command == "PASS" || command == "pass")
 		this->passCommand(arr[0], client, cmd);
 	else if (client.hasCorrectPass() == false)
 	{
 		std::cout << "Introduce the correct password to continue the autentication process." << std::endl; // only for a test
 	}
-	else if (command == "NICK")
+	else if (command == "NICK" || command == "nick")
 		this->nickCommand(arr, client, cmd);
-	else if (command == "USER")
+	else if (command == "USER" || command == "user")
 		this->userCommand(arr[0], client, cmd);
 	else if (client.isAuth() == false)
 	{
 		std::cout << "Introduce the correct password to continue the autentication process." << std::endl; // only for a test
 	}
-	else if (command == "JOIN")
+	else if (command == "JOIN" || command == "join")
 		this->joinCommand(arr[0], client, cmd);
-	else if (command == "KICK")
+	else if (command == "KICK" || command == "kick")
 		this->kickCommand(arr[0], client, cmd);
-	else if (command == "TOPIC")
+	else if (command == "TOPIC" || command == "topic")
 		this->topicCommand(arr[0], client, cmd);
-	else if (command == "INVITE")
+	else if (command == "INVITE" || command == "invite")
 		this->inviteCommand(arr[0], client, cmd);
-	else if (command == "MODE")
+	else if (command == "MODE" || command == "mode")
 		this->modes(arr[0], client, cmd);
+	else if (command == "CUT" || command == "cut")
+		this->cutCommand(arr[0], client, cmd);
+	else if (command == "QUIT" || command == "quit")
+		this->quitCommand(arr[0], client, cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd);
 }

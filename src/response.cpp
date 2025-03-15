@@ -18,6 +18,27 @@ std::string rpl_namreply(Server *server, t_data &cmd, std::string err)
 	return response;
 }
 
+void	Channel::sendModes(t_data &cmd)
+{
+	std::string tmp;
+
+	if (this->getInvite() == false)
+		tmp = ": INVITE MODE : Not set.\r\n";
+	else
+		tmp = ": INVITE MODE : Set.\r\n";
+	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
+	if (this->hasPassword() == false)
+		tmp = ": KEY MODE : Not set.\r\n";
+	else
+		tmp = ": KEY MODE : Set.\r\n";
+	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
+	if (this->hasTopic() == false)
+		tmp = ": TOPIC MODE : Not set.\r\n";
+	else
+		tmp = ": TOPIC MODE : Set.\r\n";
+	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
+}
+
 void Server::createResponse(int err, t_data &cmd)
 {
 	std::string prefix = ":ft_irc " + intToString(err) + " ";
@@ -36,15 +57,19 @@ void Server::createResponse(int err, t_data &cmd)
 	else if (err == RPL_NAMREPLY)  // finished
 		response = rpl_namreply(this, cmd, intToString(err));
 	else if (err == RPL_ENDOFNAMES) // finished
-	response = ":" + this->getHostName() + " " + intToString(err) + " " + cmd.client->getNickName() + " " + cmd.channelName + " :End of /NAMES list\r\n";
+		response = ":" + this->getHostName() + " " + intToString(err) + " " + cmd.client->getNickName() + " " + cmd.channelName + " :End of /NAMES list\r\n";
+	else if (err == ERR_USERNOTINCHANNEL)
+		response = cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :They aren't on that channel\r\r";
+	// else if (err == RPL_LEAVE)//check
+	// 	response = ":" + this->getHostName() + " LEAVE : " + cmd.client->getNickName() + " has left channel " + cmd.channelName + ".\r\n"; 
+		// else if (err == -1)
+	// 	response = ": MODE 
 	// else if (err == ERR_NOSUCHCHANNEL)
 	// 	response = cmd.client->getNickName() + " " + cmd.channelName + " :No such channel\r\n";
 	// else if (err == ERR_CHANOPRIVSNEEDED)
 	// 	response = cmd.client->getNickName() + " " + cmd.channelName + " :You're not channel operator\r\n";
 	// else if (err == ERR_NOTONCHANNEL)
 	// 	response = cmd.client->getNickName() + " " + cmd.channelName + " :You're not on that channel\r\n";
-	// else if (err == ERR_USERNOTINCHANNEL)
-	// 	response = cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :They aren't on that channel\r\r";
 	else
 		response = "";
 	send(cmd.client->getClientSocket(), response.c_str(), response.size(), 0);

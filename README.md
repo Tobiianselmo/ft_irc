@@ -212,7 +212,7 @@ La clase cliente maneja toda la información crucial con el usuario:
        - real name
        - FD
        - Estado de autenticacion.
-       Mati
+
 A medida que los usuarios se manejan por el servidor la clase Cliente se asegura de registrar y reinforzar los estados para que todas las operaciones funcionen.
 
 Esta clase tambien se encarga de manejar en que canales el usuario esta en el momento, manejando el recibir y enviar mensajes, manteniendo un correcto estado de las actividades del usuario en el servidor. Cuando un usuario te envia un mensaje, el cliente debe asegurarse que el mensaje este bien formateado y enviado a los receptores, ya sean usuarios o canales.

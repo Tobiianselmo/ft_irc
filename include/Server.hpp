@@ -56,10 +56,12 @@ class Server
 		void	kickCommand(std::string line, Client &client, t_data &cmd);
 		void	topicCommand(std::string line, Client &client, t_data &cmd);
 		void	inviteCommand(std::string line, Client &client, t_data &cmd);
-		
+		void	cutCommand(std::string line, Client &client, t_data &cmd);
+		void	quitCommand(std::string line, Client &client, t_data &cmd);
+
 		void	modes(std::string &line, Client &client, t_data &cmd);
-		int		addMode(std::vector<std::string> &line, Client &client, t_data &cmd);
-		int		delMode(std::vector<std::string> &line, Client &client, t_data &cmd);
+		void	addMode(std::vector<std::string> &line, Client &client, t_data &cmd);
+		void	delMode(std::vector<std::string> &line, Client &client, t_data &cmd);
 	};
 
 #endif

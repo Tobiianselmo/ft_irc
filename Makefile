@@ -23,6 +23,8 @@ response.cpp \
 send.cpp \
 kick.cpp \
 clientCommands.cpp \
+quit.cpp \
+cut.cpp \
 
 SRC = $(addprefix src/, $(FILES))
 

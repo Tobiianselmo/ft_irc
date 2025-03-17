@@ -11,7 +11,7 @@ Channel::Channel()
 	_inviteOnly = false;
 	_moderate = false;
 	_externMessages = false;
-	_hasLimit = false;
+	_hasLimit = true;
 	_hasPassword = false;
 }
 
@@ -55,6 +55,7 @@ bool		Channel::hasPassword() const { return this->_hasPassword; }
 bool		Channel::hasTopic() const { return this->_hasTopic; }
 bool		Channel::getInvite() const { return this->_inviteOnly; }
 int			Channel::getUserSize() const { return this->_users; }
+int			Channel::getUsersLimit() const { return this->_usersLimit; }
 bool		Channel::hasLimit() const { return this->_hasLimit; }
 
 void		Channel::getMode() const
@@ -157,6 +158,7 @@ void	Channel::deleteClient(const Client &client)
 		if (this->_clients[i].getNickName() == client.getNickName())
 			this->_clients.erase(this->_clients.begin() + i);
 	}
+	this->_users = _clients.size();
 }
 
 void	Channel::deletePassword() { this->_password.erase(); }

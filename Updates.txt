@@ -50,3 +50,5 @@ de cambiarlas a VOID, pero quizas querias manejarlos igual, los returns.
 -En el MODE, el +k no esta finalizado (ya lo habia comentado) y el -k ni esta empezado.
 
 -Si quieren se puede hacer como dijeron que solamente los comandos reciban el t_data &cmd, que ahi dentro tiene el cliente y la linea completa, pero no lo hice.
+
+-Chequear los duplicados, ver que se estan conectando de todas formas, por mas que ya exista el nickname, hay veces que lanza el error y otras que no, no se bien.

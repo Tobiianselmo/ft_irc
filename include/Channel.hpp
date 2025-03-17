@@ -49,6 +49,7 @@ class Channel
 		bool		getInvite() const;
 		void		getMode() const;
 		int			getUserSize() const;
+		int			getUsersLimit() const;
 		Client		*getClient(std::string nick);
 		std::vector<Client> getArrClients() const;
 

@@ -227,7 +227,7 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &
 		this->userCommand(arr[0], client, cmd);
 	else if (client.isAuth() == false)
 	{
-		std::cout << "Introduce the correct password to continue the autentication process." << std::endl; // only for a test
+		std::cout << "Introduce the correct Nickname to continue the autentication process." << std::endl; // only for a test
 	}
 	else if (command == "JOIN" || command == "join")
 		this->joinCommand(arr[0], client, cmd);

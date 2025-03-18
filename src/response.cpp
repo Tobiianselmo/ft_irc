@@ -58,9 +58,11 @@ void Server::createResponse(int err, t_data &cmd)
 		response = rpl_namreply(this, cmd, intToString(err));
 	else if (err == RPL_ENDOFNAMES) // finished
 		response = ":" + this->getHostName() + " " + intToString(err) + " " + cmd.client->getNickName() + " " + cmd.channelName + " :End of /NAMES list\r\n";
+	else if (err == ERR_PASSWDMISMATCH) // finished
+		response = prefix + "(client) :Password incorrect\r\n";
 	else if (err == ERR_NICKNAMEINUSE)
 		response = prefix + " :Nickname is already in use\r\n";
-		// else if (err == ERR_USERNOTINCHANNEL)
+	// else if (err == ERR_USERNOTINCHANNEL)
 	// 	response = cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :They aren't on that channel\r\r";
 	// else if (err == RPL_LEAVE)//check
 	// 	response = ":" + this->getHostName() + " LEAVE : " + cmd.client->getNickName() + " has left channel " + cmd.channelName + ".\r\n"; 

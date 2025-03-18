@@ -59,6 +59,20 @@ Client				*Server::getClient(std::string name)
 
 void	Server::setHostName(std::string hostname) { this->_hostName = hostname; }
 
+void	Server::remClientFromServ(Client &client, int i)
+{
+	_clientsMap.erase(client.getClientSocket());
+
+	for (int i = this->_channels.size() - 1; i >= 0; i--)
+	{
+		this->_channels[i].deleteClient(client);
+		if (this->_channels[i].getUserSize() == 0)
+			this->_channels.erase(_channels.begin() + i);
+	}
+	this->_fds.erase(this->_fds.begin() + i);
+	close(client.getClientSocket());
+}
+
 t_data Server::initStructure(std::string msg, Client &client)
 {
 	t_data ret;
@@ -132,7 +146,7 @@ void Server::handleConnections()
 				if (_fds[i].fd == _serverSocket)
 					newConnections();
 				else
-					eventMsg(_fds, i, *_clientsMap[_fds[i].fd]);
+					eventMsg(i, *_clientsMap[_fds[i].fd]);
 			}
 		}
 	}
@@ -166,19 +180,21 @@ void Server::newConnections()
 	_fds.push_back(newPoll);
 }
     
-void Server::eventMsg(std::vector<struct pollfd> &fds, int i, Client &client)
+void Server::eventMsg(int i, Client &client)
 {
 	std::vector<std::string> arr;
 	char buffer[1024];
 	std::memset(buffer, 0, sizeof(buffer));
 	int bytes = recv(client.getClientSocket(), buffer, sizeof(buffer), 0);
-	if (bytes <= 0) // Comprobar el error en 0 y -1 por separado.
+	if (bytes < 0)
 	{
-		// we'll need a remClientFromServ() function
-		_clientsMap.erase(client.getClientSocket());
-		close(client.getClientSocket());
-		fds.erase(fds.begin() + i);
+		send(client.getClientSocket(), ":Error :recv function failed\r\n", 29, 0);
+		return ;
+	}
+	else if (bytes == 0)
+	{
 		std::cout << "Client disconected." << std::endl;
+		remClientFromServ(client, i);
 		return ;
 	}
 	arr = parsedInput(buffer);

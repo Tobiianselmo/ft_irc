@@ -36,13 +36,15 @@ class Server
 		Client				*getClient(std::string name);
 
 		void	setHostName(std::string hostname);
-		
+
+		void	remClientFromServ(Client &client, int i);
+
 		t_data	initStructure(std::string msg, Client &client);
 		
 		void	setupServer();
 		void	handleConnections();
 		void	newConnections();
-		void	eventMsg(std::vector<struct pollfd> &fds, int i, Client &client);
+		void	eventMsg(int i, Client &client);
 
 		void	checkCommand(std::vector<std::string> arr,Client &client, t_data &cmd);
 		std::vector<std::string>	parsedInput(std::string str);

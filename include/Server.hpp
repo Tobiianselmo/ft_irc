@@ -53,7 +53,7 @@ class Server
 		void	nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd);
 		void	userCommand(std::string line, Client &client, t_data &cmd);
 		void	joinCommand(std::string line, Client &client, t_data &cmd);
-		int		topicCommand(std::string str, Client &client);
+		int		topicCommand(std::string str, Client &client,t_data &cmd);
 		int		kickCommand(std::string str, Client &client, t_data &cmd);
 		int		inviteCommand(std::string line, Client &client);//delfi
 

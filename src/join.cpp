@@ -44,7 +44,7 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 		{
 			cmd.channel = tmp;
 			if (tmp->isClient(client.getNickName()) == true) // Check the response here
-			break ;
+				break ;
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
 				this->createResponse(ERR_INVITEONLYCHAN, cmd);
 			else if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false))

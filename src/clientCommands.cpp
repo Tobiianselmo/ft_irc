@@ -8,7 +8,11 @@ void Server::passCommand(std::string line, Client &client, t_data &cmd)
 	else if (line.c_str() + 5 != this->getPassword())
 		this->createResponse(ERR_PASSWDMISMATCH, cmd);
 	else
+	{
 		client.setCorrectPass(true);
+		send(client.getClientSocket(),"PASS :Correct password\n",23,0);
+		send(client.getClientSocket(),"Introduce the nickname(cmd NICK or nick)\n",41,0);
+	}
 }
 
 void Server::nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd)
@@ -28,6 +32,8 @@ void Server::nickCommand(std::vector<std::string> arr, Client &client, t_data &c
 	{
 		client.setNickName(nick);
 		client.setAuth(true);
+		send(client.getClientSocket(),"NICK :Correct NickName\n",23,0);
+		send(client.getClientSocket(),"Introduce the UserName(cmd USER or user)\n",41,0);
 	}
 	if (arr.size() == 2 && !std::strncmp(arr[1].c_str(),"USER ", 5))
 		this->userCommand(arr[1], client, cmd);
@@ -44,6 +50,10 @@ void Server::userCommand(std::string line, Client &client, t_data &cmd)
 		if (userList.size() < 2)
 			this->createResponse(ERR_NEEDMOREPARAMS, cmd);
 		else
+		{
+			send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
+			send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
 			client.setUserName(userList[1]); // Check if we'll need to parse it.
+		}
 	}
 }

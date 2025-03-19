@@ -163,6 +163,7 @@ void Server::newConnections()
 	newPoll.fd = clientSocket;
 	newPoll.events = POLLIN | POLLOUT;
 	newPoll.revents = 0;
+	send(newPoll.fd,"Enter the password server(cmd PASS or pass)\n",44,0);
 	_fds.push_back(newPoll);
 }
     
@@ -215,29 +216,29 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &
 
 	if (command == "CAP")
 		return ; // only for a test
-	else if (command == "PASS")
+	else if (command == "PASS" || command == "pass")
 		this->passCommand(arr[0], client, cmd);
 	else if (client.hasCorrectPass() == false)
 	{
 		std::cout << "Introduce the correct password to continue the autentication process." << std::endl; // only for a test
 	}
-	else if (command == "NICK")
+	else if (command == "NICK" || command == "nick")
 		this->nickCommand(arr, client, cmd);
-	else if (command == "USER")
+	else if (command == "USER" || command == "user")
 		this->userCommand(arr[0], client, cmd);
 	else if (client.isAuth() == false)
 	{
 		std::cout << "Introduce the correct password to continue the autentication process." << std::endl; // only for a test
 	}
-	else if (command == "JOIN")
+	else if (command == "JOIN" || command == "join")
 		this->joinCommand(arr[0], client, cmd);
-	else if (command == "KICK")
+	else if (command == "KICK" || command == "kick")
 		std::cout << kickCommand(arr[0],client,cmd);
-	else if (command == "TOPIC")
-		std::cout << topicCommand(arr[0],client);
-	else if (command == "MODE")
+	else if (command == "TOPIC" || command == "topic")
+		std::cout << topicCommand(arr[0],client,cmd);
+	else if (command == "MODE" || command == "mode")
 		this->modes(arr[0], client);
-	else if (command == "INVITE")
+	else if (command == "INVITE" || command == "invite")
 		this->inviteCommand(arr[0], client);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd);

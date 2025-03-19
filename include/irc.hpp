@@ -26,6 +26,7 @@ typedef struct s_data
 	std::string msg; // Complete line
 	std::string	destUser; // User who will be affected
 	std::string	channelName;
+	std::string authMsg;
 	std::string cmdType; // ie: JOIN, KICK
 
 	Client		*client; // Pointer to the client who send the request
@@ -42,6 +43,7 @@ typedef enum
 	ERR_NOLIMIT = 005,
 	ERR_LIMITSET = 006,
 	ERR_INVALIDLIMIT = 007,
+	RPL_NICKSUCCESS = 011,
 	// RPL_YOURHOST = 002,
 	// RPL_CREATED = 003,
 	// RPL_MYINFO = 004,
@@ -128,7 +130,7 @@ typedef enum
 	// ERR_INPUTTOOLONG = 417,
 	ERR_UNKNOWNCOMMAND = 421,
 	// ERR_NOMOTD = 422,
-	ERR_NONICKNAMEGIVEN = 431,
+	// ERR_NONICKNAMEGIVEN = 431,
 	ERR_ERRONEUSNICKNAME = 432,
 	ERR_NICKNAMEINUSE = 433,
 	// ERR_NICKCOLLISION = 436,

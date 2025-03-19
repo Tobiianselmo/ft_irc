@@ -5,9 +5,10 @@ void Server::passCommand(std::string line, Client &client, t_data &cmd)
 	cmd.cmdType = "PASS";
 	if (client.isAuth() == true)
 		return ; // Add a response when the client tries to change the PASS, once he's auth.
-	if (line.size() < 6)
+	std::vector<std::string> splitParams = split(line, ' ');
+	if (splitParams.size() < 2)
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
-	else if (line.c_str() + 5 != this->getPassword())
+	else if (splitParams[1] != this->getPassword())
 		this->createResponse(ERR_PASSWDMISMATCH, cmd);
 	else
 		client.setCorrectPass(true);
@@ -16,18 +17,23 @@ void Server::passCommand(std::string line, Client &client, t_data &cmd)
 void Server::nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "NICK";
-	if (arr[0].size() < 6)
+	std::vector<std::string> splitParams = split(arr[0], ' ');
+	if (splitParams.size() < 2)
 	{
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
 		return ;
 	}
-	const char *nick = checkNickName(arr[0].c_str() + 5);
+	if (client.getNickName().size() == 0)
+		client.setNickName(splitParams[1]);
+	const char *nick = checkNickName(splitParams[1].c_str());
 	if (nick == NULL)
 		this->createResponse(ERR_ERRONEUSNICKNAME, cmd);
 	else if (isDuplicated(nick) == true)
 		this->createResponse(ERR_NICKNAMEINUSE, cmd);
 	else if (client.hasCorrectPass() == true)
 	{
+		cmd.authMsg = arr[0];
+		this->createResponse(RPL_NICKSUCCESS, cmd);
 		client.setNickName(nick);
 		client.setAuth(true);
 	}

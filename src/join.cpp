@@ -53,6 +53,8 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 			{
 				tmp->addClient(client);
 				sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + cmd.channel->getName() + "\r\n");
+				if (tmp->hasTopic() == true)
+					this->createResponse(RPL_TOPIC, cmd);
 				this->createResponse(RPL_NAMREPLY, cmd);
 				this->createResponse(RPL_ENDOFNAMES, cmd);
 				tmp->deleteInvited(client);
@@ -70,6 +72,8 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 					{
 						tmp->addClient(client);
 						sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + cmd.channel->getName() + "\r\n");
+						if (tmp->hasTopic() == true)
+							this->createResponse(RPL_TOPIC, cmd);
 						this->createResponse(RPL_NAMREPLY, cmd);
 						this->createResponse(RPL_ENDOFNAMES, cmd);
 						added = true;

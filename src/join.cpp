@@ -45,6 +45,8 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 			cmd.channel = tmp;
 			if (tmp->isClient(client.getNickName()) == true) // Check the response here
 				break ;
+			else if (tmp->hasLimit() == true && tmp->getUserSize() == tmp->getUsersLimit())
+				this->createResponse(ERR_CHANNELISFULL, cmd);
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
 				this->createResponse(ERR_INVITEONLYCHAN, cmd);
 			else if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false))
@@ -53,6 +55,7 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 				sendMsgToChannel(tmp, ":" + client.getNickName() + " JOIN " + cmd.channel->getName() + "\r\n");
 				this->createResponse(RPL_NAMREPLY, cmd);
 				this->createResponse(RPL_ENDOFNAMES, cmd);
+				tmp->deleteInvited(client);
 			}
 			else if (tmp->hasPassword() == true)
 			{

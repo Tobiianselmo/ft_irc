@@ -36,13 +36,15 @@ class Server
 		Client				*getClient(std::string name);
 
 		void	setHostName(std::string hostname);
-		
+
+		void	remClientFromServ(Client &client, int i);
+
 		t_data	initStructure(std::string msg, Client &client);
 		
 		void	setupServer();
 		void	handleConnections();
 		void	newConnections();
-		void	eventMsg(std::vector<struct pollfd> &fds, int i, Client &client);
+		void	eventMsg(int i, Client &client);
 
 		void	checkCommand(std::vector<std::string> arr,Client &client, t_data &cmd);
 		std::vector<std::string>	parsedInput(std::string str);
@@ -53,13 +55,15 @@ class Server
 		void	nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd);
 		void	userCommand(std::string line, Client &client, t_data &cmd);
 		void	joinCommand(std::string line, Client &client, t_data &cmd);
-		int		topicCommand(std::string str, Client &client,t_data &cmd);
-		int		kickCommand(std::string str, Client &client, t_data &cmd);
-		int		inviteCommand(std::string line, Client &client);//delfi
+		void	kickCommand(std::string line, Client &client, t_data &cmd);
+		void	topicCommand(std::string line, Client &client, t_data &cmd);
+		void	inviteCommand(std::string line, Client &client, t_data &cmd);
+		void	cutCommand(std::string line, Client &client, t_data &cmd);
+		void	quitCommand(std::string line, Client &client, t_data &cmd);
 
-		int		modes(std::string &line, Client &client);//delif
-		int		addMode(std::vector<std::string> &line, Client &client);//delfi
-		int		delMode(std::vector<std::string> &line, Client &client);//delfi
+		void	modes(std::string &line, Client &client, t_data &cmd);
+		void	addMode(std::vector<std::string> &line, Client &client, t_data &cmd);
+		void	delMode(std::vector<std::string> &line, Client &client, t_data &cmd);
 	};
 
 #endif

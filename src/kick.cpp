@@ -1,28 +1,32 @@
 
 #include "../include/Server.hpp"
 
-int Server::kickCommand(std::string str, Client &client, t_data &cmd)
+void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 {
+	cmd.cmdType = "KICK";
 	std::string msg;
-	std::vector<std::string> arr = split(str,' ');
+	std::vector<std::string> arr = split(line,' ');
 	if (arr.size() < 3)
-		return (ERR_NEEDMOREPARAMS);
+	{
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		return ;
+	}
 	cmd.channelName = arr[1];
 	cmd.channel = getChannel(cmd.channelName);
 	if(!cmd.channel)
 	{
 		this->createResponse(ERR_NOSUCHCHANNEL,cmd);
-		return(ERR_NOSUCHCHANNEL);
+		return;
 	}
 	if(!cmd.channel->isOperator(client.getNickName()))
 	{
 		this->createResponse(ERR_CHANOPRIVSNEEDED,cmd);
-		return(ERR_CHANOPRIVSNEEDED);
+		return;
 	}
 	if(!cmd.channel->isClient(cmd.client->getNickName()))
 	{
 		this->createResponse(ERR_NOTONCHANNEL,cmd);
-		return(ERR_NOTONCHANNEL);
+		return;
 	}
 	Client *clientTmp;
 	std::vector<std::string> split_users = split(arr[2].c_str(),',');
@@ -37,9 +41,9 @@ int Server::kickCommand(std::string str, Client &client, t_data &cmd)
 		}
 		else
 		{
-			sendMsgToChannel(cmd.channel, ":" + client.getNickName() + " " + str + "\r\n");
+			sendMsgToChannel(cmd.channel, ":" + client.getNickName() + " " + line + "\r\n");
 			cmd.channel->deleteClient(*clientTmp);
 		}
 	}
-	return(0);
+	return ;
 }

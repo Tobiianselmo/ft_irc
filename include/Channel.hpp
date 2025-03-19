@@ -34,8 +34,10 @@ class Channel
 		void	setName(std::string name);
 		void	setPassword(std::string password);
 		void	setHasPassword(bool value);
+		void	setHasLimit(bool value);
+		void	setLimit(int limit);
 		void	setTopic(std::string topic,bool val);
-		void	setMode(std::string mode, bool choice);
+		void	setInviteOnly(bool choice);
 		
 		// Getters
 		std::string getName() const;
@@ -43,8 +45,11 @@ class Channel
 		std::string getTopic() const;
 		bool		hasPassword() const;
 		bool		hasTopic() const;
+		bool		hasLimit() const;
 		bool		getInvite() const;
 		void		getMode() const;
+		int			getUserSize() const;
+		int			getUsersLimit() const;
 		Client		*getClient(std::string nick);
 		std::vector<Client> getArrClients() const;
 
@@ -58,16 +63,19 @@ class Channel
 		void	addClient(const Client &client);
 		void	addOperator(const Client &client);
 		void	addInvite(const Client &client);
+		
 
 		// Deleters
 		void	deleteClient(const Client &client);
 		void	deleteOperators(const Client &client);
-
+		void	deleteInvited(const Client &client);
+		void	deletePassword();
 		// Prints
 		void	printChannel();
 		void	printClients();
 		void	printInvited();
 		void	printOperators();
+		void	sendModes(t_data &cmd);
 };
 
 #endif

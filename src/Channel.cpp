@@ -11,7 +11,7 @@ Channel::Channel()
 	_inviteOnly = false;
 	_moderate = false;
 	_externMessages = false;
-	_hasLimit = false;
+	_hasLimit = true;
 	_hasPassword = false;
 }
 
@@ -42,11 +42,9 @@ void	Channel::setName(std::string name) { this->_name = name; }
 void	Channel::setPassword(std::string password) { this->_password = password; }
 void	Channel::setHasPassword(bool value) { this->_hasPassword = value; }
 void	Channel::setTopic(std::string topic,bool val) { this->_topic = topic; this->_hasTopic = val; }
-void	Channel::setMode(std::string mode, bool choice)
-{
-	if (mode == "+i" || mode == "-i")
-		this->_inviteOnly = choice;
-}
+void	Channel::setHasLimit(bool value) { this->_hasLimit = value; }
+void	Channel::setLimit(int limit) { this->_usersLimit = limit; }
+void	Channel::setInviteOnly(bool choice) { this->_inviteOnly = choice; }
 
 // Getters
 
@@ -56,10 +54,13 @@ std::string	Channel::getTopic() const { return this->_topic; }
 bool		Channel::hasPassword() const { return this->_hasPassword; }
 bool		Channel::hasTopic() const { return this->_hasTopic; }
 bool		Channel::getInvite() const { return this->_inviteOnly; }
+int			Channel::getUserSize() const { return this->_users; }
+int			Channel::getUsersLimit() const { return this->_usersLimit; }
+bool		Channel::hasLimit() const { return this->_hasLimit; }
 
 void		Channel::getMode() const
 {
-	std::cout << "Invite only Mode set to = " << this->_inviteOnly << std::endl;
+	std::cout << "invited false" << std::endl;
 }
 
 Client		*Channel::getClient(std::string nick)
@@ -125,6 +126,7 @@ void	Channel::addClient(const Client &client)
 			return ;
 	}
 	_clients.push_back(client);
+	this->_users = _clients.size();
 }
 
 void	Channel::addOperator(const Client &client)
@@ -149,18 +151,6 @@ void	Channel::addInvite(const Client &client)
 
 // Deleters
 
-// void	Channel::deleteClient(const Client &client)
-// {
-// 	int cont;
-
-// 	for (size_t i = 0; i < this->_clients.size(); i++)
-// 	{
-// 		if (this->_clients[i].getNickName() == client.getNickName())
-// 			cont = i;
-// 	}
-// 	this->_clients.erase(this->_clients.begin() + cont);
-// }
-
 void	Channel::deleteClient(const Client &client)
 {
 	for (size_t i = 0; i < this->_clients.size(); i++)
@@ -168,19 +158,10 @@ void	Channel::deleteClient(const Client &client)
 		if (this->_clients[i].getNickName() == client.getNickName())
 			this->_clients.erase(this->_clients.begin() + i);
 	}
+	this->_users = _clients.size();
 }
 
-// void	Channel::deleteOperators(const Client &client)
-// {
-// 	int cont;
-
-// 	for (size_t i = 0; i < this->_operators.size(); i++)
-// 	{
-// 		if (this->_operators[i].getNickName() == client.getNickName())
-// 			cont = i;
-// 	}
-// 	this->_operators.erase(this->_operators.begin() + cont);
-// }
+void	Channel::deletePassword() { this->_password.erase(); }
 
 void	Channel::deleteOperators(const Client &client)
 {
@@ -188,6 +169,15 @@ void	Channel::deleteOperators(const Client &client)
 	{
 		if (this->_operators[i].getNickName() == client.getNickName())
 			this->_operators.erase(this->_operators.begin() + i);
+	}
+}
+
+void	Channel::deleteInvited(const Client &client)
+{
+	for (size_t i = 0; i < this->_invites.size(); i++)
+	{
+		if (this->_invites[i].getNickName() == client.getNickName())
+			this->_invites.erase(this->_invites.begin() + i);
 	}
 }
 

@@ -18,12 +18,25 @@ std::string rpl_namreply(Server *server, t_data &cmd, std::string err)
 	return response;
 }
 
-std::string rpl_endofnames(Server *server, t_data &cmd, std::string err)
+void	Channel::sendModes(t_data &cmd)
 {
-	std::string response;
+	std::string tmp;
 
-	response = ":" + server->getHostName() + " " + err + " " + cmd.client->getNickName() + " " + cmd.channel->getName() + " :End of /NAMES list\r\n";
-	return response;
+	if (this->getInvite() == false)
+		tmp = ": INVITE MODE : Not set.\r\n";
+	else
+		tmp = ": INVITE MODE : Set.\r\n";
+	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
+	if (this->hasPassword() == false)
+		tmp = ": KEY MODE : Not set.\r\n";
+	else
+		tmp = ": KEY MODE : Set.\r\n";
+	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
+	if (this->hasTopic() == false)
+		tmp = ": TOPIC MODE : Not set.\r\n";
+	else
+		tmp = ": TOPIC MODE : Set.\r\n";
+	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
 }
 
 void Server::createResponse(int err, t_data &cmd)
@@ -55,7 +68,7 @@ void Server::createResponse(int err, t_data &cmd)
 	else if(err ==  RPL_NAMREPLY)
 		response = rpl_namreply(this, cmd, intToString(err));
 	else if(err ==  RPL_ENDOFNAMES)
-		response = rpl_endofnames(this, cmd, intToString(err));
+		response = ":" + this->getHostName() + " " + intToString(err) + " " + cmd.client->getNickName() + " " + cmd.channelName + " :End of /NAMES list\r\n";
 	else
 		response = "";
 	send(cmd.client->getClientSocket(), response.c_str(), response.size(), 0);

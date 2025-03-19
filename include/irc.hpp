@@ -37,6 +37,12 @@ typedef enum
 {
 	RPL_JOIN = 000,
 	RPL_WELCOME = 001,
+	RPL_MODE = 002,
+	RPL_CUT = 003,
+	RPL_QUIT = 004,
+	ERR_NOLIMIT = 005,
+	ERR_LIMITSET = 006,
+	ERR_INVALIDLIMIT = 007,
 	// RPL_YOURHOST = 002,
 	// RPL_CREATED = 003,
 	// RPL_MYINFO = 004,
@@ -134,9 +140,10 @@ typedef enum
 	ERR_NEEDMOREPARAMS = 461,
 	// ERR_ALREADYREGISTERED = 462,
 	ERR_PASSWDMISMATCH = 464,
+	ERR_KEYSET = 467,
 	// ERR_YOUREBANNEDCREEP = 465,
-	// ERR_CHANNELISFULL = 471,
-	// ERR_UNKNOWNMODE = 472,
+	ERR_CHANNELISFULL = 471,
+	ERR_UNKNOWNMODE = 472,
 	ERR_INVITEONLYCHAN = 473,
 	// ERR_BANNEDFROMCHAN = 474,
 	ERR_BADCHANNELKEY = 475,
@@ -177,6 +184,5 @@ std::string					join(const std::vector<std::string>::iterator &vec, const std::s
 // RESPONSES
 void						sendMsgToChannel(Channel *channel, std::string msg);
 std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);
-std::string					rpl_endofnames(Server *server, t_data &cmd, std::string err);
 
 #endif

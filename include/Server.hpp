@@ -31,6 +31,7 @@ class Server
 		int					getServerSocket() const;
 		const std::string	&getPassword() const;
 		const std::string	&getHostName() const;
+		std::vector<struct pollfd>	getFdsVector() const;
 		bool				isDuplicated(std::string name);
 		Channel				*getChannel(std::string name);
 		Client				*getClient(std::string name);
@@ -49,7 +50,8 @@ class Server
 		void	checkCommand(std::vector<std::string> arr,Client &client, t_data &cmd);
 		std::vector<std::string>	parsedInput(std::string str);
 
-		void	createResponse(int err, t_data &cmd);
+		void	createResponse(int err, t_data &cmd, int sendTo);
+		void	sendMsgToServer(std::string msg);
 
 		void	passCommand(std::string line, Client &client, t_data &cmd);
 		void	nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd);

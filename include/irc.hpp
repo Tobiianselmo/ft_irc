@@ -35,6 +35,13 @@ typedef struct s_data
 
 typedef enum
 {
+	ALL_CHANNEL,
+	ALL_CLIENTS,
+	ONLY_CLIENT
+} SEND;
+
+typedef enum
+{
 	RPL_JOIN = 000,
 	RPL_WELCOME = 001,
 	RPL_MODE = 002,
@@ -44,6 +51,7 @@ typedef enum
 	ERR_LIMITSET = 006,
 	ERR_INVALIDLIMIT = 007,
 	RPL_NICKSUCCESS = 011,
+	RPL_KICK = 012,
 	// RPL_YOURHOST = 002,
 	// RPL_CREATED = 003,
 	// RPL_MYINFO = 004,

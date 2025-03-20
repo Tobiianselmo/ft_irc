@@ -22,9 +22,9 @@ class Channel
 		bool _hasPassword;
 		bool _hasTopic;
 
-		std::vector<Client>	_invites;
-		std::vector<Client> _clients;
-		std::vector<Client> _operators;
+		std::vector<Client *> _clients;
+		std::vector<Client *>	_invites;
+		std::vector<Client *> _operators;
 	public:
 		Channel();
 		~Channel();
@@ -51,7 +51,7 @@ class Channel
 		int			getUserSize() const;
 		int			getUsersLimit() const;
 		Client		*getClient(std::string nick);
-		std::vector<Client> getArrClients() const;
+		std::vector<Client *> getArrClients() const;
 
 		// Bools
 		bool	isClient(const Client &client);
@@ -60,15 +60,15 @@ class Channel
 		bool	isInvited(std::string nick) const;
 
 		// Add
-		void	addClient(const Client &client);
-		void	addOperator(const Client &client);
-		void	addInvite(const Client &client);
+		void	addClient(Client *client);
+		void	addOperator(Client *client);
+		void	addInvite(Client *client);
 		
 
 		// Deleters
-		void	deleteClient(const Client &client);
-		void	deleteOperators(const Client &client);
-		void	deleteInvited(const Client &client);
+		void	deleteClient(Client *client);
+		void	deleteOperators(Client *client);
+		void	deleteInvited(Client *client);
 		void	deletePassword();
 		// Prints
 		void	printChannel();

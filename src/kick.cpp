@@ -4,7 +4,6 @@
 void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "KICK";
-	std::string msg;
 	std::vector<std::string> arr = split(line,' ');
 	if (arr.size() < 3)
 	{
@@ -30,7 +29,6 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 	}
 	Client *clientTmp;
 	std::vector<std::string> split_users = split(arr[2].c_str(),',');
-	std::cout << split_users.size() << std::endl;
 	for(size_t i = 0;i < split_users.size(); i++)
 	{
 		clientTmp = cmd.channel->getClient(split_users[i]);
@@ -41,7 +39,10 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 		}
 		else
 		{
-			sendMsgToChannel(cmd.channel, ":" + client.getNickName() + " " + line + "\r\n");
+			cmd.msg = cmd.cmdType + " " + cmd.channelName + " " + split_users[i];
+			if (arr[3].c_str())
+				cmd.msg += " " + join(arr.begin() + 3 , " ",arr.size() - 3);
+			sendMsgToChannel(cmd.channel, ":" + client.getNickName() + " " + cmd.msg + "\r\n");
 			cmd.channel->deleteClient(*clientTmp);
 		}
 	}

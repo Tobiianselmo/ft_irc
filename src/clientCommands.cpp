@@ -23,19 +23,40 @@ void Server::nickCommand(std::vector<std::string> arr, Client &client, t_data &c
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
 		return ;
 	}
-	if (client.getNickName().size() == 0)
-		client.setNickName(splitParams[1]);
 	const char *nick = checkNickName(splitParams[1].c_str());
-	if (nick == NULL)
-		this->createResponse(ERR_ERRONEUSNICKNAME, cmd);
-	else if (isDuplicated(nick) == true)
-		this->createResponse(ERR_NICKNAMEINUSE, cmd);
-	else if (client.hasCorrectPass() == true)
+	if (client.getNickName().size() == 0)
 	{
-		cmd.authMsg = arr[0];
-		this->createResponse(RPL_NICKSUCCESS, cmd);
-		client.setNickName(nick);
-		client.setAuth(true);
+		if (nick == NULL)
+		{
+			client.setNickName(splitParams[1]);
+			this->createResponse(ERR_ERRONEUSNICKNAME, cmd);
+		}
+		else if (isDuplicated(splitParams[1]) == true)
+		{
+			client.setNickName(splitParams[1]);
+			this->createResponse(ERR_NICKNAMEINUSE, cmd);
+		}
+		else
+		{
+			cmd.authMsg = arr[0];
+			this->createResponse(RPL_NICKSUCCESS, cmd);
+			client.setNickName(nick);
+			client.setAuth(true);
+		}
+	}
+	else
+	{
+		if (nick == NULL)
+			this->createResponse(ERR_ERRONEUSNICKNAME, cmd);
+		else if (isDuplicated(splitParams[1]) == true)
+			this->createResponse(ERR_NICKNAMEINUSE, cmd);
+		else
+		{
+			cmd.authMsg = arr[0];
+			this->createResponse(RPL_NICKSUCCESS, cmd);
+			client.setNickName(nick);
+			client.setAuth(true);
+		}
 	}
 	if (arr.size() == 2 && !std::strncmp(arr[1].c_str(),"USER ", 5))
 		this->userCommand(arr[1], client, cmd);

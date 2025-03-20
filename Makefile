@@ -16,7 +16,6 @@ Client.cpp \
 Channel.cpp \
 utils.cpp \
 join.cpp \
-mode.cpp \
 invite.cpp \
 topic.cpp \
 response.cpp \
@@ -24,6 +23,7 @@ send.cpp \
 kick.cpp \
 clientCommands.cpp \
 quit.cpp \
+# mode.cpp \
 cut.cpp \
 
 SRC = $(addprefix src/, $(FILES))

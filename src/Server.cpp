@@ -26,6 +26,7 @@ int					Server::getPort() const { return this->_port; }
 int					Server::getServerSocket() const { return this->_serverSocket; }
 const std::string	&Server::getPassword() const { return this->_password; }
 const std::string	&Server::getHostName() const { return this->_hostName; }
+std::vector<struct pollfd>	Server::getFdsVector() const { return this->_fds; }
 
 bool				Server::isDuplicated(std::string name)
 {
@@ -65,7 +66,7 @@ void	Server::remClientFromServ(Client &client, int i)
 
 	for (int i = this->_channels.size() - 1; i >= 0; i--)
 	{
-		this->_channels[i].deleteClient(client);
+		this->_channels[i].deleteClient(&client);
 		if (this->_channels[i].getUserSize() == 0)
 			this->_channels.erase(_channels.begin() + i);
 	}
@@ -188,7 +189,7 @@ void Server::eventMsg(int i, Client &client)
 	int bytes = recv(client.getClientSocket(), buffer, sizeof(buffer), 0);
 	if (bytes < 0)
 	{
-		send(client.getClientSocket(), ":Error :recv function failed\r\n", 29, 0);
+		send(client.getClientSocket(), ":Error :recv function failed\r\n", 29, 0); // Create a better response
 		return ;
 	}
 	else if (bytes == 0)
@@ -254,12 +255,12 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &
 		this->topicCommand(arr[0], client, cmd);
 	else if (command == "INVITE" || command == "invite")
 		this->inviteCommand(arr[0], client, cmd);
-	else if (command == "MODE" || command == "mode")
-		this->modes(arr[0], client, cmd);
-	else if (command == "CUT" || command == "cut")
-		this->cutCommand(arr[0], client, cmd);
+	// else if (command == "MODE" || command == "mode")
+	// 	this->modes(arr[0], client, cmd);
+	// else if (command == "CUT" || command == "cut")
+	// 	this->cutCommand(arr[0], client, cmd);
 	else if (command == "QUIT" || command == "quit")
 		this->quitCommand(arr[0], client, cmd);
 	else
-		this->createResponse(ERR_UNKNOWNCOMMAND, cmd);
+		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
 }

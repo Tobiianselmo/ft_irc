@@ -8,25 +8,25 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 	std::vector<std::string> arr = split(line,' ');
 	if (arr.size() < 3)
 	{
-		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
 	cmd.channelName = arr[1];
-	Channel *tmp = getChannel(cmd.channelName);
-	if (!tmp)
+	cmd.channel = getChannel(cmd.channelName);
+	if (!cmd.channel)
 	{
-		this->createResponse(ERR_NOSUCHCHANNEL, cmd);
+		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
-	if (!tmp->isOperator(client.getNickName()))
+	if (!cmd.channel->isOperator(client.getNickName()))
 	{
-		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd);
+		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd, ONLY_CLIENT);
 		return ;
 	}
-	Client *clientTmp = tmp->getClient(client.getNickName());
+	Client *clientTmp = cmd.channel->getClient(client.getNickName());
 	if (!clientTmp)
 	{
-		this->createResponse(ERR_NOTONCHANNEL, cmd);
+		this->createResponse(ERR_NOTONCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
 
@@ -34,16 +34,19 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 
 	for (size_t i = 0; i < splitUsers.size(); i++)
 	{
-		clientTmp = tmp->getClient(splitUsers[i]);
+		clientTmp = cmd.channel->getClient(splitUsers[i]);
 		if (!clientTmp)
 		{
 			cmd.destUser = splitUsers[i];
-			this->createResponse(ERR_USERNOTINCHANNEL, cmd);
+			this->createResponse(ERR_USERNOTINCHANNEL, cmd, ONLY_CLIENT);
 		}
 		else
 		{
-			sendMsgToChannel(tmp, ":" + client.getNickName() + " " + line + "\r\n");
-			tmp->deleteClient(*clientTmp);
+			cmd.msg = cmd.cmdType + " " + cmd.channelName + " " + splitUsers[i];
+			if (arr.size() > 3)
+				cmd.msg += " " + join(arr.begin() + 3 , " ", arr.size() - 3);
+			this->createResponse(RPL_KICK, cmd, ALL_CHANNEL);
+			cmd.channel->deleteClient(clientTmp);
 		}
 	}
 	return ;

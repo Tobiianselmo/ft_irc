@@ -5,44 +5,44 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 	cmd.cmdType = "TOPIC";
 	std::vector<std::string> arr = split(str, ' ');
 
-	if (arr.size() != 2)
+	if (arr.size() < 2)
 	{
-		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
-	Channel *tmp = getChannel(arr[1].c_str() + 1);
-	if (!tmp)
+	cmd.channelName = arr[1];
+	cmd.channel = getChannel(cmd.channelName);
+	if(!cmd.channel)
 	{
-		this->createResponse(ERR_NOSUCHCHANNEL, cmd);
-		return ;
+		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
+		return;
 	}
 	if (!arr[2].c_str())
 	{
-		if (tmp->hasTopic())
+		if (cmd.channel->hasTopic())
 		{
-			this->createResponse(RPL_TOPIC, cmd);
+			this->createResponse(RPL_TOPIC, cmd, ONLY_CLIENT);
 			return ;
 		}
 		else
 		{
-			this->createResponse(RPL_NOTOPIC, cmd);
+			this->createResponse(RPL_NOTOPIC, cmd, ONLY_CLIENT);
 			return ;
 		}
 	}
-
-	Client *clientTmp = tmp->getClient(client.getNickName());
-	if (!clientTmp)
+	if (!cmd.channel->isClient(cmd.client->getNickName()))
 	{
-		this->createResponse(ERR_NOTONCHANNEL, cmd);
-		return ;
+		this->createResponse(ERR_NOTONCHANNEL,cmd, ONLY_CLIENT);
+		return;
 	}
-
-	std::string topic = join(arr.begin() + 2, " ", arr.size() - 2);
-	if (tmp->isOperator(client.getNickName()))
+	if (cmd.channel->isOperator(client.getNickName()))
 	{
-		tmp->setTopic(topic, true);
-		this->createResponse(RPL_TOPICWHOTIME, cmd);
+		arr[2] = arr[2].c_str() + 1;
+		std::string topic = join(arr.begin() + 2, " ", arr.size() - 2);
+		cmd.channel->setTopic(topic, true);
+		this->createResponse(RPL_TOPIC, cmd, ALL_CHANNEL);
+		this->createResponse(RPL_TOPICWHOTIME, cmd, ALL_CHANNEL);
 	}
 	else
-		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd);
+		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd, ONLY_CLIENT);
 }

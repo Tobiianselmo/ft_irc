@@ -222,7 +222,8 @@ std::vector<std::string> Server::parsedInput(std::string str)
 		return (ret);
 	for (std::vector<std::string>::iterator it = ret.begin(); it != ret.end(); ++it)
 		removeCarriageReturn(*it);
-	ret.pop_back();
+	if(ret[ret.size() - 1][0] == '\0')
+		ret.pop_back();
 	return(ret);
 }
 

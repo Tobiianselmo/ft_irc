@@ -42,10 +42,7 @@ std::string join(const std::vector<std::string>::iterator &vec, const std::strin
 	std::string result;
 	size_t totalSize = 0;
 	for (size_t i = 0; i < size; ++i)
-	{
 		totalSize += vec[i].size();
-		std::cout << vec[i] << std::endl;
-	}
 	totalSize += delimiter.size() * (size - 1);
 	result.reserve(totalSize);
 

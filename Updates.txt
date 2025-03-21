@@ -1,18 +1,7 @@
-Faltan las respuestas de: (Al menos no las tengo hechas yo, capaz ya las tienen hechas)
-
-NICK:
--ERR_NONICKNAMEGIVEN
+Faltan las respuestas de:
 
 TOPIC:
--RPL_TOPIC
--RPL_NOTOPIC
 -RPL_TOPICWHOTIME
-
-KICK:
--ERR_NOSUCHCHANNEL
--ERR_CHANOPRIVSNEEDED
--ERR_NOTONCHANNEL
--ERR_USERNOTINCHANNEL
 
 INVITE:
 -ERR_NOOPERHOST
@@ -23,18 +12,11 @@ MODE:
 
 -Manejar las señales.
 
--Chequear el parseInput para los comandos por la terminal. Ya que se splitea por \n y se borra el \r, y elimina la ultima posicion porque el hexChat manda un NULL tambien.
-Entonces en la terminal siempre va a dar el problema de que es un error spliteando el buffer, ya que borra la unica posicion que existe. (NO SE SI ESTA HECHO, FALTA CHEQUEAR)
-
--Ver el /TOPIC, porque si el size es != 2 ya larga un error, pero si es 2 despues busca el arr en posicion 2, y va a dar problemas, no quise tocarlo.
-
 -En el invite creo que cuando lo agrega vamos a tener que enviarle una respuesta al cliente. Tampoco quise tocarlo.
 
 -En el MODE, el +k no esta finalizado (ya lo habia comentado) y el -k ni esta empezado.
 
 -Si quieren se puede hacer como dijeron que solamente los comandos reciban el t_data &cmd, que ahi dentro tiene el cliente y la linea completa, pero no lo hice.
-
-
 
 
 18/03/25 changes:

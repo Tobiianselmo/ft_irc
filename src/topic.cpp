@@ -21,6 +21,7 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 		if (cmd.channel->hasTopic())
 		{
 			this->createResponse(RPL_TOPIC, cmd, ONLY_CLIENT);
+			this->createResponse(RPL_TOPICWHOTIME, cmd, ALL_CHANNEL);
 			return ;
 		}
 		else
@@ -38,7 +39,7 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 	{
 		arr[2] = arr[2].c_str() + 1;
 		std::string topic = join(arr.begin() + 2, " ", arr.size() - 2);
-		cmd.channel->setTopic(topic, true);
+		cmd.channel->setTopic(topic, true,cmd.client->getNickName());
 		this->createResponse(RPL_TOPIC, cmd, ALL_CHANNEL);
 		this->createResponse(RPL_TOPICWHOTIME, cmd, ALL_CHANNEL);
 	}

@@ -41,10 +41,19 @@ Channel::Channel(const std::string &name)
 void	Channel::setName(std::string name) { this->_name = name; }
 void	Channel::setPassword(std::string password) { this->_password = password; }
 void	Channel::setHasPassword(bool value) { this->_hasPassword = value; }
-void	Channel::setTopic(std::string topic,bool val) { this->_topic = topic; this->_hasTopic = val; }
 void	Channel::setHasLimit(bool value) { this->_hasLimit = value; }
 void	Channel::setLimit(int limit) { this->_usersLimit = limit; }
 void	Channel::setInviteOnly(bool choice) { this->_inviteOnly = choice; }
+void	Channel::setTopic(std::string topic,bool val,std::string topicCreate)
+{
+	this->_topicCreate = topicCreate;
+	std::stringstream aux;	
+	this->_topic = topic;
+	this->_hasTopic = val;
+	std::time_t time = std::time(NULL);
+	aux << time;
+	this->_nowTime = aux.str();
+}
 
 // Getters
 

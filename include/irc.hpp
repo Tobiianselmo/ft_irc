@@ -17,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <ctime>
 
 class Server;
 class Channel;
@@ -29,10 +30,11 @@ typedef struct s_data
 	std::string	channelName;
 	std::string authMsg;
 	std::string cmdType; // ie: JOIN, KICK
-
+	
 	Client		*client; // Pointer to the client who send the request
 	Channel		*channel; // Pointer to the Channel
 } t_data;
+
 
 typedef enum
 {

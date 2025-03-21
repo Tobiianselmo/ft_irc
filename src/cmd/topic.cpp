@@ -1,4 +1,5 @@
-#include "../include/Server.hpp"
+#include "../../include/Server.hpp"
+
 void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "TOPIC";

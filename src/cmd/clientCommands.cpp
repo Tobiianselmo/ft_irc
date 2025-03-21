@@ -1,4 +1,4 @@
-#include "../include/Server.hpp"
+#include "../../include/Server.hpp"
 
 void Server::passCommand(std::string line, Client &client, t_data &cmd)
 {
@@ -18,10 +18,10 @@ void Server::passCommand(std::string line, Client &client, t_data &cmd)
 	}
 }
 
-void Server::nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd)
+void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "NICK";
-	std::vector<std::string> splitParams = split(arr[0], ' ');
+	std::vector<std::string> splitParams = split(line, ' ');
 	if (splitParams.size() < 2)
 	{
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
@@ -42,7 +42,7 @@ void Server::nickCommand(std::vector<std::string> arr, Client &client, t_data &c
 		}
 		else
 		{
-			cmd.authMsg = arr[0];
+			cmd.authMsg = line;
 			this->createResponse(RPL_NICKSUCCESS, cmd, ONLY_CLIENT);
 			client.setNickName(nick);
 			client.setAuth(true);
@@ -58,14 +58,12 @@ void Server::nickCommand(std::vector<std::string> arr, Client &client, t_data &c
 			this->createResponse(ERR_NICKNAMEINUSE, cmd, ONLY_CLIENT);
 		else
 		{
-			cmd.authMsg = arr[0];
+			cmd.authMsg = line;
 			this->createResponse(RPL_NICKSUCCESS, cmd, ALL_CLIENTS);
 			client.setNickName(nick);
 			client.setAuth(true);
 		}
 	}
-	if (arr.size() == 2 && !std::strncmp(arr[1].c_str(),"USER ", 5))
-		this->userCommand(arr[1], client, cmd);
 }
 
 void Server::userCommand(std::string line, Client &client, t_data &cmd)

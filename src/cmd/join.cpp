@@ -1,4 +1,4 @@
-#include "../include/Server.hpp"
+#include "../../include/Server.hpp"
 
 void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 {

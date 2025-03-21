@@ -1,12 +1,11 @@
-
-#include "../include/Server.hpp"
+#include "../../include/Server.hpp"
 
 void	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd)
 {
 	//este if es solo para los modes de canales
 	if (cmd.channel->isOperator(client.getNickName()) == false)//si el cliente que lo pide es operador
 	{
-		this->createResponse(ERR_NOOPERHOST, cmd);
+		this->createResponse(ERR_NOOPERHOST, cmd, ONLY_CLIENT);
 		return ;
 	}
 	if (line[2] == "+i")
@@ -15,33 +14,33 @@ void	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd
 	{
 		if (line.size() != 4)
 		{
-			this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 			return ;
 		}
 		Client *clientTmp = cmd.channel->getClient(line[3]);//si el cliente que se quiere hacer operador es del canal
 		if (!clientTmp)
 		{
-			this->createResponse(ERR_USERNOTINCHANNEL, cmd);
+			this->createResponse(ERR_USERNOTINCHANNEL, cmd, ONLY_CLIENT);
 			return ;
 		}
-		cmd.channel->addOperator(*clientTmp);
+		cmd.channel->addOperator(clientTmp);
 		cmd.channel->printOperators();
 	}
 	else if (line[2] == "+k") // hecho para testear el join (tobi)
 	{
 		if (line.size() < 4)
 		{
-			this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 			return ;
 		}
 		else if (line.size() > 4) // si la password tenia espacios
 		{
-			this->createResponse(ERR_INVALIDMODEPARAM, cmd);
+			this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
 			return ;
 		}
 		if (cmd.channel->hasPassword() == true)
 		{
-			this->createResponse(ERR_KEYSET, cmd);//crear mensaje en el response
+			this->createResponse(ERR_KEYSET, cmd, ONLY_CLIENT);//crear mensaje en el response
 			return ;
 		}
 		cmd.channel->setHasPassword(true);
@@ -52,24 +51,24 @@ void	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd
 	{
 		if (cmd.channel->hasLimit() == true)
 		{
-			this->createResponse(ERR_LIMITSET, cmd);//escribir mensaje
+			this->createResponse(ERR_LIMITSET, cmd, ONLY_CLIENT);//escribir mensaje
 			return ;
 		}
 		if (line.size() < 4)
 		{
-			this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 			return ;
 		}
 		if (atoi(line[3].c_str()) < cmd.channel->getUserSize())
 		{
-			this->createResponse(ERR_INVALIDLIMIT, cmd);
+			this->createResponse(ERR_INVALIDLIMIT, cmd, ONLY_CLIENT);
 			return ;
 		}
 		cmd.channel->setLimit(atoi(line[3].c_str()));
 		cmd.channel->setHasLimit(true);
 	}
 	else
-		this->createResponse(ERR_UNKNOWNMODE, cmd);
+		this->createResponse(ERR_UNKNOWNMODE, cmd, ONLY_CLIENT);
 	return ;
 }
 
@@ -77,7 +76,7 @@ void	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd
 {
 	if (cmd.channel->isOperator(client.getNickName()) == false)
 	{
-		this->createResponse(ERR_NOOPERHOST, cmd);
+		this->createResponse(ERR_NOOPERHOST, cmd, ONLY_CLIENT);
 		return ;
 	}
 	if (line[2] == "-i")
@@ -86,17 +85,17 @@ void	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd
 	{
 		if (line.size() != 4)
 		{
-			this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 			return ;
 		}
 		Client *clientTmp = cmd.channel->getClient(line[3]);
 		if (!clientTmp)
 		{
-			this->createResponse(ERR_NOSUCHNICK, cmd);
+			this->createResponse(ERR_NOSUCHNICK, cmd, ONLY_CLIENT);
 			return ;
 		}
 		if (cmd.channel->isOperator(clientTmp->getNickName()))
-			cmd.channel->deleteOperators(*clientTmp);
+			cmd.channel->deleteOperators(clientTmp);
 	}
 	else if (line[2] == "-k")
 	{
@@ -104,7 +103,7 @@ void	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd
 			return ; //buscar error
 		if (line.size() != 3)
 		{
-			this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 			return ;
 		}
 		cmd.channel->setHasPassword(false);
@@ -114,19 +113,19 @@ void	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd
 	{
 		if (cmd.channel->hasLimit() == false)
 		{
-			this->createResponse(ERR_NOLIMIT, cmd);//escribir mensaje
+			this->createResponse(ERR_NOLIMIT, cmd, ONLY_CLIENT);//escribir mensaje
 			return ;
 		}
 		if (line.size() < 3)
 		{
-			this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 			return ;
 		}
 		cmd.channel->setHasLimit(false);
 		cmd.channel->setLimit(10);
 	}
 	else
-		this->createResponse(ERR_UNKNOWNMODE, cmd);
+		this->createResponse(ERR_UNKNOWNMODE, cmd, ONLY_CLIENT);
 }
 
 void	Server::modes(std::string &line, Client &client, t_data &cmd)
@@ -136,13 +135,13 @@ void	Server::modes(std::string &line, Client &client, t_data &cmd)
 
 	if (parameters.size() < 2)
 	{
-		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
 	cmd.channel = this->getChannel(parameters[1]);
 	if (!cmd.channel)
 	{
-		this->createResponse(ERR_NOSUCHCHANNEL, cmd);
+		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
 	if (parameters.size() == 2)

@@ -205,8 +205,11 @@ void Server::eventMsg(int i, Client &client)
 		std::cout << "Error splitting buffer" << std::endl;
 		return ;
 	}
-	t_data cmd = initStructure(buffer, client);
-	checkCommand(arr, client, cmd);
+	for (size_t i = 0; i < arr.size(); i++)
+	{	
+		t_data cmd = initStructure(arr[i], client);
+		checkCommand(arr[i], client, cmd);
+	}
 }
 
 static void removeCarriageReturn(std::string &str)
@@ -228,40 +231,42 @@ std::vector<std::string> Server::parsedInput(std::string str)
 	return(ret);
 }
 
-void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &cmd)
+void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 {
-	std::string command = arr[0].substr(0, arr[0].find(" "));
+	std::string command = line.substr(0, line.find(" "));
 
 	if (command == "CAP" || command == "cap")
 		return ; // only for a test
 	else if (command == "PASS" || command == "pass")
-		this->passCommand(arr[0], client, cmd);
+		this->passCommand(line, client, cmd);
 	else if (client.hasCorrectPass() == false)
 	{
 		std::cout << "Introduce the correct password to continue the autentication process." << std::endl; // only for a test
 	}
 	else if (command == "NICK" || command == "nick")
-		this->nickCommand(arr, client, cmd);
+		this->nickCommand(line, client, cmd);
 	else if (command == "USER" || command == "user")
-		this->userCommand(arr[0], client, cmd);
+		this->userCommand(line, client, cmd);
 	else if (client.isAuth() == false)
 	{
 		std::cout << "Introduce the correct Nickname to continue the autentication process." << std::endl; // only for a test
 	}
 	else if (command == "JOIN" || command == "join")
-		this->joinCommand(arr[0], client, cmd);
+		this->joinCommand(line, client, cmd);
 	else if (command == "KICK" || command == "kick")
-		this->kickCommand(arr[0], client, cmd);
+		this->kickCommand(line, client, cmd);
 	else if (command == "TOPIC" || command == "topic")
-		this->topicCommand(arr[0], client, cmd);
+		this->topicCommand(line, client, cmd);
 	else if (command == "INVITE" || command == "invite")
-		this->inviteCommand(arr[0], client, cmd);
-	// else if (command == "MODE" || command == "mode")
-	// 	this->modes(arr[0], client, cmd);
+		this->inviteCommand(line, client, cmd);
+	else if (command == "MODE" || command == "mode")
+		this->modes(line, client, cmd);
 	// else if (command == "CUT" || command == "cut")
-	// 	this->cutCommand(arr[0], client, cmd);
+	// 	this->cutCommand(line, client, cmd);
 	else if (command == "QUIT" || command == "quit")
-		this->quitCommand(arr[0], client, cmd);
+		this->quitCommand(line, client, cmd);
+	else if (command == "PRIVMSG" || command == "privmsg")
+		this->privmsgCommand(line, client, cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
 }

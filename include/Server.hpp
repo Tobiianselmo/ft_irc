@@ -47,14 +47,14 @@ class Server
 		void	newConnections();
 		void	eventMsg(int i, Client &client);
 
-		void	checkCommand(std::vector<std::string> arr,Client &client, t_data &cmd);
+		void	checkCommand(std::string line, Client &client, t_data &cmd);
 		std::vector<std::string>	parsedInput(std::string str);
 
 		void	createResponse(int err, t_data &cmd, int sendTo);
 		void	sendMsgToServer(std::string msg);
 
 		void	passCommand(std::string line, Client &client, t_data &cmd);
-		void	nickCommand(std::vector<std::string> arr, Client &client, t_data &cmd);
+		void	nickCommand(std::string line, Client &client, t_data &cmd);
 		void	userCommand(std::string line, Client &client, t_data &cmd);
 		void	joinCommand(std::string line, Client &client, t_data &cmd);
 		void	kickCommand(std::string line, Client &client, t_data &cmd);
@@ -62,12 +62,11 @@ class Server
 		void	inviteCommand(std::string line, Client &client, t_data &cmd);
 		void	cutCommand(std::string line, Client &client, t_data &cmd);
 		void	quitCommand(std::string line, Client &client, t_data &cmd);
+		void	privmsgCommand(std::string line, Client &client, t_data &cmd);
 
 		void	modes(std::string &line, Client &client, t_data &cmd);
 		void	addMode(std::vector<std::string> &line, Client &client, t_data &cmd);
 		void	delMode(std::vector<std::string> &line, Client &client, t_data &cmd);
-
-		void	sendMsgToServer(std::string msg);
 	};
 
 #endif

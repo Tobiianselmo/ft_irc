@@ -1,5 +1,4 @@
-
-#include "../include/Server.hpp"
+#include "../../include/Server.hpp"
 
 void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 {

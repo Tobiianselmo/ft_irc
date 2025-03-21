@@ -42,6 +42,7 @@ void	Channel::sendModes(t_data &cmd)
 void Server::createResponse(int err, t_data &cmd, int sendTo)
 {
 	std::string prefix = ":ft_irc " + intToString(err) + " ";
+
 	std::string response;
 
 	//General responses
@@ -73,6 +74,12 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	//Kick responses
 	else if (err == RPL_KICK)
 		response = ":" + cmd.client->getNickName() + " " + cmd.msg + "\r\n";
+	else if(err ==  ERR_CHANOPRIVSNEEDED)
+		response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " :You're not channel operator\r\n";
+	else if(err ==  ERR_NOTONCHANNEL)
+		response = cmd.client->getNickName() + " " + cmd.channelName + " :You're not on that channel\r\n";
+	else if(err ==  ERR_USERNOTINCHANNEL)
+		response = prefix + " " + cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :They aren't on that channel\r\n"; //finished
 
 
 	//Nick respones
@@ -86,7 +93,6 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	//Pass responses
 	else if (err == ERR_PASSWDMISMATCH)
 		response = prefix + "(client) :Password incorrect\r\n";
-
 
 	else
 		response = "";

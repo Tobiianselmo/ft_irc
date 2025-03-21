@@ -2,9 +2,9 @@
 
 std::vector<std::string> split(const std::string &str, char delimiter)
 {
-	std::vector<std::string> tokens;
-	size_t start = 0;
-	size_t end = str.find(delimiter);
+    std::vector<std::string> tokens;
+    size_t start = 0;
+    size_t end = str.find(delimiter);
 
 	while (end != std::string::npos)
 	{
@@ -37,7 +37,7 @@ std::string intToString(int nbr)
 	return ss.str();
 }
 
-std::string join(const std::vector<std::string>::iterator &vec, const std::string &delimiter,size_t size)
+std::string join(const std::vector<std::string>::iterator &vec, const std::string &delimiter, size_t size)
 {
 	std::string result;
 	size_t totalSize = 0;

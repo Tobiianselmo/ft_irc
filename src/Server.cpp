@@ -178,6 +178,7 @@ void Server::newConnections()
 	newPoll.fd = clientSocket;
 	newPoll.events = POLLIN | POLLOUT;
 	newPoll.revents = 0;
+	send(newPoll.fd,"Enter the password server(cmd PASS or pass)\n",44,0);
 	_fds.push_back(newPoll);
 }
     

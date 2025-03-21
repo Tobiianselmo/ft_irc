@@ -4,7 +4,6 @@
 void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "KICK";
-	std::string msg;
 	std::vector<std::string> arr = split(line,' ');
 	if (arr.size() < 3)
 	{
@@ -23,15 +22,13 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd, ONLY_CLIENT);
 		return ;
 	}
-	Client *clientTmp = cmd.channel->getClient(client.getNickName());
-	if (!clientTmp)
+	if (!cmd.channel->isClient(cmd.client->getNickName()))
 	{
 		this->createResponse(ERR_NOTONCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
-
+	Client *clientTmp;
 	std::vector<std::string> splitUsers = split(arr[2].c_str(), ',');
-
 	for (size_t i = 0; i < splitUsers.size(); i++)
 	{
 		clientTmp = cmd.channel->getClient(splitUsers[i]);

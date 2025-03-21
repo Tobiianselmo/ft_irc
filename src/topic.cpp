@@ -1,5 +1,4 @@
 #include "../include/Server.hpp"
-
 void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "TOPIC";
@@ -12,7 +11,7 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 	}
 	cmd.channelName = arr[1];
 	cmd.channel = getChannel(cmd.channelName);
-	if(!cmd.channel)
+	if (!cmd.channel)
 	{
 		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 		return;
@@ -33,7 +32,7 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 	if (!cmd.channel->isClient(cmd.client->getNickName()))
 	{
 		this->createResponse(ERR_NOTONCHANNEL,cmd, ONLY_CLIENT);
-		return;
+		return ;
 	}
 	if (cmd.channel->isOperator(client.getNickName()))
 	{

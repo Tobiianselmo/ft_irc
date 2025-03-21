@@ -67,7 +67,6 @@ class Server
 		void	addMode(std::vector<std::string> &line, Client &client, t_data &cmd);
 		void	delMode(std::vector<std::string> &line, Client &client, t_data &cmd);
 
-		void	sendMsgToServer(std::string msg);
 	};
 
 #endif

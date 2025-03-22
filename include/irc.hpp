@@ -190,6 +190,8 @@ std::vector<std::string>	split(const std::string &str, char delimiter);
 const char					*checkNickName(const char *str);
 std::string					intToString(int nbr);
 std::string					join(const std::vector<std::string>::iterator &vec, const std::string& delimiter, size_t size);
+std::string					join(const std::vector<std::string> &vec);
+std::string					commandToUpper(std::string line);
 
 // RESPONSES
 void						sendMsgToChannel(Channel *channel, std::string msg);

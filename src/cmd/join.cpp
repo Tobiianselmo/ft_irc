@@ -3,6 +3,7 @@
 void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "JOIN";
+	cmd.msg = commandToUpper(line);
 	std::vector<std::string> parameters = split(line, ' ');
 
 	if (parameters.size() < 2)

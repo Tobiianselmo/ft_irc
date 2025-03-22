@@ -73,7 +73,7 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else if (err == RPL_TOPICWHOTIME)
 		response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " " + cmd.channel->getTopicCreate() + " " + cmd.channel->getNowTime() + "\r\n";
 	else if (err == RPL_REMOVETOPIC)
-		response = prefix + "TEST " + cmd.channelName + " :Clearing the topic on " + cmd.channelName + "\r\n";
+		response = prefix + "test " + cmd.channelName + " :Clearing the topic on " + cmd.channelName + "\r\n";
 
 	//Kick responses
 	else if (err == RPL_KICK)

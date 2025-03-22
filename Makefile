@@ -10,26 +10,23 @@ CFLAGS = -Wall -Werror -Wextra -std=c++98
 
 RM = rm -rf
 
-# FILES = main.cpp \
-# Server.cpp \
-# Client.cpp \
-# Channel.cpp \
-# utils.cpp \
-# join.cpp \
-# invite.cpp \
-# topic.cpp \
-# response.cpp \
-# send.cpp \
-# kick.cpp \
-# clientCommands.cpp \
-# quit.cpp \
-# mode.cpp \
-cut.cpp \
-
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC_FILES = main Server Client Channel utils join invite topic response send kick clientCommands quit
+SRC_FILES = main \
+			Server \
+			Client \
+			Channel \
+			utils \
+			join \
+			invite \
+			topic \
+			response \
+			send \
+			kick \
+			clientCommands \
+			quit \
+			info \
 
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
 OBJ = $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))

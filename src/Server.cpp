@@ -262,6 +262,8 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &
 	// 	this->cutCommand(arr[0], client, cmd);
 	else if (command == "QUIT" || command == "quit")
 		this->quitCommand(arr[0], client, cmd);
+	else if (command == "INFO" || command == "info")
+		this->infoCommand(cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
 }

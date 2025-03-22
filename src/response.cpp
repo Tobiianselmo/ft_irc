@@ -50,7 +50,17 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = prefix + cmd.client->getNickName() + " :Unknown command\r\n";
 	else if (err == ERR_NEEDMOREPARAMS)  // finished
 		response = prefix + cmd.client->getNickName() + " " + cmd.cmdType + " :Not enough parameters\r\n";
-		
+	
+	//Privmsg responses
+	else if (err == RPL_PRIVMSGSUCCESS)
+		response = ":" + cmd.client->getNickName() + " " + cmd.cmdType + " " + cmd.destUser + " " + cmd.privMessage + "\r\n"; 
+	else if (err == ERR_NOTEXTTOSEND)
+		response = prefix + cmd.client->getNickName() + " :No text to send\r\n";
+	else if (err == ERR_CANNOTSENDTOCHAN)
+		response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " :Cannot send to channel\r\n";
+	else if (err == ERR_NOSUCHNICK)
+		response = prefix + cmd.client->getNickName() + " " + cmd.destUser + " :No such nick/channel\r\n";
+
 	//Join responses
 	else if (err == RPL_JOIN)  // finished
 		response = ":" + cmd.client->getNickName() + " JOIN " + cmd.channelName + "\r\n";
@@ -97,9 +107,13 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else
 		response = "";
 	if (sendTo == ALL_CHANNEL)
-		sendMsgToChannel(cmd.channel, response);
+		sendMsgToChannel(cmd.channel, response, ALL_CHANNEL);
+	else if (sendTo == ONLY_OPERATORS)
+		sendMsgToChannel(cmd.channel, response, ONLY_OPERATORS);
 	else if (sendTo == ALL_CLIENTS)
 		sendMsgToServer(response);
+	else if (sendTo == ONE_CLIENT)
+		sendMsgToOneClient(response, cmd);
 	else
 		send(cmd.client->getClientSocket(), response.c_str(), response.size(), 0);
 }

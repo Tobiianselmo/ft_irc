@@ -13,6 +13,7 @@ Channel::Channel()
 	_externMessages = false;
 	_hasLimit = true;
 	_hasPassword = false;
+	_allowedTopic = false;
 }
 
 Channel::~Channel()
@@ -34,6 +35,7 @@ Channel::Channel(const std::string &name)
 	_hasLimit = false;
 	_hasPassword = false;
 	_hasTopic = false;
+	_allowedTopic = false;
 }
 
 // Setters
@@ -45,6 +47,7 @@ void	Channel::setTopic(std::string topic,bool val) { this->_topic = topic; this-
 void	Channel::setHasLimit(bool value) { this->_hasLimit = value; }
 void	Channel::setLimit(int limit) { this->_usersLimit = limit; }
 void	Channel::setInviteOnly(bool choice) { this->_inviteOnly = choice; }
+void	Channel::setAllowedTopic(bool choice) { this->_allowedTopic = choice; }
 
 // Getters
 
@@ -57,6 +60,7 @@ bool		Channel::getInvite() const { return this->_inviteOnly; }
 int			Channel::getUserSize() const { return this->_users; }
 int			Channel::getUsersLimit() const { return this->_usersLimit; }
 bool		Channel::hasLimit() const { return this->_hasLimit; }
+bool		Channel::getAllowedTopic() const { return this->_allowedTopic; }
 
 void		Channel::getMode() const
 {

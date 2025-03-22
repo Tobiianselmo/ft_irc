@@ -182,6 +182,15 @@ void Server::newConnections()
 	_fds.push_back(newPoll);
 }
     
+// client._buffer = client.buffer.append(buffer)
+// if (!client._buffer.find(\n))
+// 	return;
+//para señales, viene bien que el cliente tenga el buffer control d
+//Ver errores de cuando hay muchos saltos de linea
+
+//control z => suspende proceso. tiene que llegar los mensajes que se envien despues
+// de que se suspende
+
 void Server::eventMsg(int i, Client &client)
 {
 	std::vector<std::string> arr;
@@ -256,8 +265,8 @@ void Server::checkCommand(std::vector<std::string> arr, Client &client, t_data &
 		this->topicCommand(arr[0], client, cmd);
 	else if (command == "INVITE" || command == "invite")
 		this->inviteCommand(arr[0], client, cmd);
-	// else if (command == "MODE" || command == "mode")
-	// 	this->modes(arr[0], client, cmd);
+	else if (command == "MODE" || command == "mode")
+		this->modes(arr[0], client, cmd);
 	// else if (command == "CUT" || command == "cut")
 	// 	this->cutCommand(arr[0], client, cmd);
 	else if (command == "QUIT" || command == "quit")

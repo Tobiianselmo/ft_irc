@@ -1,3 +1,8 @@
 no funciona lo de los duplicados, me deja joinear igual (FIXED)
 no toquen el quit o el cut asi los termino yo.
 PART #chan :Leaving   (cuando le hacemos click derecho al canal y lo cerramos hexchat envia el comando PART) 
+
+
+mode isOperator
+
+mandarle mensaje al nuevo operador o al que estes eliminando, con la funcion de tobi

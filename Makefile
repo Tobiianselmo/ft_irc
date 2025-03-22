@@ -29,7 +29,7 @@ cut.cpp \
 SRC_DIR = src/
 OBJ_DIR = obj/
 
-SRC_FILES = main Server Client Channel utils join invite topic response send kick clientCommands quit
+SRC_FILES = main Server Client Channel utils join invite topic response send kick clientCommands quit mode
 
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
 OBJ = $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))

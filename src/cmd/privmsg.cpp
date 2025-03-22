@@ -1,9 +1,19 @@
 #include "../../include/Server.hpp"
 
-/* 
+/*
 	Params: PRIVMSG (USUARIO A QUIEN ENVIA),(SI SON VARIOS) (MENSAJE)
 
 	Chequear si es un canal o un usuario con el primer caracter.
+
+	Chequear que el cliente no es baneado del canal.
+
+	Si hay un error es el ERR_CANNOTSENDTOCHAN (404)
+
+
+	CREAR RESPUESTAS:
+	ERR_CANNOTSENDTOCHAN
+	ERR_NOTEXTTOSEND
+
 
 	FINALIZAR
 
@@ -13,81 +23,60 @@ void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 {
 	(void)client;
 	cmd.cmdType = "PRIVMSG";
+	cmd.msg = commandToUpper(line);
 	std::vector<std::string> parameters = split(line, ' ');
-
+	
 	if (parameters.size() < 2)
 	{
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
-
+	
 	std::vector<std::string> targetList = split(parameters[1], ',');
-	std::vector<std::string> message;
+	if (parameters.size() < 3)
+	{
+		this->createResponse(ERR_NOTEXTTOSEND, cmd, ONLY_CLIENT);
+		return ;
+	}
+	std::string message = join(parameters.begin() + 2, " ", parameters.size() - 2);
 
 	for (size_t i = 0; i < targetList.size(); i++)
 	{
 		std::string target = targetList[i];
-		// cmd.channelName = channelName;
-		if (target.empty() || (!isalpha(target[0]) && !strchr("#&", target[0])))
+		cmd.destUser = target;
+		if (target.empty() || (!isalpha(target[0]) && !strchr("#&@", target[0])))
 		{
-			std::cout << "entra " << target << std::endl;
-			this->createResponse(ERR_BADCHANMASK, cmd, ONLY_CLIENT);
+			this->createResponse(ERR_NOSUCHNICK, cmd, ONLY_CLIENT);
 			continue ;
 		}
-		// tmp = this->getChannel(channelName);
-		// if (!tmp)
-		// {
-		// 	Channel newChannel(channelName);
-		// 	newChannel.addClient(&client);
-		// 	newChannel.addOperator(&client);
-		// 	_channels.push_back(newChannel);
-		// 	cmd.channel = &newChannel;
-		// 	this->createResponse(RPL_JOIN, cmd, ONLY_CLIENT);
-		// 	this->createResponse(RPL_NAMREPLY, cmd, ONLY_CLIENT);
-		// 	this->createResponse(RPL_ENDOFNAMES, cmd, ONLY_CLIENT);
-		// }
-		// else
-		// {
-		// 	cmd.channel = tmp;
-		// 	if (tmp->isClient(client.getNickName()) == true) // Check the response here
-		// 		break ;
-		// 	else if (tmp->hasLimit() == true && tmp->getUserSize() == tmp->getUsersLimit())
-		// 		this->createResponse(ERR_CHANNELISFULL, cmd, ONLY_CLIENT);
-		// 	else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)
-		// 		this->createResponse(ERR_INVITEONLYCHAN, cmd, ONLY_CLIENT);
-		// 	else if ((tmp->getInvite() == true && tmp->isInvited(client.getNickName())) || (tmp->getInvite() == false && tmp->hasPassword() == false))
-		// 	{
-		// 		tmp->addClient(&client);
-		// 		this->createResponse(RPL_JOIN, cmd, ALL_CHANNEL);
-		// 		if (tmp->hasTopic() == true)
-		// 			this->createResponse(RPL_TOPIC, cmd, ONLY_CLIENT);
-		// 		this->createResponse(RPL_NAMREPLY, cmd, ONLY_CLIENT);
-		// 		this->createResponse(RPL_ENDOFNAMES, cmd, ONLY_CLIENT);
-		// 		tmp->deleteInvited(&client);
-		// 	}
-		// 	else if (tmp->hasPassword() == true)
-		// 	{
-		// 		for (bool added = false; added != true;)
-		// 		{
-		// 			if (keyList.empty())
-		// 			{
-		// 				this->createResponse(ERR_BADCHANNELKEY, cmd, ONLY_CLIENT);
-		// 				break ;
-		// 			}
-		// 			else if (tmp->getPassword() == keyList[0])
-		// 			{
-		// 				tmp->addClient(&client);
-		// 				this->createResponse(RPL_JOIN, cmd, ALL_CHANNEL);
-		// 				if (tmp->hasTopic() == true)
-		// 					this->createResponse(RPL_TOPIC, cmd, ONLY_CLIENT);
-		// 				this->createResponse(RPL_NAMREPLY, cmd, ONLY_CLIENT);
-		// 				this->createResponse(RPL_ENDOFNAMES, cmd, ONLY_CLIENT);
-		// 				added = true;
-		// 			}
-		// 			if (!keyList.empty())
-		// 				keyList.erase(keyList.begin());
-		// 		}
-		// 	}
-		// }
+		cmd.privMessage = message;
+		if (strchr("#&@", target[0]))
+		{
+			if (target[0] == '@' && target.size() > 1) // Will send the msg only to the operators
+			{
+				cmd.channel = this->getChannel(&target[1]);
+				cmd.destUser = &target[1];
+				if (!cmd.channel)
+					this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
+				else
+					this->createResponse(RPL_PRIVMSGSUCCESS, cmd, ONLY_OPERATORS);
+			}
+			else
+			{
+				cmd.channel = this->getChannel(target);
+				if (!cmd.channel)
+					this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
+				else
+					this->createResponse(RPL_PRIVMSGSUCCESS, cmd, ALL_CHANNEL);
+			}
+		}
+		else // If it is a client
+		{
+			Client *tmp = this->getClient(target);
+			if (!tmp)
+				this->createResponse(ERR_NOSUCHNICK, cmd, ONLY_CLIENT);
+			else
+				this->createResponse(RPL_PRIVMSGSUCCESS, cmd, ONE_CLIENT);
+		}
 	}
 }

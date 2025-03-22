@@ -52,6 +52,7 @@ class Server
 
 		void	createResponse(int err, t_data &cmd, int sendTo);
 		void	sendMsgToServer(std::string msg);
+		void	sendMsgToOneClient(std::string msg, t_data &cmd);
 
 		void	passCommand(std::string line, Client &client, t_data &cmd);
 		void	nickCommand(std::string line, Client &client, t_data &cmd);

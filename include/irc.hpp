@@ -24,11 +24,12 @@ class Client;
 
 typedef struct s_data
 {
-	std::string msg; // Complete line
+	std::string	msg; // Complete line
 	std::string	destUser; // User who will be affected
+	std::string	privMessage; // Message to send in PRIVMSG
 	std::string	channelName;
-	std::string authMsg;
-	std::string cmdType; // ie: JOIN, KICK
+	std::string	authMsg;
+	std::string	cmdType; // ie: JOIN, KICK
 
 	Client		*client; // Pointer to the client who send the request
 	Channel		*channel; // Pointer to the Channel
@@ -38,6 +39,8 @@ typedef enum
 {
 	ALL_CHANNEL,
 	ALL_CLIENTS,
+	ONLY_OPERATORS,
+	ONE_CLIENT,
 	ONLY_CLIENT
 } SEND;
 
@@ -53,6 +56,7 @@ typedef enum
 	ERR_INVALIDLIMIT = 007,
 	RPL_NICKSUCCESS = 011,
 	RPL_KICK = 012,
+	RPL_PRIVMSGSUCCESS = 013,
 	// RPL_YOURHOST = 002,
 	// RPL_CREATED = 003,
 	// RPL_MYINFO = 004,
@@ -130,12 +134,12 @@ typedef enum
 	ERR_NOSUCHNICK = 401,
 	// ERR_NOSUCHSERVER = 402,
 	ERR_NOSUCHCHANNEL = 403,
-	// ERR_CANNOTSENDTOCHAN = 404,
+	ERR_CANNOTSENDTOCHAN = 404,
 	// ERR_TOOMANYCHANNELS = 405,
 	// ERR_WASNOSUCHNICK = 406,
 	// ERR_NOORIGIN = 409,
 	// ERR_NORECIPIENT = 411,
-	// ERR_NOTEXTTOSEND = 412,
+	ERR_NOTEXTTOSEND = 412,
 	// ERR_INPUTTOOLONG = 417,
 	ERR_UNKNOWNCOMMAND = 421,
 	// ERR_NOMOTD = 422,
@@ -193,7 +197,7 @@ std::string					join(const std::vector<std::string>::iterator &vec, const std::s
 std::string					commandToUpper(std::string line);
 
 // RESPONSES
-void						sendMsgToChannel(Channel *channel, std::string msg);
+void						sendMsgToChannel(Channel *channel, std::string msg, int sendTo);
 std::string					rpl_namreply(Server *server, t_data &cmd, std::string err);
 
 #endif

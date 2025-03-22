@@ -57,6 +57,8 @@ void	Channel::setTopic(std::string topic,bool val,std::string topicCreate)
 
 // Getters
 
+std::string Channel::getTopicCreate() const {return this->_topicCreate;}
+std::string Channel::getNowTime() const {return this->_nowTime;}
 std::string	Channel::getName() const { return this->_name; }
 std::string	Channel::getPassword() const { return this->_password; }
 std::string	Channel::getTopic() const { return this->_topic; }

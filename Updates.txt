@@ -1,7 +1,5 @@
 Faltan las respuestas de:
 
-TOPIC:
--RPL_TOPICWHOTIME
 
 INVITE:
 -ERR_NOOPERHOST

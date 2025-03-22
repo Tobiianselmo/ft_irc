@@ -70,6 +70,10 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = prefix + cmd.client->getNickName() + " " + cmd.channel->getName() + " :No topic is set\r\n";
 	else if (err == ERR_NOSUCHCHANNEL)
 		response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " :No such channel\r\n";
+	else if (err == RPL_TOPICWHOTIME)
+		response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " " + cmd.channel->getTopicCreate() + " " + cmd.channel->getNowTime() + "\r\n";
+	else if (err == RPL_REMOVETOPIC)
+		response = prefix + "TEST " + cmd.channelName + " :Clearing the topic on " + cmd.channelName + "\r\n";
 
 	//Kick responses
 	else if (err == RPL_KICK)
@@ -79,7 +83,7 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else if(err ==  ERR_NOTONCHANNEL)
 		response = cmd.client->getNickName() + " " + cmd.channelName + " :You're not on that channel\r\n";
 	else if(err ==  ERR_USERNOTINCHANNEL)
-		response = prefix + " " + cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :They aren't on that channel\r\n"; //finished
+		response = prefix + " " + cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :They aren't on that channel\r\n";
 
 
 	//Nick respones

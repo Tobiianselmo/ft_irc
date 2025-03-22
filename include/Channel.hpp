@@ -45,6 +45,8 @@ class Channel
 		std::string getName() const;
 		std::string getPassword() const;	
 		std::string getTopic() const;
+		std::string getTopicCreate() const;
+		std::string getNowTime() const;
 		bool		hasPassword() const;
 		bool		hasTopic() const;
 		bool		hasLimit() const;

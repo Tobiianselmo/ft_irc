@@ -15,12 +15,13 @@ class Channel
 		int _users;
 		int _usersLimit;
 
-		bool _inviteOnly;
-		bool _moderate;
-		bool _externMessages;
-		bool _hasLimit;
-		bool _hasPassword;
-		bool _hasTopic;
+		bool	_inviteOnly;
+		bool	_moderate;
+		bool	_externMessages;
+		bool	_hasLimit;
+		bool	_hasPassword;
+		bool	_hasTopic;
+		bool	_allowedTopic;
 
 		std::vector<Client *> _clients;
 		std::vector<Client *>	_invites;
@@ -38,7 +39,8 @@ class Channel
 		void	setLimit(int limit);
 		void	setTopic(std::string topic,bool val);
 		void	setInviteOnly(bool choice);
-		
+		void	setAllowedTopic(bool choice);
+
 		// Getters
 		std::string getName() const;
 		std::string getPassword() const;	
@@ -47,6 +49,7 @@ class Channel
 		bool		hasTopic() const;
 		bool		hasLimit() const;
 		bool		getInvite() const;
+		bool		getAllowedTopic() const;
 		void		getMode() const;
 		int			getUserSize() const;
 		int			getUsersLimit() const;
@@ -75,7 +78,7 @@ class Channel
 		void	printClients();
 		void	printInvited();
 		void	printOperators();
-		void	sendModes(t_data &cmd);
+		void	sendModes(t_data &cmd, int num);
 };
 
 #endif

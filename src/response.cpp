@@ -18,25 +18,38 @@ std::string rpl_namreply(Server *server, t_data &cmd, std::string err)
 	return response;
 }
 
-void	Channel::sendModes(t_data &cmd)
+void	Channel::sendModes(t_data &cmd, int num)
 {
 	std::string tmp;
+	std::string	prefix = ":ft_irc " + intToString(num) + " " + cmd.client->getNickName() + " " + cmd.channel->getName() + " :+";
 
-	if (this->getInvite() == false)
-		tmp = ": INVITE MODE : Not set.\r\n";
-	else
-		tmp = ": INVITE MODE : Set.\r\n";
-	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
-	if (this->hasPassword() == false)
-		tmp = ": KEY MODE : Not set.\r\n";
-	else
-		tmp = ": KEY MODE : Set.\r\n";
-	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
-	if (this->hasTopic() == false)
-		tmp = ": TOPIC MODE : Not set.\r\n";
-	else
-		tmp = ": TOPIC MODE : Set.\r\n";
-	send(cmd.client->getClientSocket(), tmp.c_str(), tmp.size(), 0);
+	if (this->getInvite() == true)
+		tmp = "i";
+	if (this->hasPassword() == true)
+	{
+		if (tmp.size() > 0)	//consultar
+			tmp += "k";
+		else
+			tmp = "k";
+	}
+	if (this->getAllowedTopic() == true)
+	{
+		if (tmp.size() > 0)	//consultar
+			tmp += "t";
+		else
+			tmp = "t";
+	}
+	if (this->hasLimit() == true)
+	{
+		if (tmp.size() > 0)
+			tmp += "l";
+		else
+			tmp = "l";
+	}
+	if (tmp.size() > 0)	
+		prefix += tmp;
+	prefix += "\r\n";
+	send(cmd.client->getClientSocket(), prefix.c_str(), prefix.size(), 0);
 }
 
 void Server::createResponse(int err, t_data &cmd, int sendTo)
@@ -104,6 +117,18 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else if (err == ERR_PASSWDMISMATCH)
 		response = prefix + "(client) :Password incorrect\r\n";
 
+	else if (err == ERR_INVALIDMODEPARAM)
+		response = prefix + cmd.client->getNickName() + " : Invalid mode parameter\r\n";
+	else if (err == ERR_KEYSET)
+		response = prefix + cmd.client->getNickName() + " : Channel key already set\r\n";
+	else if (err == ERR_LIMITSET)
+		response = prefix + cmd.client->getNickName() + " : Channel user limit already set\r\n";
+	else if (err == ERR_INVALIDLIMIT)
+		response = prefix + cmd.client->getNickName() + " : Can't set a channel limit higher than " + intToString(cmd.channel->getUserSize()) + "\r\n";
+	else if (err == ERR_UNKNOWNMODE)
+		response = prefix + cmd.client->getNickName() + " : Unknown mode\r\n";
+	// else if (err = ERR)
+	
 	else
 		response = "";
 	if (sendTo == ALL_CHANNEL)

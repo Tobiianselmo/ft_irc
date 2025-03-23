@@ -66,8 +66,17 @@ class Server
 		void	privmsgCommand(std::string line, Client &client, t_data &cmd);
 
 		void	modes(std::string &line, Client &client, t_data &cmd);
-		void	addMode(std::vector<std::string> &line, Client &client, t_data &cmd);
-		void	delMode(std::vector<std::string> &line, Client &client, t_data &cmd);
+		int		addMode(std::vector<std::string> &line, Client &client, t_data &cmd, int *i);
+		int		delMode(std::vector<std::string> &line, Client &client, t_data &cmd, int *i);
+		void	modeErrorMsg(t_data &cmd, std::string &msg);
+
+		int		addChannelOperator(t_data &cmd, std::vector<std::string> &line, int args);
+		int		addChannelLimit(t_data &cmd, std::vector<std::string> &line, int args);
+		int		addChannelKey(t_data &cmd, std::vector<std::string> &line, int args);
+
+		int		delChannelOperator(t_data &cmd, std::vector<std::string> &line, int args);
+		int		delChannelKey(t_data &cmd, std::vector<std::string> &line, int args);
+		int		delChannelLimit(t_data &cmd, std::vector<std::string> &line, int args);
 	};
 
 #endif

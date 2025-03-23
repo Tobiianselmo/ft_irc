@@ -31,6 +31,9 @@ typedef struct s_data
 	std::string	authMsg;
 	std::string	cmdType; // ie: JOIN, KICK
 
+	std::string	prefix;
+	std::string	suffix;
+
 	Client		*client; // Pointer to the client who send the request
 	Channel		*channel; // Pointer to the Channel
 } t_data;
@@ -56,7 +59,11 @@ typedef enum
 	ERR_INVALIDLIMIT = 007,
 	RPL_NICKSUCCESS = 011,
 	RPL_KICK = 012,
-	RPL_PRIVMSGSUCCESS = 013,
+	ERR_INVALIDCHAR = 013,
+	RPL_INVITE = 014,
+	RPL_TOPIC_mode = 015,
+	RPL_KEY = 016,
+	RPL_PRIVMSGSUCCESS = 017,
 	// RPL_YOURHOST = 002,
 	// RPL_CREATED = 003,
 	// RPL_MYINFO = 004,

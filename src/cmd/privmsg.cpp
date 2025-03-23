@@ -25,13 +25,13 @@ void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 	cmd.cmdType = "PRIVMSG";
 	cmd.msg = commandToUpper(line);
 	std::vector<std::string> parameters = split(line, ' ');
-	
+
 	if (parameters.size() < 2)
 	{
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
-	
+
 	std::vector<std::string> targetList = split(parameters[1], ',');
 	if (parameters.size() < 3)
 	{

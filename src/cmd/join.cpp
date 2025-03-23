@@ -17,9 +17,9 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 	
 	if (parameters.size() > 2)
 	keyList = split(parameters[2], ',');
-	
+
 	Channel *tmp;
-	
+
 	for (size_t i = 0; i < channelList.size(); i++)
 	{
 		std::string channelName = channelList[i];

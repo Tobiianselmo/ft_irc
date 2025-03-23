@@ -58,7 +58,7 @@ std::string join(const std::vector<std::string>::iterator &vec, const std::strin
 std::string commandToUpper(std::string line)
 {
 	std::vector<std::string> splitParams = split(line, ' ');
-	
+
 	for (size_t i = 0; i < splitParams[0].size(); i++)
 		splitParams[0][i] = toupper(splitParams[0][i]);
 

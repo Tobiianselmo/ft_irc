@@ -8,12 +8,14 @@ class Client;
 class Channel
 {
 	private:
-		std::string _name;
-		std::string _password;
-		std::string _topic;
+		std::string	_name;
+		std::string	_password;
+		std::string	_topic;
+		std::string	_nowTime;
+		std::string	_topicCreate;
 
-		int _users;
-		int _usersLimit;
+		int	_users;
+		int	_usersLimit;
 
 		bool	_inviteOnly;
 		bool	_moderate;
@@ -23,9 +25,9 @@ class Channel
 		bool	_hasTopic;
 		bool	_allowedTopic;
 
-		std::vector<Client *> _clients;
+		std::vector<Client *>	_clients;
 		std::vector<Client *>	_invites;
-		std::vector<Client *> _operators;
+		std::vector<Client *>	_operators;
 	public:
 		Channel();
 		~Channel();
@@ -37,7 +39,7 @@ class Channel
 		void	setHasPassword(bool value);
 		void	setHasLimit(bool value);
 		void	setLimit(int limit);
-		void	setTopic(std::string topic,bool val);
+		void	setTopic(std::string topic, bool val, std::string topicCreate);
 		void	setInviteOnly(bool choice);
 		void	setAllowedTopic(bool choice);
 
@@ -45,6 +47,8 @@ class Channel
 		std::string getName() const;
 		std::string getPassword() const;	
 		std::string getTopic() const;
+		std::string getTopicCreate() const;
+		std::string getNowTime() const;
 		bool		hasPassword() const;
 		bool		hasTopic() const;
 		bool		hasLimit() const;

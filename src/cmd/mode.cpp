@@ -124,8 +124,8 @@ int	Server::delChannelKey(t_data &cmd, std::vector<std::string> &line, int args)
 		cmd.channel->setHasPassword(false);
 		cmd.channel->deletePassword();
 	}
-	else
-		;//mandar mensaje de error y de success
+	// else
+	// 	;//mandar mensaje de error y de success
 	if (cmd.suffix.size() > 0 || args == (int)line.size())
 		cmd.suffix += ":";
 	if (args != (int)line.size())

@@ -1,15 +1,3 @@
-Faltan las respuestas de:
-
-TOPIC:
--RPL_TOPICWHOTIME
-
-INVITE:
--ERR_NOOPERHOST
--ERR_NOSUCHNICK
-
-MODE:
--ERR_INVALIDMODEPARAM
-
 -Manejar las señales.
 
 -En el invite creo que cuando lo agrega vamos a tener que enviarle una respuesta al cliente. Tampoco quise tocarlo.
@@ -24,3 +12,5 @@ MODE:
 -Cree la funcion remClientFromServ(Client &client, int i); que busca el cliente y lo elimina de todos los canales, del mapa y del vector de pollfds.
 Se podria pulir MUCHO mas. Pero para ahora va bien.
 
+Ver si utilizamos esta funcion:
+-void	Channel::setAllowedTopic(bool choice) { this->_allowedTopic = choice; }

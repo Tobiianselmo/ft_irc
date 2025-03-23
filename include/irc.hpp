@@ -17,6 +17,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <ctime>
 
 class Server;
 class Channel;
@@ -37,6 +38,7 @@ typedef struct s_data
 	Client		*client; // Pointer to the client who send the request
 	Channel		*channel; // Pointer to the Channel
 } t_data;
+
 
 typedef enum
 {
@@ -64,6 +66,7 @@ typedef enum
 	RPL_TOPIC_mode = 015,
 	RPL_KEY = 016,
 	RPL_PRIVMSGSUCCESS = 017,
+	RPL_REMOVETOPIC = 020,
 	// RPL_YOURHOST = 002,
 	// RPL_CREATED = 003,
 	// RPL_MYINFO = 004,

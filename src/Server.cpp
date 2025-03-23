@@ -276,6 +276,8 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->quitCommand(line, client, cmd);
 	else if (command == "PRIVMSG" || command == "privmsg")
 		this->privmsgCommand(line, client, cmd);
+	else if (command == "INFO" || command == "info")
+		this->infoCommand(cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
 }

@@ -80,6 +80,7 @@ void Server::userCommand(std::string line, Client &client, t_data &cmd)
 		{
 			send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
 			send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
+			send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);
 			client.setUserName(userList[1]); // Check if we'll need to parse it.
 		}
 	}

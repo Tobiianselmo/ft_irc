@@ -64,6 +64,7 @@ class Server
 		void	cutCommand(std::string line, Client &client, t_data &cmd);
 		void	quitCommand(std::string line, Client &client, t_data &cmd);
 		void	privmsgCommand(std::string line, Client &client, t_data &cmd);
+		void	infoCommand(t_data &cmd);
 
 		void	modes(std::string &line, Client &client, t_data &cmd);
 		int		addMode(std::vector<std::string> &line, Client &client, t_data &cmd, int *i);

@@ -64,6 +64,16 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else if (err == ERR_NEEDMOREPARAMS)  // finished
 		response = prefix + cmd.client->getNickName() + " " + cmd.cmdType + " :Not enough parameters\r\n";
 	
+	//Invite responses
+	else if (err == RPL_INVITING)
+		response = ":" + cmd.client->getNickName() + " " + cmd.msg + "\r\n";
+	else if (err == ERR_USERONCHANNEL)
+		response = prefix + cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :Is already on channel\r\n";
+	
+	//Quit responses
+	else if (err == RPL_QUIT)
+		response = ":" + cmd.client->getNickName() + " " + cmd.msg + "\r\n";
+
 	//Privmsg responses
 	else if (err == RPL_PRIVMSGSUCCESS)
 		response = ":" + cmd.client->getNickName() + " " + cmd.cmdType + " " + cmd.destUser + " " + cmd.privMessage + "\r\n"; 
@@ -85,6 +95,8 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = ":" + this->getHostName() + " " + intToString(err) + " " + cmd.client->getNickName() + " " + cmd.channelName + " :End of /NAMES list\r\n";
 	else if (err == ERR_BADCHANNELKEY)  // finished
 		response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " :Cannot join channel (+k)\r\n";
+	else if (err == ERR_INVITEONLYCHAN)
+		response = prefix + cmd.client->getNickName() + " " + cmd.channelName + " :Cannot join channel (+i)\r\n"; 
 
 	//Topic responses
 	else if (err == RPL_TOPIC)
@@ -116,10 +128,16 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = prefix + " :Erroneus nickname\r\n";
 	else if (err == ERR_NICKNAMEINUSE)
 		response = prefix + " :Nickname is already in use\r\n";
+	else if (err == ERR_NOTCORRECTNICK)
+		response = prefix + " :Introduce the correct nickname to continue the authentication process\r\n";
 	
 	//Pass responses
 	else if (err == ERR_PASSWDMISMATCH)
 		response = prefix + "(client) :Password incorrect\r\n";
+	else if (err == ERR_NOTCORRECTPASS)
+		response = prefix + "(client) :Introduce the correct password to continue the authentication process\r\n";
+	else if (err == ERR_ALREADYREGISTERED)
+		response = prefix + "(client) :You may not reregister\r\n";
 
 	else if (err == ERR_INVALIDMODEPARAM)
 		response = prefix + cmd.client->getNickName() + " : Invalid mode parameter\r\n";
@@ -131,14 +149,11 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = prefix + cmd.client->getNickName() + " : Can't set a channel limit higher than " + intToString(cmd.channel->getUserSize()) + "\r\n";
 	else if (err == ERR_UNKNOWNMODE)
 		response = prefix + cmd.client->getNickName() + " : Unknown mode\r\n";
-	// else if (err = ERR)
-	
+
 	else
 		response = "";
-	if (sendTo == ALL_CHANNEL)
-		sendMsgToChannel(cmd.channel, response, ALL_CHANNEL);
-	else if (sendTo == ONLY_OPERATORS)
-		sendMsgToChannel(cmd.channel, response, ONLY_OPERATORS);
+	if (sendTo == ALL_CHANNEL || sendTo == ONLY_OPERATORS || sendTo == NOT_ALL_CHANNEL)
+		sendMsgToChannel(response, sendTo, cmd);
 	else if (sendTo == ALL_CLIENTS)
 		sendMsgToServer(response);
 	else if (sendTo == ONE_CLIENT)

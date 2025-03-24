@@ -3,11 +3,11 @@
 void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "QUIT";
+	cmd.msg = commandToUpper(line);
 	std::vector<std::string>	parameters = split(line, ' ');
-		// we'll need a remClientFromServ() function
 
 	_clientsMap.erase(client.getClientSocket());
-	for (int i = 0; i < (int)this->_fds.size(); i++)
+	for (size_t i = 0; i < this->_fds.size(); i++)
 	{
 		if (this->_fds[i].fd == client.getClientSocket())
 		{
@@ -17,11 +17,15 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 	}
 	for (int i = this->_channels.size() - 1; i >= 0; i--)
 	{
-		this->_channels[i].deleteClient(&client);
+		if (this->_channels[i].isClient(client.getNickName()) == true)
+		{
+			cmd.channel = &this->_channels[i];
+			this->createResponse(RPL_QUIT, cmd, ALL_CHANNEL);
+			this->_channels[i].deleteClient(&client);
+		}
 		if (this->_channels[i].getUserSize() == 0)
 			this->_channels.erase(_channels.begin() + i);
 	}
-	//en teoria haciendo esto, se está eliminando tambien de los canales disponibles
 	close(client.getClientSocket());
-	// send(cmd.client->getClientSocket(), response.c_str(), response.size(), 0);
+	std::cout << "Client disconected" << std::endl;
 }

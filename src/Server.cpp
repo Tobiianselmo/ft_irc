@@ -211,7 +211,7 @@ void Server::eventMsg(int i, Client &client)
 	arr = parsedInput(buffer);
 	if (arr.size() == 0)
 	{
-		std::cout << "Error splitting buffer" << std::endl;
+		std::cerr << "Error splitting buffer" << std::endl;
 		return ;
 	}
 	for (size_t i = 0; i < arr.size(); i++)
@@ -231,7 +231,7 @@ std::vector<std::string> Server::parsedInput(std::string str)
 	std::vector<std::string> ret;
 
 	ret = split(str, '\n');
-	if (ret.size() == 0) // We need to handle this error.
+	if (ret.size() == 0)
 		return (ret);
 	for (std::vector<std::string>::iterator it = ret.begin(); it != ret.end(); ++it)
 		removeCarriageReturn(*it);
@@ -245,23 +245,21 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 	std::string command = line.substr(0, line.find(" "));
 
 	if (command == "CAP" || command == "cap")
-		return ; // only for a test
+		return ;
 	else if (command == "PASS" || command == "pass")
 		this->passCommand(line, client, cmd);
 	else if (client.hasCorrectPass() == false)
-	{
-		std::cout << "Introduce the correct password to continue the autentication process." << std::endl; // only for a test
-	}
+		this->createResponse(ERR_NOTCORRECTPASS, cmd, ONLY_CLIENT);
 	else if (command == "NICK" || command == "nick")
 		this->nickCommand(line, client, cmd);
 	else if (command == "USER" || command == "user")
 		this->userCommand(line, client, cmd);
 	else if (client.isAuth() == false)
-	{
-		std::cout << "Introduce the correct Nickname to continue the autentication process." << std::endl; // only for a test
-	}
+		this->createResponse(ERR_NOTCORRECTNICK, cmd, ONLY_CLIENT);
 	else if (command == "JOIN" || command == "join")
 		this->joinCommand(line, client, cmd);
+	else if (command == "WHO" || command == "who")
+		return ;
 	else if (command == "KICK" || command == "kick")
 		this->kickCommand(line, client, cmd);
 	else if (command == "TOPIC" || command == "topic")
@@ -270,8 +268,8 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->inviteCommand(line, client, cmd);
 	else if (command == "MODE" || command == "mode")
 		this->modes(line, client, cmd);
-	// else if (command == "CUT" || command == "cut")
-	// 	this->cutCommand(line, client, cmd);
+	// else if (command == "PART" || command == "part")
+	// 	this->partCommand(line, client, cmd);
 	else if (command == "QUIT" || command == "quit")
 		this->quitCommand(line, client, cmd);
 	else if (command == "PRIVMSG" || command == "privmsg")

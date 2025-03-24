@@ -1,17 +1,25 @@
 #include "../include/Server.hpp"
 
-void	sendMsgToChannel(Channel *channel, std::string msg, int sendTo)
+void	sendMsgToChannel(std::string msg, int sendTo, t_data &cmd)
 {
-	std::vector<Client *> clientsList = channel->getArrClients();
+	std::vector<Client *> clientsList = cmd.channel->getArrClients();
 	for (size_t i = 0; i < clientsList.size(); i++)
 	{
-		if (sendTo == ONLY_OPERATORS)
+		if (sendTo == ALL_CHANNEL || sendTo == ONLY_OPERATORS)
 		{
-			if (channel->isOperator(clientsList[i]->getNickName()) == true)
+			if (sendTo == ONLY_OPERATORS)
+			{
+				if (cmd.channel->isOperator(clientsList[i]->getNickName()) == true)
+					send(clientsList[i]->getClientSocket(), msg.c_str(), msg.size(), 0);
+			}
+			else
 				send(clientsList[i]->getClientSocket(), msg.c_str(), msg.size(), 0);
 		}
-		else
-			send(clientsList[i]->getClientSocket(), msg.c_str(), msg.size(), 0);
+		else if (sendTo == NOT_ALL_CHANNEL)
+		{
+			if (cmd.client->getClientSocket() != clientsList[i]->getClientSocket())
+				send(clientsList[i]->getClientSocket(), msg.c_str(), msg.size(), 0);
+		}
 	}	
 }
 

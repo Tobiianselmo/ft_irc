@@ -15,5 +15,3 @@ Se podria pulir MUCHO mas. Pero para ahora va bien.
 Ver si utilizamos esta funcion:
 -void	Channel::setAllowedTopic(bool choice) { this->_allowedTopic = choice; }
 
--Hacer el mensaje para todos los clientes del canal, menos el cliente que envia el mensaje. (para que no aparezca dos veces en el canal)
-

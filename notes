@@ -6,3 +6,5 @@ PART #chan :Leaving   (cuando le hacemos click derecho al canal y lo cerramos he
 mode isOperator
 
 mandarle mensaje al nuevo operador o al que estes eliminando, con la funcion de tobi
+
+MANDAR LOS MENSAJES DE LOS ERRORES DEL MODE AL CANAL (OSEA QUE HAY QUE GUARDAR EN LA ESTRUCTURA EL CMD.CHANNEL) PARA ENVIAR EL MENSAJE AL CANAL Y NO AL SERVER

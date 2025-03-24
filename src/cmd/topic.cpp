@@ -35,7 +35,29 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 		this->createResponse(ERR_NOTONCHANNEL,cmd, ONLY_CLIENT);
 		return ;
 	}
-	if (cmd.channel->isOperator(client.getNickName()))
+	if(cmd.channel->getAllowedTopic() == true)
+	{
+		if (cmd.channel->isOperator(client.getNickName()))
+		{
+			if(arr[2].size() > 1)
+			{
+				arr[2] = arr[2].c_str() + 1;
+				std::string topic = join(arr.begin() + 2, " ", arr.size() - 2);
+				cmd.channel->setTopic(topic, true,cmd.client->getNickName());
+				this->createResponse(RPL_TOPIC, cmd, ALL_CHANNEL);
+				this->createResponse(RPL_TOPICWHOTIME, cmd, ALL_CHANNEL);
+			}
+			else
+			{
+				cmd.channel->setTopic("",false,cmd.client->getNickName());
+				this->createResponse(RPL_REMOVETOPIC,cmd,ALL_CHANNEL);
+				this->createResponse(RPL_TOPIC, cmd, ALL_CHANNEL);
+			}
+		}
+		else
+			this->createResponse(ERR_CHANOPRIVSNEEDED, cmd, ONLY_CLIENT);
+	}
+	else
 	{
 		if(arr[2].size() > 1)
 		{
@@ -52,6 +74,4 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 			this->createResponse(RPL_TOPIC, cmd, ALL_CHANNEL);
 		}
 	}
-	else
-		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd, ONLY_CLIENT);
 }

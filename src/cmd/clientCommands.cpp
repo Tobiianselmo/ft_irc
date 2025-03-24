@@ -3,8 +3,11 @@
 void Server::passCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "PASS";
-	if (client.isAuth() == true)
-		return ; // Add a response when the client tries to change the PASS, once he's auth.
+	if (client.hasCorrectPass() == true)
+	{
+		this->createResponse(ERR_ALREADYREGISTERED, cmd, ONLY_CLIENT);
+		return ;
+	}
 	std::vector<std::string> splitParams = split(line, ' ');
 	if (splitParams.size() < 2)
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
@@ -69,19 +72,14 @@ void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 void Server::userCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "USER";
-	if (line.size() < 6)
+	std::vector<std::string> splitParams = split(line, ' ');
+	if (splitParams.size() < 2)
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 	else
 	{
-		std::vector<std::string> userList = split(line, ' ');
-		if (userList.size() < 2)
-			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
-		else
-		{
-			send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
-			send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
-			send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);
-			client.setUserName(userList[1]); // Check if we'll need to parse it.
-		}
+		send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
+		send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
+		send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);
+		client.setUserName(splitParams[1]); // Check if we'll need to parse it.
 	}
 }

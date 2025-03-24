@@ -30,7 +30,7 @@ cmd/quit \
 cmd/mode \
 cmd/privmsg \
 cmd/info \
-# cmd/cut \
+# cmd/part \
 
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
 

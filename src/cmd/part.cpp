@@ -1,8 +1,8 @@
 #include "../../include/Server.hpp"
 
-void	Server::cutCommand(std::string line, Client &client, t_data &cmd)
+void	Server::partCommand(std::string line, Client &client, t_data &cmd)
 {
-	cmd.cmdType = "CUT";
+	cmd.cmdType = "PART";
 	std::vector<std::string>	parameters = split(line, ' ');
 
 	if (parameters.size() != 2)

@@ -1,24 +1,5 @@
 #include "../../include/Server.hpp"
 
-/*
-	Params: PRIVMSG (USUARIO A QUIEN ENVIA),(SI SON VARIOS) (MENSAJE)
-
-	Chequear si es un canal o un usuario con el primer caracter.
-
-	Chequear que el cliente no es baneado del canal.
-
-	Si hay un error es el ERR_CANNOTSENDTOCHAN (404)
-
-
-	CREAR RESPUESTAS:
-	ERR_CANNOTSENDTOCHAN
-	ERR_NOTEXTTOSEND
-
-
-	FINALIZAR
-
-*/
-
 void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 {
 	(void)client;
@@ -52,12 +33,14 @@ void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 		cmd.privMessage = message;
 		if (strchr("#&@", target[0]))
 		{
-			if (target[0] == '@' && target.size() > 1) // Will send the msg only to the operators
+			if (target[0] == '@' && target.size() > 1)
 			{
 				cmd.channel = this->getChannel(&target[1]);
 				cmd.destUser = &target[1];
 				if (!cmd.channel)
 					this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
+				else if (cmd.channel->isClient(cmd.client->getNickName()) == false)
+					this->createResponse(ERR_NOTONCHANNEL, cmd, ONLY_CLIENT);
 				else
 					this->createResponse(RPL_PRIVMSGSUCCESS, cmd, ONLY_OPERATORS);
 			}
@@ -67,10 +50,10 @@ void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 				if (!cmd.channel)
 					this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 				else
-					this->createResponse(RPL_PRIVMSGSUCCESS, cmd, ALL_CHANNEL);
+					this->createResponse(RPL_PRIVMSGSUCCESS, cmd, NOT_ALL_CHANNEL);
 			}
 		}
-		else // If it is a client
+		else
 		{
 			Client *tmp = this->getClient(target);
 			if (!tmp)

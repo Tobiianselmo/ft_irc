@@ -61,7 +61,7 @@ class Server
 		void	kickCommand(std::string line, Client &client, t_data &cmd);
 		void	topicCommand(std::string line, Client &client, t_data &cmd);
 		void	inviteCommand(std::string line, Client &client, t_data &cmd);
-		void	cutCommand(std::string line, Client &client, t_data &cmd);
+		void	partCommand(std::string line, Client &client, t_data &cmd);
 		void	quitCommand(std::string line, Client &client, t_data &cmd);
 		void	privmsgCommand(std::string line, Client &client, t_data &cmd);
 		void	infoCommand(t_data &cmd);

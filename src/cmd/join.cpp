@@ -45,7 +45,7 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 		{
 			cmd.channel = tmp;
 			if (tmp->isClient(client.getNickName()) == true) // Check the response here
-				break ;
+				this->createResponse(ERR_USERONCHANNEL, cmd, ONLY_CLIENT);
 			else if (tmp->hasLimit() == true && tmp->getUserSize() == tmp->getUsersLimit())
 				this->createResponse(ERR_CHANNELISFULL, cmd, ONLY_CLIENT);
 			else if (tmp->getInvite() == true && tmp->isInvited(client.getNickName()) == false)

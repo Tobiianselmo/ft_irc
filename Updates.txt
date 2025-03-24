@@ -2,18 +2,7 @@
 
 -En el invite creo que cuando lo agrega vamos a tener que enviarle una respuesta al cliente. Tampoco quise tocarlo.
 
--En el MODE, el +k no esta finalizado (ya lo habia comentado) y el -k ni esta empezado.
-
--Si quieren se puede hacer como dijeron que solamente los comandos reciban el t_data &cmd, que ahi dentro tiene el cliente y la linea completa, pero no lo hice.
-
-
-18/03/25 changes:
-
 -Cree la funcion remClientFromServ(Client &client, int i); que busca el cliente y lo elimina de todos los canales, del mapa y del vector de pollfds.
 Se podria pulir MUCHO mas. Pero para ahora va bien.
 
-Ver si utilizamos esta funcion:
--void	Channel::setAllowedTopic(bool choice) { this->_allowedTopic = choice; }
-
--Hacer el mensaje para todos los clientes del canal, menos el cliente que envia el mensaje. (para que no aparezca dos veces en el canal)
-
+-Comprobar bien las respuestas en el INVITE, agregue varias pero no se si estan todas

@@ -27,10 +27,11 @@ cmd/topic \
 cmd/kick \
 cmd/clientCommands \
 cmd/quit \
-cmd/mode \
 cmd/privmsg \
 cmd/info \
+cmd/mode_aux \
 # cmd/part \
+cmd/mode \
 
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
 

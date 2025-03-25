@@ -139,16 +139,21 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else if (err == ERR_ALREADYREGISTERED)
 		response = prefix + "(client) :You may not reregister\r\n";
 
+	//Mode responses
+	else if (err == ERR_INVALIDCHAR)
+		response = prefix + cmd.client->getNickName() + " :Invalid char in MODE command\r\n";
 	else if (err == ERR_INVALIDMODEPARAM)
-		response = prefix + cmd.client->getNickName() + " : Invalid mode parameter\r\n";
+		response = prefix + cmd.client->getNickName() + " " + cmd.channel->getName() + cmd.description;
+		// response = prefix + cmd.client->getNickName() + " : Invalid mode parameter\r\n";
+
 	else if (err == ERR_KEYSET)
-		response = prefix + cmd.client->getNickName() + " : Channel key already set\r\n";
+			response = prefix + cmd.client->getNickName() + " :Channel key already set\r\n";
 	else if (err == ERR_LIMITSET)
-		response = prefix + cmd.client->getNickName() + " : Channel user limit already set\r\n";
+		response = prefix + cmd.client->getNickName() + " :Channel user limit already set\r\n";
 	else if (err == ERR_INVALIDLIMIT)
-		response = prefix + cmd.client->getNickName() + " : Can't set a channel limit higher than " + intToString(cmd.channel->getUserSize()) + "\r\n";
+		response = prefix + cmd.client->getNickName() + " :Can't set a channel limit higher than " + intToString(cmd.channel->getUserSize()) + "\r\n";
 	else if (err == ERR_UNKNOWNMODE)
-		response = prefix + cmd.client->getNickName() + " : Unknown mode\r\n";
+		response = prefix + cmd.client->getNickName() + " :Unknown mode\r\n";
 
 	else
 		response = "";

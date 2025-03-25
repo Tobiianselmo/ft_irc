@@ -32,8 +32,9 @@ typedef struct s_data
 	std::string	authMsg;
 	std::string	cmdType; // ie: JOIN, KICK
 
-	std::string	prefix;
-	std::string	suffix;
+	std::string	prefix; // Mode prefix
+	std::string	suffix; // Mode suffix
+	std::string description; // Mode error description
 
 	Client		*client; // Pointer to the client who send the request
 	Channel		*channel; // Pointer to the Channel
@@ -110,7 +111,7 @@ typedef enum
 	// RPL_LISTSTART = 321,
 	// RPL_LIST = 322,
 	// RPL_LISTEND = 323,
-	// RPL_CHANNELMODEIS = 324,
+	RPL_CHANNELMODEIS = 324,
 	// RPL_CREATIONTIME = 329,
 	// RPL_WHOISACCOUNT = 330,
 	RPL_NOTOPIC = 331,

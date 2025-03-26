@@ -6,11 +6,10 @@ void	Server::infoCommand(t_data &cmd)
 	send(cmd.client->getClientSocket(),"cmd kick or KICK: kicks a user from a channel\n", 46, 0);
 	send(cmd.client->getClientSocket(),"cmd nick or NICK: change nickname\n", 34, 0);
 	send(cmd.client->getClientSocket(),"cmd mode or MODE: \n", 19, 0);
-	send(cmd.client->getClientSocket(),"cmd invite or INVITE: \n", 23, 0);
+	send(cmd.client->getClientSocket(),"cmd invite or INVITE: invites user to a channel\n", 48, 0);
 	send(cmd.client->getClientSocket(),"cmd topic or TOPIC: change the channel topic\n", 45, 0);
 	send(cmd.client->getClientSocket(),"cmd user or USER: change username\n", 34, 0);
-	send(cmd.client->getClientSocket(),"cmd quit or QUIT: \n", 19, 0);
-	send(cmd.client->getClientSocket(),"cmd part or PART: \n", 19, 0);
-	send(cmd.client->getClientSocket(),"cmd pass or PASS: \n", 19, 0);
-	send(cmd.client->getClientSocket(),"cmd privmsg or PRIVMSG: \n", 25, 0);
+	send(cmd.client->getClientSocket(),"cmd quit or QUIT: quit the server\n", 34, 0);
+	send(cmd.client->getClientSocket(),"cmd part or PART: quit the channel\n", 35, 0);
+	send(cmd.client->getClientSocket(),"cmd privmsg or PRIVMSG: send message to another user\n", 53, 0);
 }

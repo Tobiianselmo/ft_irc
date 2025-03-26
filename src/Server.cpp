@@ -278,6 +278,8 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->privmsgCommand(line, client, cmd);
 	else if (command == "INFO" || command == "info")
 		this->infoCommand(cmd);
+	else if (command == "BOT" || command == "bot")
+		this->botCommand(line, cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
 }

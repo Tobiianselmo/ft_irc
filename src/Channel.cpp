@@ -174,6 +174,8 @@ void	Channel::deleteClient(Client *client)
 			this->_clients.erase(this->_clients.begin() + i);
 	}
 	this->_users = _clients.size();
+	deleteOperators(client);
+	deleteInvited(client);
 	// actualizar a todo el canal aca mismo (pasar la lista de usuarios).
 	// sendMsgToChannel(this, ...); 
 }

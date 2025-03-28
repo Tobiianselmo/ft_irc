@@ -199,7 +199,7 @@ void Server::eventMsg(int i, Client &client)
 	int bytes = recv(client.getClientSocket(), buffer, sizeof(buffer), 0);
 	if (bytes < 0)
 	{
-		send(client.getClientSocket(), ":Error :recv function failed\r\n", 29, 0); // Create a better response
+		send(client.getClientSocket(), ":Error :recv function failed\r\n", 29, 0);
 		return ;
 	}
 	else if (bytes == 0)
@@ -246,6 +246,8 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 
 	if (command == "CAP" || command == "cap")
 		return ;
+	else if (command == "QUIT" || command == "quit")
+		this->quitCommand(line, client, cmd);
 	else if (command == "PASS" || command == "pass")
 		this->passCommand(line, client, cmd);
 	else if (client.hasCorrectPass() == false)
@@ -270,8 +272,6 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->modes(line, client, cmd);
 	// else if (command == "PART" || command == "part")
 	// 	this->partCommand(line, client, cmd);
-	else if (command == "QUIT" || command == "quit")
-		this->quitCommand(line, client, cmd);
 	else if (command == "PRIVMSG" || command == "privmsg")
 		this->privmsgCommand(line, client, cmd);
 	else if (command == "INFO" || command == "info")

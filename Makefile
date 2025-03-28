@@ -51,7 +51,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp | $(OBJF)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJF):
-		@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)
 
 clean:
 	@$(RM) $(OBJ_DIR)

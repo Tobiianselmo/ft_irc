@@ -1,23 +1,24 @@
 #ifndef IRC_HPP
 #define IRC_HPP
 
-#include <algorithm>
-#include <iostream>
-#include <cstring>
-#include <cstdlib>
-#include <sstream>
-#include <cctype>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <netinet/in.h>
-#include <stdexcept>
-#include <cstring>
-#include <poll.h>
-#include <vector>
-#include <map>
-#include <sstream>
-#include <ctime>
+# include <algorithm>
+# include <iostream>
+# include <cstring>
+# include <csignal>
+# include <cstdlib>
+# include <sstream>
+# include <cctype>
+# include <sys/socket.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <netinet/in.h>
+# include <stdexcept>
+# include <cstring>
+# include <poll.h>
+# include <vector>
+# include <map>
+# include <sstream>
+# include <ctime>
 
 class Server;
 class Channel;

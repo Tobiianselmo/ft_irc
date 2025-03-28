@@ -12,6 +12,8 @@ int validPort(char *str)
 	return (1);
 }
 
+int g_global = 0;
+
 int main(int argc, char **argv)
 {
 	if (argc != 3)

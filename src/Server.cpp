@@ -133,8 +133,14 @@ void Server::setupServer()
 	_fds.push_back(fd);
 }
 
+void	Server::handleSignal(int signal)
+{
+	g_global = signal;
+}
+
 void Server::handleConnections()
 {
+	signal(SIGINT, Server::handleSignal);
 	while (true)
 	{
 		int ret = poll(&_fds[0], _fds.size(), -1);
@@ -150,6 +156,8 @@ void Server::handleConnections()
 					eventMsg(i, *_clientsMap[_fds[i].fd]);
 			}
 		}
+		if (g_global == SIGINT)
+			return ;
 	}
 }
 
@@ -180,6 +188,7 @@ void Server::newConnections()
 	newPoll.revents = 0;
 	send(newPoll.fd,"Enter the password server(cmd PASS or pass)\n",44,0);
 	_fds.push_back(newPoll);
+	// delete newClient;
 }
     
 // client._buffer = client.buffer.append(buffer)

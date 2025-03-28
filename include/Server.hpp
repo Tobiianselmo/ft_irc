@@ -1,12 +1,14 @@
 #ifndef SERVER_HPP
-#define SERVER_HPP
+# define SERVER_HPP
 
-#include "irc.hpp"
-#include "Client.hpp"
-#include "Channel.hpp"
+# include "irc.hpp"
+# include "Client.hpp"
+# include "Channel.hpp"
 
 class Client;
 class Channel;
+
+extern	int g_global;
 
 class Server
 {
@@ -15,6 +17,7 @@ class Server
 		int							_serverSocket;
 		std::string					_password;
 
+		int							_signal;
 		std::string					_hostName;
 
 		std::vector<struct pollfd>	_fds;
@@ -44,6 +47,7 @@ class Server
 		
 		void	setupServer();
 		void	handleConnections();
+		static void	handleSignal(int signal);
 		void	newConnections();
 		void	eventMsg(int i, Client &client);
 

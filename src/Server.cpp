@@ -194,9 +194,9 @@ void Server::newConnections()
 void Server::eventMsg(int i, Client &client)
 {
 	std::vector<std::string> arr;
-	char buffer[1024];
-	std::memset(buffer, 0, sizeof(buffer));
-	int bytes = recv(client.getClientSocket(), buffer, sizeof(buffer), 0);
+	char aux[1024];
+	std::memset(aux, 0, sizeof(aux));
+	int bytes = recv(client.getClientSocket(), aux, sizeof(aux), 0);
 	if (bytes < 0)
 	{
 		send(client.getClientSocket(), ":Error :recv function failed\r\n", 29, 0);
@@ -208,10 +208,14 @@ void Server::eventMsg(int i, Client &client)
 		remClientFromServ(client, i);
 		return ;
 	}
-	arr = parsedInput(buffer);
+	client.setBuffer(aux);
+	if (client.getBuffer().find('\n') == std::string::npos)
+		return ;
+	arr = parsedInput(client.getBuffer());
 	if (arr.size() == 0)
 	{
 		std::cerr << "Error splitting buffer" << std::endl;
+		client.eraseBuffer();
 		return ;
 	}
 	for (size_t i = 0; i < arr.size(); i++)
@@ -219,6 +223,7 @@ void Server::eventMsg(int i, Client &client)
 		t_data cmd = initStructure(arr[i], client);
 		checkCommand(arr[i], client, cmd);
 	}
+	client.eraseBuffer();
 }
 
 static void removeCarriageReturn(std::string &str)

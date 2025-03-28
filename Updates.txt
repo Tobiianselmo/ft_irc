@@ -34,5 +34,3 @@ y no agregarlo al prefix, entonces podria continuar sin retornar 1 y cortar el m
 -Cambie una respuesta.
 -Si quiero remover la key, y el canal no tiene key, no deberia hacer nada.
 -Si me pasan /MODE +k hola buen dia, me setea el hola y el resto no hace nada, ver si hay que mandar un mensaje de error o si asi esta bien.
-
-

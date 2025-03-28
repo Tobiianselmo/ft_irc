@@ -30,6 +30,7 @@ cmd/quit \
 cmd/privmsg \
 cmd/info \
 cmd/mode_aux \
+cmd/bot \
 # cmd/part \
 cmd/mode \
 

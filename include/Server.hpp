@@ -65,6 +65,7 @@ class Server
 		void	quitCommand(std::string line, Client &client, t_data &cmd);
 		void	privmsgCommand(std::string line, Client &client, t_data &cmd);
 		void	infoCommand(t_data &cmd);
+		void	botCommand(std::string line, t_data &cmd);
 
 		void	modes(std::string &line, Client &client, t_data &cmd);
 		int		addMode(std::vector<std::string> &line, Client &client, t_data &cmd, int *i);
@@ -78,6 +79,6 @@ class Server
 		int		delChannelOperator(t_data &cmd, std::vector<std::string> &line, int args);
 		int		delChannelKey(t_data &cmd, std::vector<std::string> &line, int args);
 		int		delChannelLimit(t_data &cmd, std::vector<std::string> &line, int args);
-	};
+};
 
 #endif

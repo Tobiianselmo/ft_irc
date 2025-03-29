@@ -120,10 +120,9 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else if(err ==  ERR_USERNOTINCHANNEL)
 		response = prefix + " " + cmd.client->getNickName() + " " + cmd.destUser + " " + cmd.channelName + " :They aren't on that channel\r\n";
 
-
 	//Nick respones
 	else if (err == RPL_NICKSUCCESS)
-		response = ":" + cmd.client->getNickName() + " " + cmd.authMsg + "\r\n";
+		response = ":" + cmd.client->getNickName() + "!" + this->getHostName() + " " + cmd.authMsg + "\r\n";
 	else if (err == ERR_ERRONEUSNICKNAME)
 		response = prefix + " :Erroneus nickname\r\n";
 	else if (err == ERR_NICKNAMEINUSE)
@@ -147,13 +146,18 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		// response = prefix + cmd.client->getNickName() + " : Invalid mode parameter\r\n";
 
 	else if (err == ERR_KEYSET)
-			response = prefix + cmd.client->getNickName() + " :Channel key already set\r\n";
+		response = prefix + cmd.client->getNickName() + " :Channel key already set\r\n";
 	else if (err == ERR_LIMITSET)
 		response = prefix + cmd.client->getNickName() + " :Channel user limit already set\r\n";
 	else if (err == ERR_INVALIDLIMIT)
 		response = prefix + cmd.client->getNickName() + " :Can't set a channel limit higher than " + intToString(cmd.channel->getUserSize()) + "\r\n";
 	else if (err == ERR_UNKNOWNMODE)
 		response = prefix + cmd.client->getNickName() + " :Unknown mode\r\n";
+	else if (err == RPL_OPERATOR)
+		response = ":" + cmd.client->getNickName() + "!" + this->getHostName() + " MODE " + cmd.channel->getName() + " +o :" + cmd.destUser + "\r\n";
+
+	else if (err == RPL_PART)
+		response = ":" + cmd.client->getNickName() + "!" + this->getHostName() + " " + cmd.msg + "\r\n";
 
 	else
 		response = "";

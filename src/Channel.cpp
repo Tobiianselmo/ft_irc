@@ -70,6 +70,7 @@ bool		Channel::hasTopic() const { return this->_hasTopic; }
 bool		Channel::getInvite() const { return this->_inviteOnly; }
 int			Channel::getUserSize() const { return this->_users; }
 int			Channel::getUsersLimit() const { return this->_usersLimit; }
+int			Channel::getOperatorsSize() const { return this->_operators.size(); }
 bool		Channel::hasLimit() const { return this->_hasLimit; }
 bool		Channel::getAllowedTopic() const { return this->_allowedTopic; }
 

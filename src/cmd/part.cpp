@@ -1,49 +1,49 @@
+
 #include "../../include/Server.hpp"
 
 void	Server::partCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "PART";
+	cmd.msg = line;
+	cmd.client = &client;
 	std::vector<std::string>	parameters = split(line, ' ');
 
-	if (parameters.size() != 2)
+	if (parameters.size() < 3)
 	{
-		this->createResponse(ERR_NEEDMOREPARAMS, cmd);
+		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
+	cmd.channelName = parameters[1];
 	cmd.channel = this->getChannel(parameters[1]);
 	if (!cmd.channel)
 	{
-		this->createResponse(ERR_NOSUCHCHANNEL, cmd);
+		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
-	if (cmd.channel->isClient(client.getNickName()) == false)
+	if (!cmd.channel->isClient(client))
 	{
-		this->createResponse(ERR_USERNOTINCHANNEL, cmd);
+		this->createResponse(ERR_NOTONCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
-	std::vector<Client>	clients = cmd.channel->getArrClients();
-	if (cmd.channel->isOperator(client.getNickName()) == true)
+
+	bool opChange = false;
+
+	if (cmd.channel->isOperator(client.getNickName()) && cmd.channel->getOperatorsSize() == 1)
 	{
-		if (clients.size() > 1)
+		std::vector<Client *>	clientAux = cmd.channel->getArrClients();
+		for (int i = 0; i < (int)clientAux.size(); i++)
 		{
-			cmd.channel->addOperator(clients[1]);
-			send(clients[1].getClientSocket(), ": you are channel operator now.", 32, 0);
-		}
-	}
-	if (clients.size() > 1)
-		sendMsgToChannel(cmd.channel, ":" + client.getNickName() + " " + line + "\r\n");
-	else if (clients.size() == 1)
-	{
-		for (int i = 0; i < (int)this->_channels.size(); i++)
-		{
-			if (this->_channels[i].getName() == cmd.channel->getName())
+			if (clientAux[i]->getNickName() != client.getNickName())
 			{
-				this->_channels.erase(_channels.begin() + i);
-				break;
+				cmd.channel->addOperator(clientAux[i]);
+				opChange = true;
+				cmd.destUser = clientAux[i]->getNickName();
+				break ;
 			}
 		}
-		std::cout << "left" << std::endl;
-		return ;
-	}		
-	cmd.channel->deleteClient(client);
+	}
+	this->createResponse(RPL_PART, cmd, ALL_CHANNEL);
+	cmd.channel->deleteClient(&client);
+	if (opChange)
+		this->createResponse(RPL_OPERATOR, cmd, ALL_CHANNEL);
 }

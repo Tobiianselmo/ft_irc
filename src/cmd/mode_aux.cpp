@@ -8,11 +8,6 @@ int	Server::addChannelKey(t_data &cmd, std::vector<std::string> &line, int args)
 		this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
 		return (0);
 	}
-	// else if (line.size() > 4)
-	// {
-	// 	this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
-	// 	return (0);
-	// }
 	if (cmd.channel->hasPassword() == true)
 	{
 		this->createResponse(ERR_KEYSET, cmd, ONLY_CLIENT);
@@ -334,6 +329,19 @@ void	Server::modes(std::string &line, Client &client, t_data &cmd)
 	cmd.cmdType = "MODE";
 	std::vector<std::string>	parameters = split(line, ' ');
 
+	if (parameters.size() == 2)
+	{
+		cmd.channelName = parameters[1];
+		cmd.channel = this->getChannel(parameters[1]);
+		if (!cmd.channel)
+		{
+			this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
+			return ;
+		}
+		cmd.channel->sendModes(cmd, RPL_CHANNELMODEIS);
+
+		return ;
+	}
 	if (parameters.size() < 2)
 	{
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
@@ -344,11 +352,6 @@ void	Server::modes(std::string &line, Client &client, t_data &cmd)
 	if (!cmd.channel)
 	{
 		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
-		return ;
-	}
-	if (parameters.size() == 2)
-	{
-		cmd.channel->sendModes(cmd, RPL_CHANNELMODEIS);
 		return ;
 	}
 	cmd.prefix = ":" + client.getNickName() + "!" + this->getHostName() + " MODE " + cmd.channel->getName() + " ";

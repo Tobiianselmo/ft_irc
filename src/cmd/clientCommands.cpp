@@ -62,7 +62,9 @@ void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 		else
 		{
 			cmd.authMsg = line;
-			this->createResponse(RPL_NICKSUCCESS, cmd, ALL_CLIENTS);
+			this->createResponse(RPL_NICKSUCCESS, cmd, ONLY_CLIENT);
+			if (this->getChannelsSize() > 0)
+				this->sendMsgToAllChannels(client, cmd);
 			client.setNickName(nick);
 			client.setAuth(true);
 		}

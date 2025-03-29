@@ -32,17 +32,18 @@ class Server
 		// Getters
 		int					getPort() const;
 		int					getServerSocket() const;
+		int					getChannelsSize() const;
 		const std::string	&getPassword() const;
 		const std::string	&getHostName() const;
 		std::vector<struct pollfd>	getFdsVector() const;
 		bool				isDuplicated(std::string name);
 		Channel				*getChannel(std::string name);
 		Client				*getClient(std::string name);
-
+		
 		void	setHostName(std::string hostname);
-
+		
 		void	remClientFromServ(Client &client, int i);
-
+		
 		t_data	initStructure(std::string msg, Client &client);
 		
 		void	setupServer();
@@ -50,13 +51,14 @@ class Server
 		static void	handleSignal(int signal);
 		void	newConnections();
 		void	eventMsg(int i, Client &client);
-
+		
 		void	checkCommand(std::string line, Client &client, t_data &cmd);
 		std::vector<std::string>	parsedInput(std::string str);
-
+		
 		void	createResponse(int err, t_data &cmd, int sendTo);
 		void	sendMsgToServer(std::string msg);
 		void	sendMsgToOneClient(std::string msg, t_data &cmd);
+		void	sendMsgToAllChannels(const Client  & client, t_data &cmd);
 
 		void	passCommand(std::string line, Client &client, t_data &cmd);
 		void	nickCommand(std::string line, Client &client, t_data &cmd);

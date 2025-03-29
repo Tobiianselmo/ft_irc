@@ -19,6 +19,7 @@ void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 		this->createResponse(ERR_NOTEXTTOSEND, cmd, ONLY_CLIENT);
 		return ;
 	}
+	
 	std::string message = join(parameters.begin() + 2, " ", parameters.size() - 2);
 
 	for (size_t i = 0; i < targetList.size(); i++)
@@ -50,7 +51,12 @@ void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 				if (!cmd.channel)
 					this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 				else
-					this->createResponse(RPL_PRIVMSGSUCCESS, cmd, NOT_ALL_CHANNEL);
+				{
+					if (cmd.privMessage[0] == ':')
+						this->createResponse(RPL_PRIVMSGSUCCESS, cmd, NOT_ALL_CHANNEL);
+					else
+						this->createResponse(RPL_PRIVMSGSUCCESS, cmd, ALL_CHANNEL);
+				}
 			}
 		}
 		else

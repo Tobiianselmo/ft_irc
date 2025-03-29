@@ -6,7 +6,7 @@ NAME = ircserv
 
 CC = c++
 
-CFLAGS = -Wall -Werror -Wextra -std=c++98
+CFLAGS = -Wall -Werror -Wextra -std=c++98 
 
 RM = rm -rf
 
@@ -31,8 +31,7 @@ cmd/privmsg \
 cmd/info \
 cmd/mode_aux \
 cmd/bot \
-# cmd/part \
-cmd/mode \
+cmd/part
 
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .cpp, $(SRC_FILES)))
 

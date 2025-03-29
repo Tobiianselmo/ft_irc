@@ -33,6 +33,15 @@ int	Server::addChannelLimit(t_data &cmd, std::vector<std::string> &line, int arg
 		return (0);
 	}
 	// Aca se podria chequear si hay algo que no sea numeros quizas.
+	for (int i = 0; i < (int)line[args].size(); i++)
+	{
+		if (!isdigit(line[args][i]))
+		{
+			cmd.description = " l * :Invalid limit mode parameter. Syntax: <limit>.\r\n";
+			this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
+			return (0);
+		}
+	}
 	cmd.channel->setLimit(atoi(line[args].c_str()));
 	cmd.channel->setHasLimit(true);
 	if (cmd.suffix.size() > 0 || args == (int)line.size())
@@ -133,7 +142,7 @@ int	Server::delChannelLimit(t_data &cmd, std::vector<std::string> &line, int arg
 		return (0);
 	}
 	cmd.channel->setHasLimit(false);
-	cmd.channel->setLimit(10); // Ver como volvemos a setear esto
+	cmd.channel->setLimit(0); 
 	if (cmd.suffix.size() > 0 || args == (int)line.size())
 		cmd.suffix += ":";
 	if (args != (int)line.size())
@@ -206,9 +215,10 @@ int	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 					add = 1;
 					cmd.prefix += "+";
 				}
-				cmd.prefix += "l";
+				cmd.prefix += "l"; 
 				ret = 1;
 			}
+			std::cout << "existe" << std::endl;
 		}
 		else if (line[2][*i] == 't')
 		{
@@ -306,7 +316,7 @@ int	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 			if (!add)
 			{
 				add = 1;
-				cmd.prefix += "-";
+	  
 			}
 			cmd.channel->setAllowedTopic(false);
 			cmd.prefix += "t";

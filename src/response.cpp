@@ -76,7 +76,7 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 
 	//Privmsg responses
 	else if (err == RPL_PRIVMSGSUCCESS)
-		response = ":" + cmd.client->getNickName() + " " + cmd.cmdType + " " + cmd.destUser + " " + cmd.privMessage + "\r\n"; 
+		response = ":" + cmd.client->getNickName() + "!" + this->getHostName() + " " + cmd.cmdType + " " + cmd.destUser + " " + cmd.privMessage + "\r\n"; 
 	else if (err == ERR_NOTEXTTOSEND)
 		response = prefix + cmd.client->getNickName() + " :No text to send\r\n";
 	else if (err == ERR_CANNOTSENDTOCHAN)

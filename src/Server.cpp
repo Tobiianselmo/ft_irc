@@ -24,6 +24,7 @@ Server::Server(int port,const std::string &password)
 
 int					Server::getPort() const { return this->_port; }
 int					Server::getServerSocket() const { return this->_serverSocket; }
+int					Server::getChannelsSize() const { return this->_channels.size(); }
 const std::string	&Server::getPassword() const { return this->_password; }
 const std::string	&Server::getHostName() const { return this->_hostName; }
 std::vector<struct pollfd>	Server::getFdsVector() const { return this->_fds; }
@@ -36,6 +37,20 @@ bool				Server::isDuplicated(std::string name)
 			return true;
 	}
 	return false;
+}
+
+void				Server::sendMsgToAllChannels(const Client  & client, t_data &cmd)
+{
+	for (int i = 0; i < this->getChannelsSize() ; i++)
+	{
+		if (this->_channels[i].isClient(client) == true)
+		{
+			// if (cmd.channel) revisar leaks
+			// 	cmd.channel
+			cmd.channel = &this->_channels[i];
+			this->createResponse(RPL_NICKSUCCESS, cmd, NOT_ALL_CHANNEL);
+		}
+	}
 }
 
 Channel				*Server::getChannel(std::string name)
@@ -190,15 +205,6 @@ void Server::newConnections()
 	_fds.push_back(newPoll);
 	// delete newClient;
 }
-    
-// client._buffer = client.buffer.append(buffer)
-// if (!client._buffer.find(\n))
-// 	return;
-//para señales, viene bien que el cliente tenga el buffer control d
-//Ver errores de cuando hay muchos saltos de linea
-
-//control z => suspende proceso. tiene que llegar los mensajes que se envien despues
-// de que se suspende
 
 void Server::eventMsg(int i, Client &client)
 {
@@ -284,8 +290,8 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->inviteCommand(line, client, cmd);
 	else if (command == "MODE" || command == "mode")
 		this->modes(line, client, cmd);
-	// else if (command == "PART" || command == "part")
-	// 	this->partCommand(line, client, cmd);
+	else if (command == "PART" || command == "part")
+		this->partCommand(line, client, cmd);
 	else if (command == "PRIVMSG" || command == "privmsg")
 		this->privmsgCommand(line, client, cmd);
 	else if (command == "INFO" || command == "info")

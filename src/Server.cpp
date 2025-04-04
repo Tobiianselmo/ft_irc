@@ -2,7 +2,6 @@
 
 Server::~Server()
 {
-	close(this->_serverSocket);
 	std::map<int, Client *>::iterator it_beg = _clientsMap.begin();
 	std::map<int, Client *>::iterator it_end = _clientsMap.end();
 	while (it_beg != it_end)
@@ -11,6 +10,7 @@ Server::~Server()
 		it_beg++;
 	}
 	_clientsMap.clear();
+	close(this->_serverSocket);
 }
 
 Server::Server(int port,const std::string &password)
@@ -77,16 +77,18 @@ void	Server::setHostName(std::string hostname) { this->_hostName = hostname; }
 
 void	Server::remClientFromServ(Client &client, int i)
 {
-	_clientsMap.erase(client.getClientSocket());
-
+	// _clientsMap.erase(client.getClientSocket());
+	
 	for (int i = this->_channels.size() - 1; i >= 0; i--)
 	{
 		this->_channels[i].deleteClient(&client);
 		if (this->_channels[i].getUserSize() == 0)
-			this->_channels.erase(_channels.begin() + i);
+		this->_channels.erase(_channels.begin() + i);
 	}
 	this->_fds.erase(this->_fds.begin() + i);
+	int fd = client.getClientSocket();
 	close(client.getClientSocket());
+	delete _clientsMap[fd];
 }
 
 t_data Server::initStructure(std::string msg, Client &client)
@@ -156,6 +158,8 @@ void	Server::handleSignal(int signal)
 void Server::handleConnections()
 {
 	signal(SIGINT, Server::handleSignal);
+	t_data cmd_aux;
+
 	while (true)
 	{
 		int ret = poll(&_fds[0], _fds.size(), -1);
@@ -172,7 +176,11 @@ void Server::handleConnections()
 			}
 		}
 		if (g_global == SIGINT)
+		{
+			cmd_aux.msg = "Disconnected (Remote host closed socket)";
+			this->createResponse(RPL_CONTROLC, cmd_aux, ALL_CLIENTS);
 			return ;
+		}
 	}
 }
 
@@ -203,6 +211,7 @@ void Server::newConnections()
 	newPoll.revents = 0;
 	send(newPoll.fd,"Enter the password server(cmd PASS or pass)\n",44,0);
 	_fds.push_back(newPoll);
+	// delete newClient;
 }
 
 void Server::eventMsg(int i, Client &client)

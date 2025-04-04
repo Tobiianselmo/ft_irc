@@ -158,6 +158,8 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 	else if (err == RPL_PART)
 		response = ":" + cmd.client->getNickName() + "!" + this->getHostName() + " " + cmd.msg + "\r\n";
 
+	else if (err == RPL_CONTROLC)
+		response = ": " + cmd.msg;
 	else
 		response = "";
 	if (sendTo == ALL_CHANNEL || sendTo == ONLY_OPERATORS || sendTo == NOT_ALL_CHANNEL)

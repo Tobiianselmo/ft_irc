@@ -29,7 +29,7 @@ cmd/clientCommands \
 cmd/quit \
 cmd/privmsg \
 cmd/info \
-cmd/mode_aux \
+cmd/mode \
 cmd/bot \
 cmd/part
 

@@ -35,7 +35,7 @@ void	Server::inviteCommand(std::string line, Client &client, t_data &cmd)
 			this->createResponse(ERR_USERONCHANNEL, cmd, ONLY_CLIENT);
 		else
 		{
-			cmd.destUser = clientTmp->getNickName();
+			cmd.destUser = clientTmp->getNickName();//tiene sentido tenerlo acá tambien?
 			tmp->addInvite(clientTmp);
 			this->createResponse(RPL_INVITING, cmd, ONE_CLIENT);
 		}

@@ -2,9 +2,9 @@
 
 void Server::privmsgCommand(std::string line, Client &client, t_data &cmd)
 {
-	(void)client;
 	cmd.cmdType = "PRIVMSG";
 	cmd.msg = commandToUpper(line);
+	cmd.client = &client;
 	std::vector<std::string> parameters = split(line, ' ');
 
 	if (parameters.size() < 2)

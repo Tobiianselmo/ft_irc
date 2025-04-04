@@ -143,7 +143,6 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = prefix + cmd.client->getNickName() + " :Invalid char in MODE command\r\n";
 	else if (err == ERR_INVALIDMODEPARAM)
 		response = prefix + cmd.client->getNickName() + " " + cmd.channel->getName() + cmd.description;
-		// response = prefix + cmd.client->getNickName() + " : Invalid mode parameter\r\n";
 
 	else if (err == ERR_KEYSET)
 		response = prefix + cmd.client->getNickName() + " :Channel key already set\r\n";

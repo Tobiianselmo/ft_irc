@@ -203,7 +203,6 @@ void Server::newConnections()
 	newPoll.revents = 0;
 	send(newPoll.fd,"Enter the password server(cmd PASS or pass)\n",44,0);
 	_fds.push_back(newPoll);
-	// delete newClient;
 }
 
 void Server::eventMsg(int i, Client &client)
@@ -289,7 +288,7 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 	else if (command == "INVITE" || command == "invite")
 		this->inviteCommand(line, client, cmd);
 	else if (command == "MODE" || command == "mode")
-		this->modes(line, client, cmd);
+		this->modeCommand(line, client, cmd);
 	else if (command == "PART" || command == "part")
 		this->partCommand(line, client, cmd);
 	else if (command == "PRIVMSG" || command == "privmsg")

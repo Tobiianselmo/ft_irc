@@ -73,10 +73,9 @@ class Server
 		void	infoCommand(t_data &cmd);
 		void	botCommand(std::string line, t_data &cmd);
 
-		void	modes(std::string &line, Client &client, t_data &cmd);
+		void	modeCommand(std::string &line, Client &client, t_data &cmd);
 		int		addMode(std::vector<std::string> &line, Client &client, t_data &cmd, int *i);
 		int		delMode(std::vector<std::string> &line, Client &client, t_data &cmd, int *i);
-		void	modeErrorMsg(t_data &cmd, std::string &msg);
 
 		int		addChannelOperator(t_data &cmd, std::vector<std::string> &line, int args);
 		int		addChannelLimit(t_data &cmd, std::vector<std::string> &line, int args);

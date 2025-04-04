@@ -67,6 +67,9 @@ void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 				this->sendMsgToAllChannels(client, cmd);
 			client.setNickName(nick);
 			client.setAuth(true);
+			send(client.getClientSocket(),"NICK :Correct NickName\n",23,0);
+			if (client.getUserName().size() == 0)
+				send(client.getClientSocket(),"Introduce the UserName(cmd USER or user)\n",41,0);
 		}
 	}
 }

@@ -364,6 +364,11 @@ void	Server::modeCommand(std::string &line, Client &client, t_data &cmd)
 		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
+	if (!cmd.channel->isClient(cmd.client->getNickName()))
+	{
+		this->createResponse(ERR_NOTONCHANNEL, cmd, ONLY_CLIENT);
+		return ;
+	}
 	cmd.prefix = ":" + client.getNickName() + "!" + this->getHostName() + " MODE " + cmd.channel->getName() + " ";
 	int added = 0;
 	for (int i = 0; i < (int)parameters[2].size(); i++)

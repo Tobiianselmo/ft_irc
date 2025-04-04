@@ -4,7 +4,7 @@ Client::Client() {}
 
 Client::~Client()
 {
-	std::cout << "Client default destructor called." << std::endl;
+	// std::cout << "Client default destructor called." << std::endl;
 	close(this->_clientSocket);
 }
 

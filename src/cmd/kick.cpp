@@ -16,14 +16,14 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 		return ;
 	}
-	if (!cmd.channel->isOperator(client.getNickName()))
-	{
-		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd, ONLY_CLIENT);
-		return ;
-	}
 	if (!cmd.channel->isClient(cmd.client->getNickName()))
 	{
 		this->createResponse(ERR_NOTONCHANNEL, cmd, ONLY_CLIENT);
+		return ;
+	}
+	if (!cmd.channel->isOperator(client.getNickName()))
+	{
+		this->createResponse(ERR_CHANOPRIVSNEEDED, cmd, ONLY_CLIENT);
 		return ;
 	}
 	Client *clientTmp;

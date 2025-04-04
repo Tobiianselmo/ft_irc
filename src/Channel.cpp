@@ -2,7 +2,7 @@
 
 Channel::Channel()
 {
-	std::cout << "Channel default constructor called." << std::endl;
+	//std::cout << "Channel default constructor called." << std::endl;
 	_name = "";
 	_password = "";
 	_topic = "";
@@ -18,12 +18,12 @@ Channel::Channel()
 
 Channel::~Channel()
 {
-	std::cout << "Channel default destructor called." << std::endl;
+	//std::cout << "Channel default destructor called." << std::endl;
 }
 
 Channel::Channel(const std::string &name)
 {
-	std::cout << "Channel constructor with name called." << std::endl;
+	//std::cout << "Channel constructor with name called." << std::endl;
 	_name = name;
 	_password = "";
 	_topic = "";
@@ -47,6 +47,7 @@ void	Channel::setHasLimit(bool value) { this->_hasLimit = value; }
 void	Channel::setLimit(int limit) { this->_usersLimit = limit; }
 void	Channel::setInviteOnly(bool choice) { this->_inviteOnly = choice; }
 void	Channel::setAllowedTopic(bool choice) { this->_allowedTopic = choice; }
+
 void	Channel::setTopic(std::string topic,bool val,std::string topicCreate)
 {
 	this->_topicCreate = topicCreate;
@@ -73,11 +74,6 @@ int			Channel::getUsersLimit() const { return this->_usersLimit; }
 int			Channel::getOperatorsSize() const { return this->_operators.size(); }
 bool		Channel::hasLimit() const { return this->_hasLimit; }
 bool		Channel::getAllowedTopic() const { return this->_allowedTopic; }
-
-void		Channel::getMode() const
-{
-	std::cout << "invited false" << std::endl;
-}
 
 Client		*Channel::getClient(std::string nick)
 {
@@ -177,10 +173,7 @@ void	Channel::deleteClient(Client *client)
 	this->_users = _clients.size();
 	deleteOperators(client);
 	deleteInvited(client);
-	// actualizar a todo el canal aca mismo (pasar la lista de usuarios).
-	// sendMsgToChannel(this, ...); 
 }
-
 void	Channel::deletePassword() { this->_password.erase(); }
 
 void	Channel::deleteOperators(Client *client)
@@ -198,46 +191,5 @@ void	Channel::deleteInvited(Client *client)
 	{
 		if (this->_invites[i]->getNickName() == client->getNickName())
 			this->_invites.erase(this->_invites.begin() + i);
-	}
-}
-
-// Prints
-
-void	Channel::printChannel()
-{
-	std::cout << "Channel: " << this->getName() << std::endl;
-	std::cout << "- Password: " << this->getPassword() << std::endl;
-	std::cout << "- Topic: " << this->getTopic() << std::endl;
-	std::cout << "- Invite mode: ";
-	this->getMode();
-	std::cout << "Clients List: " << std::endl;
-	this->printClients();
-	std::cout << "Operators List: " << std::endl;
-	this->printOperators();
-	std::cout << "Invited List: " << std::endl;
-	this->printInvited();
-}
-
-void	Channel::printClients()
-{
-	for (size_t i = 0; i < this->_clients.size(); i++)
-	{
-		std::cout << "Client Nº " << i << " " << this->_clients[i]->getNickName() << std::endl;
-	}
-}
-
-void	Channel::printInvited()
-{
-	for (size_t i = 0; i < this->_invites.size(); i++)
-	{
-		std::cout << "Invited " << i << " " << this->_invites[i]->getNickName() << std::endl;
-	}
-}
-
-void	Channel::printOperators()
-{
-	for (size_t i = 0; i < this->_operators.size(); i++)
-	{
-		std::cout << "operators " << this->_operators[i]->getNickName() << std::endl;
 	}
 }

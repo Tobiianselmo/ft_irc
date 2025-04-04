@@ -78,11 +78,7 @@ class Channel
 		void	deleteOperators(Client *client);
 		void	deleteInvited(Client *client);
 		void	deletePassword();
-		// Prints
-		void	printChannel();
-		void	printClients();
-		void	printInvited();
-		void	printOperators();
+		// Print
 		void	sendModes(t_data &cmd, int num);
 };
 

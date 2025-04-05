@@ -24,7 +24,7 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 			this->_channels[i].deleteClient(&client);
 		}
 		if (this->_channels[i].getUserSize() == 0)
-		this->_channels.erase(_channels.begin() + i);
+			this->_channels.erase(_channels.begin() + i);
 	}
 	int fd = client.getClientSocket();
 	close(client.getClientSocket());

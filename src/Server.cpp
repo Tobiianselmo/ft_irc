@@ -2,13 +2,15 @@
 
 Server::~Server()
 {
-	std::map<int, Client *>::iterator it_beg = _clientsMap.begin();
+	//EN EL DESTRUCTOR SI ESTO SE DESCOMENTA DA SEGFOULT CUANDO UN USUARIO HACE QUIT,
+	//SI SE DEJA COMENTADO Y SE CORTA EL SERVIDOR CON UN USUARIO LOGEADO DA LEAKS
+/* 	std::map<int, Client *>::iterator it_beg = _clientsMap.begin();
 	std::map<int, Client *>::iterator it_end = _clientsMap.end();
 	while (it_beg != it_end)
 	{
 		delete it_beg->second;
 		it_beg++;
-	}
+	} */
 	_clientsMap.clear();
 	close(this->_serverSocket);
 }

@@ -6,7 +6,6 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 	cmd.msg = commandToUpper(line);
 	std::vector<std::string>	parameters = split(line, ' ');
 
-	// _clientsMap.erase(client.getClientSocket());
 	for (size_t i = 0; i < this->_fds.size(); i++)
 	{
 		if (this->_fds[i].fd == client.getClientSocket())
@@ -24,10 +23,11 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 			this->_channels[i].deleteClient(&client);
 		}
 		if (this->_channels[i].getUserSize() == 0)
-			this->_channels.erase(_channels.begin() + i);
+		this->_channels.erase(_channels.begin() + i);
 	}
 	int fd = client.getClientSocket();
 	close(client.getClientSocket());
 	delete _clientsMap[fd];
 	std::cout << "Client disconected" << std::endl;
+	_clientsMap.erase(fd);
 }

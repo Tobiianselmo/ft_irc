@@ -4,14 +4,17 @@ Server::~Server()
 {
 	//EN EL DESTRUCTOR SI ESTO SE DESCOMENTA DA SEGFOULT CUANDO UN USUARIO HACE QUIT,
 	//SI SE DEJA COMENTADO Y SE CORTA EL SERVIDOR CON UN USUARIO LOGEADO DA LEAKS
-/* 	std::map<int, Client *>::iterator it_beg = _clientsMap.begin();
-	std::map<int, Client *>::iterator it_end = _clientsMap.end();
-	while (it_beg != it_end)
+	if (_clientsMap.size() > 0)
 	{
-		delete it_beg->second;
-		it_beg++;
-	} */
-	_clientsMap.clear();
+		std::map<int, Client *>::iterator it_beg = _clientsMap.begin();
+		std::map<int, Client *>::iterator it_end = _clientsMap.end();
+		while (it_beg != it_end)
+		{
+			delete it_beg->second;
+			it_beg++;
+		}
+		_clientsMap.clear();
+	}
 	close(this->_serverSocket);
 }
 
@@ -79,18 +82,17 @@ void	Server::setHostName(std::string hostname) { this->_hostName = hostname; }
 
 void	Server::remClientFromServ(Client &client, int i)
 {
-	// _clientsMap.erase(client.getClientSocket());
-	
-	for (int i = this->_channels.size() - 1; i >= 0; i--)
+	for (int j = this->_channels.size() - 1; j >= 0; j--)
 	{
-		this->_channels[i].deleteClient(&client);
-		if (this->_channels[i].getUserSize() == 0)
-		this->_channels.erase(_channels.begin() + i);
+		this->_channels[j].deleteClient(&client);
+		if (this->_channels[j].getUserSize() == 0)
+			this->_channels.erase(_channels.begin() + j);
 	}
-	this->_fds.erase(this->_fds.begin() + i);
 	int fd = client.getClientSocket();
-	close(client.getClientSocket());
+	this->_fds.erase(this->_fds.begin() + i);
+	close(fd);
 	delete _clientsMap[fd];
+	_clientsMap.erase(fd);
 }
 
 t_data Server::initStructure(std::string msg, Client &client)

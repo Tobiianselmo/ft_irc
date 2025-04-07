@@ -23,6 +23,7 @@ class Server
 		std::vector<struct pollfd>	_fds;
 		std::vector<Channel>		_channels;
 		std::map<int, Client *>		_clientsMap;
+		bool						_checkQuit;
 
 		sockaddr_in					_serverAddress;
 	public:
@@ -39,6 +40,8 @@ class Server
 		bool				isDuplicated(std::string name);
 		Channel				*getChannel(std::string name);
 		Client				*getClient(std::string name);
+
+		void				setCheckQuit(bool checkQuit);
 		
 		void	setHostName(std::string hostname);
 		

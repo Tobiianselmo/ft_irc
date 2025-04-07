@@ -21,5 +21,6 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 			this->createResponse(RPL_QUIT, cmd, ALL_CHANNEL);
 	}
 	this->remClientFromServ(client,aux);
+	setCheckQuit(true);
 	std::cout << "Client disconected" << std::endl;
 }

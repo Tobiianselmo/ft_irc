@@ -23,8 +23,12 @@ Server::Server(int port,const std::string &password)
 	this->_port = port;
 	this->_password = password;
 	this->_serverSocket = -1;
+	this->_checkQuit = false;
 }
-
+void	Server::setCheckQuit(bool checkQuit)
+{
+	this->_checkQuit = checkQuit;
+}
 // Getters
 
 int					Server::getPort() const { return this->_port; }
@@ -250,7 +254,9 @@ void Server::eventMsg(int i, Client &client)
 		t_data cmd = initStructure(arr[i], client);
 		checkCommand(arr[i], client, cmd);
 	}
-	client.eraseBuffer();
+	if (this->_checkQuit == false)
+		client.eraseBuffer();
+	setCheckQuit(false);
 }
 
 static void removeCarriageReturn(std::string &str)

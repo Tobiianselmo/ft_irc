@@ -2,9 +2,12 @@
 
 void	sendMsgToChannel(std::string msg, int sendTo, t_data &cmd)
 {
-	std::vector<Client *> clientsList = cmd.channel->getArrClients();
+	std::cout << "llega sendMsgToChannel\n";
+	std::vector<Client *> clientsList = cmd.channel->getArrClients(); //////ESTO DA SEGFOULT
+	std::cout << "llega antes bucle grande msgtochannel\n";
 	for (size_t i = 0; i < clientsList.size(); i++)
 	{
+		std::cout << "llega bucle grande msgtochannel\n";
 		if (sendTo == ALL_CHANNEL || sendTo == ONLY_OPERATORS)
 		{
 			if (sendTo == ONLY_OPERATORS)

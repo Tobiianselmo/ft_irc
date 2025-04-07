@@ -162,6 +162,7 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = ": " + cmd.msg;
 	else
 		response = "";
+	std::cout << "llega adentro del response\n";
 	if (sendTo == ALL_CHANNEL || sendTo == ONLY_OPERATORS || sendTo == NOT_ALL_CHANNEL)
 		sendMsgToChannel(response, sendTo, cmd);
 	else if (sendTo == ALL_CLIENTS)

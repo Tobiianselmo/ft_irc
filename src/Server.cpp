@@ -2,8 +2,6 @@
 
 Server::~Server()
 {
-	//EN EL DESTRUCTOR SI ESTO SE DESCOMENTA DA SEGFOULT CUANDO UN USUARIO HACE QUIT,
-	//SI SE DEJA COMENTADO Y SE CORTA EL SERVIDOR CON UN USUARIO LOGEADO DA LEAKS
 	if (_clientsMap.size() > 0)
 	{
 		std::map<int, Client *>::iterator it_beg = _clientsMap.begin();

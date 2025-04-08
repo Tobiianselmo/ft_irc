@@ -1,6 +1,7 @@
 chequear si hay que parsear el usuario => clienCommands.cpp
 chequear que si se envian letras en el mode +l que se envie un error.
 chequear mensajes del part si se tienen que hacer join
+si no seteamos el nick y seteamos el user se logea.
 
 
 NOTAS MATI

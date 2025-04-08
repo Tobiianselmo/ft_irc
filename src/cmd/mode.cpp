@@ -188,6 +188,7 @@ int	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 					cmd.prefix += "+";
 				}
 				cmd.prefix += "o";
+				this->createResponse(RPL_NAMREPLY, cmd, ALL_CHANNEL);
 				ret = 1;
 			}
 		}
@@ -202,7 +203,7 @@ int	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 					cmd.prefix += "+";
 				}
 				cmd.prefix += "k";
-				ret = 1;
+				// ret = 1;
 			}
 		}
 		else if (line[2][*i] == 'l')
@@ -218,7 +219,6 @@ int	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 				cmd.prefix += "l"; 
 				ret = 1;
 			}
-			std::cout << "existe" << std::endl;
 		}
 		else if (line[2][*i] == 't')
 		{
@@ -233,7 +233,6 @@ int	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 		}
 		else if (line[2][*i] == '-' || line[2][*i] == '+')
 		{
-			std::cout << "entra aca\n";
 			(*i)--;
 			return (ret);
 		}
@@ -316,7 +315,7 @@ int	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 			if (!add)
 			{
 				add = 1;
-	  
+				cmd.prefix += "-";
 			}
 			cmd.channel->setAllowedTopic(false);
 			cmd.prefix += "t";

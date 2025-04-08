@@ -1,0 +1,36 @@
+-Manejar las señales.
+
+-En el invite creo que cuando lo agrega vamos a tener que enviarle una respuesta al cliente. Tampoco quise tocarlo.
+
+-Cree la funcion remClientFromServ(Client &client, int i); que busca el cliente y lo elimina de todos los canales, del mapa y del vector de pollfds.
+Se podria pulir MUCHO mas. Pero para ahora va bien.
+
+-Comprobar bien las respuestas en el INVITE, agregue varias pero no se si estan todas
+
+-Mensaje para dar operador solo se entera el que realiza el comando.
+
+- Tal vez crear una manera de mandar mensajes a canales pero unicamente a quien lo creo
+
+-Si falla un mode por ejemplo /MODE +oi user(no existe el usuario), la funcion retorna y no sigue con el +i, se podria crear una respuesta del error
+y no agregarlo al prefix, entonces podria continuar sin retornar 1 y cortar el modo.
+
+-El ERR_KEYSET es igual que el ERR_INVALIDKEY?
+
+-Si falla el addChannelKey ya dentro envia la respuesta de error, y fuera continua sin agregar el +k y sigue con el resto de comandos.
+
+--------CAMBIOS EN EL MODE--------
+
+"o"
+-Cambie una respuesta.
+-Si quiero remover a un cliente que no es operador, no largo error y sigue con normalidad.
+
+"l"
+-Cuando se eliminan los limites volvemos a setear a 10. Quizas si no manejamos limites, lo podemos dejar en 0, si total hay un bool para ver si hay limites.
+-Si hago +l 5 y despues hago +l 8, tiene que funcionar igualmente y setear el limite a 8. Elimine ese if y el error que se daba.
+-Tambien saque el error de agregar un limite que sea menor de la cantidad de usuarios que ya hay. (lo dice en la documentacion en la parte de channel modes).
+-Faltaria ver si parseamos el parametro, que sean solo numeros y que sean positivos.
+
+"k"
+-Cambie una respuesta.
+-Si quiero remover la key, y el canal no tiene key, no deberia hacer nada.
+-Si me pasan /MODE +k hola buen dia, me setea el hola y el resto no hace nada, ver si hay que mandar un mensaje de error o si asi esta bien.

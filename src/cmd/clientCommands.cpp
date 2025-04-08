@@ -25,7 +25,8 @@ void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "NICK";
 	std::vector<std::string> splitParams = split(line, ' ');
-	if (splitParams.size() < 2)
+	
+	if (splitParams.size() != 2)
 	{
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
@@ -78,6 +79,11 @@ void Server::userCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "USER";
 	std::vector<std::string> splitParams = split(line, ' ');
+	if (client.getNickName().size() <= 0)
+	{
+		send(client.getClientSocket(),"Introduce the nickname(cmd NICK or nick)\n",41,0);
+		return ;
+	}
 	if (splitParams.size() < 2)
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 	else
@@ -85,6 +91,7 @@ void Server::userCommand(std::string line, Client &client, t_data &cmd)
 		send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
 		send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
 		send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);
+		std::cout << "Client Authenticated" << std::endl;
 		client.setUserName(splitParams[1]); // Check if we'll need to parse it.
 	}
 }

@@ -63,6 +63,8 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = prefix + cmd.client->getNickName() + " :Unknown command\r\n";
 	else if (err == ERR_NEEDMOREPARAMS)  // finished
 		response = prefix + cmd.client->getNickName() + " " + cmd.cmdType + " :Not enough parameters\r\n";
+	else if (err == ERR_INVALIDPARAMS)
+		response = prefix + cmd.client->getNickName() + " " + cmd.cmdType + " :Invalid numbers params\r\n";
 	
 	//Invite responses
 	else if (err == RPL_INVITING)

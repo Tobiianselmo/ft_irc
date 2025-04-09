@@ -1,16 +1,16 @@
 chequear si hay que parsear el usuario => clienCommands.cpp
 chequear que si se envian letras en el mode +l que se envie un error.
 chequear mensajes del part si se tienen que hacer join
-si no seteamos el nick y seteamos el user se logea.
-probar cuando le ponemos espacios al nick
+si no seteamos el nick y seteamos el user se logea./// ARREGLADO
+probar cuando le ponemos espacios al nick /// ARREGLADO
 
-agregar mensaje de invalidparams
+agregar mensaje de invalidparams /// AGREGADO
 
 mensajes:
 
 Servidor: mejorar el uso del servidor
 se creo un canal y se destruyo
-se union un cliente y se desconecto y cuando se autentico
+se union un cliente y se desconecto y cuando se autentico /// AGREGADO
 
 Client: mejorar el uso desde la terminal, que se entienda mejor
 se unio a un canal

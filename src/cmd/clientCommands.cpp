@@ -28,7 +28,10 @@ void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 	
 	if (splitParams.size() != 2)
 	{
-		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
+		if (splitParams.size() > 2)
+			this->createResponse(ERR_INVALIDPARAMS, cmd, ONLY_CLIENT);
+		else
+			this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
 	const char *nick = checkNickName(splitParams[1].c_str());

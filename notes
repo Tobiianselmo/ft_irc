@@ -9,14 +9,15 @@ agregar mensaje de invalidparams /// AGREGADO
 mensajes:
 
 Servidor: mejorar el uso del servidor
-se creo un canal y se destruyo
+se creo un canal /// AGREGADO
+se destruyo un canal
 se union un cliente y se desconecto y cuando se autentico /// AGREGADO
 
 Client: mejorar el uso desde la terminal, que se entienda mejor
-se unio a un canal
+se unio a un canal /// PARA MI ESTA BIEN MUESTRA POR PANTALLA JOIN
 cuando otra persona se une al canal
 uno por cada mode del canal
-cuando alguien se va del canal
+cuando alguien se va del canal /// ACA AL IGUAL QUE CUANDO SE UNEN POR PANTALLA MUESTRA PART
 
 por si pinta
 agregar errores de cuando se repiten comandos, mode +o a un operador, topic igual al existente, mode +l cuando ya hay limite, etc.
@@ -26,3 +27,5 @@ NOTAS MATI
 FUNCIONA CUANDO CORTAMOS EL SERVIDOR Y HAY USUARIOS CONECTADOS.
 FUNCIONA CUANDO CORTA EL USUARIO CON CONTROL C, NO HAY LEAKS NI ERRORES.
 FUNCIONA CUANDO EL USUARIO HACE QUIT, NO HAY LEAKS NI ERRORES.
+
+SIEMPRE TIENE QUE HABER UN OPERADOR EN EL CANAL 

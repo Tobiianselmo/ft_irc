@@ -34,7 +34,7 @@ void Server::joinCommand(std::string line, Client &client, t_data &cmd)
 		{
 			Channel newChannel(channelName);
 
-			std::cout << "New Channel created" << std::endl;
+			std::cout << "New Channel created: " << channelName << std::endl;
 			newChannel.addClient(&client);
 			newChannel.addOperator(&client);
 			_channels.push_back(newChannel);

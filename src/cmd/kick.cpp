@@ -41,6 +41,11 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 			cmd.msg = cmd.cmdType + " " + cmd.channelName + " " + splitUsers[i];
 			if (arr.size() > 3)
 				cmd.msg += " " + join(arr.begin() + 3 , " ", arr.size() - 3);
+			if (clientTmp->getNickName() == client.getNickName())
+			{
+				std::cout << "No puedes echarte a ti mismo\n";
+				continue ;
+			}
 			this->createResponse(RPL_KICK, cmd, ALL_CHANNEL);
 			cmd.channel->deleteClient(clientTmp);
 		}

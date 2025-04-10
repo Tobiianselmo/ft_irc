@@ -30,9 +30,14 @@ void	help(int fd)
 void	Server::botCommand(std::string line, t_data &cmd)
 {
 	std::vector<std::string> arr = split(line, ' ');
+	if (arr.size() == 1)
+	{
+		send(cmd.client->getClientSocket(), "Please enter a valid option: help or play\r\n",43,0);
+		return ;
+	}
 	if (arr[1] == "play" || arr[1] == "PLAY")
 	{
-		if (!arr[2].c_str())
+		if (arr.size() == 2)
 			send(cmd.client->getClientSocket(), "Number arguments not valid\r\n", 28, 0);
 		else
 			playBot(arr[2], cmd);

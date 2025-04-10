@@ -45,6 +45,8 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 			}
 			this->createResponse(RPL_PART, cmd, ALL_CHANNEL);
 			cmd.channel->deleteClient(&client);
+			if(cmd.channel->getUserSize() == 0)
+				std::cout  << "Channel remove: " << cmd.channel->getName() << std::endl;
 			if (opChange)
 				this->createResponse(RPL_OPERATOR, cmd, ALL_CHANNEL);
 		}

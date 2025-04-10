@@ -16,7 +16,7 @@ void Server::topicCommand(std::string str, Client &client, t_data &cmd)
 		this->createResponse(ERR_NOSUCHCHANNEL, cmd, ONLY_CLIENT);
 		return;
 	}
-	if (!arr[2].c_str())
+	if (arr.size() == 2)
 	{
 		if (cmd.channel->hasTopic())
 		{

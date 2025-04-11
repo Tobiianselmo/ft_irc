@@ -87,14 +87,26 @@ void	Server::remClientFromServ(Client &client, int i, bool checkQuit)
 	if (checkQuit == false)
 	{
 		t_data cmd = initStructure("QUIT", client);
-		for (int i = this->_channels.size() - 1; i >= 0; i--)
+		for (int c = this->_channels.size() - 1; c >= 0; c--)
 		{
-			cmd.channel = &this->_channels[i];
-			if (this->_channels[i].isClient(client.getNickName()) == true)
+			cmd.channel = &this->_channels[c];
+			if (this->_channels[c].isOperator(client.getNickName()) && this->_channels[c].getOperatorsSize() == 1 && this->_channels[c].getUserSize() > 1)
 			{
-				std::cout << cmd.channel->getName() << std::endl;
-				this->createResponse(RPL_QUIT, cmd, ALL_CHANNEL);
+				std::vector<Client *> clientAux = this->_channels[c].getArrClients();
+
+				for (int cont = 0; cont < (int)clientAux.size() ; cont++)
+				{
+					if (clientAux[cont]->getNickName() != client.getNickName())
+					{
+						this->_channels[c].addOperator(clientAux[cont]);
+						this->createResponse(RPL_NAMREPLY, cmd, NOT_ALL_CHANNEL);
+						this->createResponse(RPL_ENDOFNAMES, cmd, NOT_ALL_CHANNEL);
+						break ;
+					}
+				}
 			}
+			if (this->_channels[c].isClient(client.getNickName()) == true)
+				this->createResponse(RPL_QUIT, cmd, ALL_CHANNEL);
 		}
 	}
 	for (int j = this->_channels.size() - 1; j >= 0; j--)

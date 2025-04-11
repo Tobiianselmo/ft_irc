@@ -45,7 +45,7 @@ class Server
 		
 		void	setHostName(std::string hostname);
 		
-		void	remClientFromServ(Client &client, int i);
+		void	remClientFromServ(Client &client, int i, bool checkQuit);
 		
 		t_data	initStructure(std::string msg, Client &client);
 		

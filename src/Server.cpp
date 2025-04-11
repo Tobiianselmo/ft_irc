@@ -82,8 +82,21 @@ Client				*Server::getClient(std::string name)
 
 void	Server::setHostName(std::string hostname) { this->_hostName = hostname; }
 
-void	Server::remClientFromServ(Client &client, int i)
+void	Server::remClientFromServ(Client &client, int i, bool checkQuit)
 {
+	if (checkQuit == false)
+	{
+		t_data cmd = initStructure("QUIT", client);
+		for (int i = this->_channels.size() - 1; i >= 0; i--)
+		{
+			cmd.channel = &this->_channels[i];
+			if (this->_channels[i].isClient(client.getNickName()) == true)
+			{
+				std::cout << cmd.channel->getName() << std::endl;
+				this->createResponse(RPL_QUIT, cmd, ALL_CHANNEL);
+			}
+		}
+	}
 	for (int j = this->_channels.size() - 1; j >= 0; j--)
 	{
 		this->_channels[j].deleteClient(&client);
@@ -234,7 +247,7 @@ void Server::eventMsg(int i, Client &client)
 	else if (bytes == 0)
 	{
 		std::cout << "Client disconected." << std::endl;
-		remClientFromServ(client, i);
+		remClientFromServ(client, i, false);
 		return ;
 	}
 	client.setBuffer(aux);

@@ -26,24 +26,21 @@ void	Server::partCommand(std::string line, Client &client, t_data &cmd)
 		return ;
 	}
 
-	bool opChange = false;
-
-	if (cmd.channel->isOperator(client.getNickName()) && cmd.channel->getOperatorsSize() == 1)
+	if (cmd.channel->isOperator(client.getNickName()) && cmd.channel->getOperatorsSize() == 1 && cmd.channel->getUserSize() > 1)
 	{
-		std::vector<Client *>	clientAux = cmd.channel->getArrClients();
-		for (int i = 0; i < (int)clientAux.size(); i++)
+		std::vector<Client *> clientAux = cmd.channel->getArrClients();
+
+		for (int cont = 0; cont < (int)clientAux.size() ; cont++)
 		{
-			if (clientAux[i]->getNickName() != client.getNickName())
+			if (clientAux[cont]->getNickName() != client.getNickName())
 			{
-				cmd.channel->addOperator(clientAux[i]);
-				opChange = true;
-				cmd.destUser = clientAux[i]->getNickName();
+				cmd.channel->addOperator(clientAux[cont]);
+				this->createResponse(RPL_NAMREPLY, cmd, NOT_ALL_CHANNEL);
+				this->createResponse(RPL_ENDOFNAMES, cmd, NOT_ALL_CHANNEL);
 				break ;
 			}
 		}
 	}
 	this->createResponse(RPL_PART, cmd, ALL_CHANNEL);
 	cmd.channel->deleteClient(&client);
-	if (opChange)
-		this->createResponse(RPL_OPERATOR, cmd, ALL_CHANNEL);
 }

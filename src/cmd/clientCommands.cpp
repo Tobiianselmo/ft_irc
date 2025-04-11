@@ -52,7 +52,7 @@ void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 			cmd.authMsg = line;
 			this->createResponse(RPL_NICKSUCCESS, cmd, ONLY_CLIENT);
 			client.setNickName(nick);
-			client.setAuth(true);
+			client.setIsNick(true);
 			send(client.getClientSocket(),"NICK :Correct NickName\n",23,0);
 			send(client.getClientSocket(),"Introduce the UserName(cmd USER or user)\n",41,0);
 		}
@@ -70,7 +70,7 @@ void Server::nickCommand(std::string line, Client &client, t_data &cmd)
 			if (this->getChannelsSize() > 0)
 				this->sendMsgToAllChannels(client, cmd);
 			client.setNickName(nick);
-			client.setAuth(true);
+			client.setIsNick(true);
 			send(client.getClientSocket(),"NICK :Correct NickName\n",23,0);
 			if (client.getUserName().size() == 0)
 				send(client.getClientSocket(),"Introduce the UserName(cmd USER or user)\n",41,0);
@@ -82,8 +82,9 @@ void Server::userCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "USER";
 	std::vector<std::string> splitParams = split(line, ' ');
-	if (client.getNickName().size() <= 0)
+	if (client.getIsNick() == false)
 	{
+		//mensaje de error
 		send(client.getClientSocket(),"Introduce the nickname(cmd NICK or nick)\n",41,0);
 		return ;
 	}
@@ -91,10 +92,7 @@ void Server::userCommand(std::string line, Client &client, t_data &cmd)
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 	else
 	{
-		send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
-		send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
-		send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);
-		std::cout << "Client Authenticated" << std::endl;
 		client.setUserName(splitParams[1]); // Check if we'll need to parse it.
+		client.setAuth(true);
 	}
 }

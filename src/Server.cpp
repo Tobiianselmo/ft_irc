@@ -341,4 +341,11 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->botCommand(line, cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
+	if (client.isAuth() == true)
+	{
+		send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
+		send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
+		send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);
+		std::cout << "Client Authenticated" << std::endl;
+	}
 }

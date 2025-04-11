@@ -11,6 +11,7 @@ class Client
 		int			_clientSocket;
 		std::string	_nickName;
 		std::string	_userName;
+		bool		_isNick;
 		bool		_isAuth;
 		bool		_hasCorrectPass;
 
@@ -29,12 +30,14 @@ class Client
 		void	setUserName(std::string username);
 		void	setBuffer(char *aux);
 		void	setAuth(bool val);
+		void	setIsNick(bool val);
 		void	setCorrectPass(bool val);
 
 		// Getters
 		const std::string	&getNickName() const;
 		const std::string	&getUserName() const;
 		const std::string	&getBuffer() const;
+		bool				getIsNick() const;
 		int					getClientSocket() const;
 		bool				isAuth() const;
 		bool				hasCorrectPass() const;

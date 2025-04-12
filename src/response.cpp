@@ -131,6 +131,8 @@ void Server::createResponse(int err, t_data &cmd, int sendTo)
 		response = prefix + " :Nickname is already in use\r\n";
 	else if (err == ERR_NOTCORRECTNICK)
 		response = prefix + " :Introduce the correct nickname to continue the authentication process\r\n";
+	else if (err == RPL_NOTAUTH)
+		response = prefix + " : Introduce the basic commands PASS, NICK & USER\r\n";
 	
 	//Pass responses
 	else if (err == ERR_PASSWDMISMATCH)

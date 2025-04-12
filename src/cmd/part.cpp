@@ -13,7 +13,6 @@ void	Server::partCommand(std::string line, Client &client, t_data &cmd)
 		this->createResponse(ERR_NEEDMOREPARAMS, cmd, ONLY_CLIENT);
 		return ;
 	}
-
 	cmd.channelName = parameters[1];
 	cmd.channel = this->getChannel(parameters[1]);
 	if (!cmd.channel)

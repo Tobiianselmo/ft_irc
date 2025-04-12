@@ -111,7 +111,7 @@ void	Server::remClientFromServ(Client &client, int i, bool checkQuit)
 	}
 	for (int j = this->_channels.size() - 1; j >= 0; j--)
 	{
-		this->_channels[j].deleteClient(&client);
+		this->_channels[j].deleteClient(&client);//sera que hay que eliminarlo?? esta duplicado en el quit.
 		if (this->_channels[j].getUserSize() == 0)
 			this->_channels.erase(_channels.begin() + j);
 	}
@@ -317,8 +317,10 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->nickCommand(line, client, cmd);
 	else if (command == "USER" || command == "user")
 		this->userCommand(line, client, cmd);
-	else if (client.isAuth() == false)
+	else if (client.getIsNick() == false)
 		this->createResponse(ERR_NOTCORRECTNICK, cmd, ONLY_CLIENT);
+	else if (client.isAuth() == false && (client.getIsNick() == false || client.getUserName().size() <= 0))
+		this->createResponse(RPL_NOTAUTH, cmd, ONLY_CLIENT);//cambiar y que sea ERR
 	else if (command == "JOIN" || command == "join")
 		this->joinCommand(line, client, cmd);
 	else if (command == "WHO" || command == "who")
@@ -343,9 +345,9 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
 	if (client.isAuth() == true)
 	{
-		send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
 		send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
 		send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);
 		std::cout << "Client Authenticated" << std::endl;
+		client.setAuth(false);
 	}
 }

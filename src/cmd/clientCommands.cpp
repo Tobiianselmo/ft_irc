@@ -94,5 +94,6 @@ void Server::userCommand(std::string line, Client &client, t_data &cmd)
 	{
 		client.setUserName(splitParams[1]); // Check if we'll need to parse it.
 		client.setAuth(true);
+		send(client.getClientSocket(),"USER :Correct UserName\n",23,0);
 	}
 }

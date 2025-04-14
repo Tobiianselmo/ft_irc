@@ -129,6 +129,7 @@ t_data Server::initStructure(std::string msg, Client &client)
 	ret.msg = msg;
 	ret.client = &client;
 	ret.channel = NULL;
+	ret.quit = false;
 	return ret;
 }
 
@@ -343,7 +344,7 @@ void Server::checkCommand(std::string line, Client &client, t_data &cmd)
 		this->botCommand(line, cmd);
 	else
 		this->createResponse(ERR_UNKNOWNCOMMAND, cmd, ONLY_CLIENT);
-	if (client.isAuth() == true)
+	if (cmd.quit == false && client.isAuth() == true)
 	{
 		send(client.getClientSocket(),"---WELCOME TO THE SERVER---\n",28,0);
 		send(client.getClientSocket(),"Introduce (cmd INFO or info)\n",29,0);

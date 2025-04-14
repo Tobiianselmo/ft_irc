@@ -4,6 +4,7 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 {
 	cmd.cmdType = "QUIT";
 	cmd.msg = commandToUpper(line);
+	cmd.quit = true;
 	int aux;
 	std::vector<std::string>	parameters = split(line, ' ');
 

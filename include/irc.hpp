@@ -32,6 +32,7 @@ typedef struct s_data
 	std::string	channelName;
 	std::string	authMsg;
 	std::string	cmdType; // ie: JOIN, KICK
+	bool		quit;
 
 	std::string	prefix; // Mode prefix
 	std::string	suffix; // Mode suffix

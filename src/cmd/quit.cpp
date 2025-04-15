@@ -54,5 +54,5 @@ void	Server::quitCommand(std::string line, Client &client, t_data &cmd)
 	}
 	this->remClientFromServ(client,aux,true);
 	setCheckQuit(true);
-	std::cout << "Client disconected" << std::endl;
+	std::cout << "Client disconnected" << std::endl;
 }

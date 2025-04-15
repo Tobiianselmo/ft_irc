@@ -86,7 +86,7 @@ class Server
 
 		int		delChannelOperator(t_data &cmd, std::vector<std::string> &line, int args);
 		int		delChannelKey(t_data &cmd, std::vector<std::string> &line, int args);
-		int		delChannelLimit(t_data &cmd, std::vector<std::string> &line, int args);
+		int		delChannelLimit(t_data &cmd);
 };
 
 #endif

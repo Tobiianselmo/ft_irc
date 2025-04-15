@@ -27,12 +27,11 @@ int	Server::addChannelKey(t_data &cmd, std::vector<std::string> &line, int args)
 int	Server::addChannelLimit(t_data &cmd, std::vector<std::string> &line, int args)
 {
 	cmd.description = " l * :You must specify a parameter for the limit mode. Syntax: <limit>.\r\n";
-	if (args > (int)line.size())
+	if (args >= (int)line.size())
 	{
 		this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
 		return (0);
 	}
-	// Aca se podria chequear si hay algo que no sea numeros quizas.
 	for (int i = 0; i < (int)line[args].size(); i++)
 	{
 		if (!isdigit(line[args][i]))
@@ -56,7 +55,7 @@ int	Server::addChannelLimit(t_data &cmd, std::vector<std::string> &line, int arg
 int	Server::addChannelOperator(t_data &cmd, std::vector<std::string> &line, int args)
 {
 	cmd.description = " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n";
-	if (args > (int)line.size())
+	if (args >= (int)line.size())
 	{
 		this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
 		return (0);
@@ -68,6 +67,8 @@ int	Server::addChannelOperator(t_data &cmd, std::vector<std::string> &line, int 
 		this->createResponse(ERR_USERNOTINCHANNEL, cmd, ONLY_CLIENT);
 		return (0);
 	}
+	if (clientTmp->getNickName() == cmd.client->getNickName())
+		return (0);
 	cmd.channel->addOperator(clientTmp);
 	if (cmd.suffix.size() > 0 || args == (int)line.size())
 		cmd.suffix += ":";
@@ -81,7 +82,7 @@ int	Server::addChannelOperator(t_data &cmd, std::vector<std::string> &line, int 
 int	Server::delChannelOperator(t_data &cmd, std::vector<std::string> &line, int args)
 {
 	cmd.description = " o * :You must specify a parameter for the op mode. Syntax: <nick>.\r\n";
-	if (args > (int)line.size())
+	if (args >= (int)line.size())
 	{
 		this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
 		return (0);
@@ -94,6 +95,8 @@ int	Server::delChannelOperator(t_data &cmd, std::vector<std::string> &line, int 
 		return (0);
 	}
 	if (cmd.channel->isOperator(clientTmp->getNickName()) == false)
+		return (0);
+	if (clientTmp->getNickName() == cmd.client->getNickName())
 		return (0);
 	cmd.channel->deleteOperators(clientTmp);
 	if (cmd.suffix.size() > 0 || args == (int)line.size())
@@ -131,24 +134,12 @@ int	Server::delChannelKey(t_data &cmd, std::vector<std::string> &line, int args)
 	return (1);
 }
 
-int	Server::delChannelLimit(t_data &cmd, std::vector<std::string> &line, int args)
+int	Server::delChannelLimit(t_data &cmd)
 {
-	cmd.description = " l * :You must specify a parameter for the limit mode. Syntax: <limit>.\r\n";
 	if (cmd.channel->hasLimit() == false)
 		return (0);
-	if ((int)line.size() < args)
-	{
-		this->createResponse(ERR_INVALIDMODEPARAM, cmd, ONLY_CLIENT);
-		return (0);
-	}
 	cmd.channel->setHasLimit(false);
-	cmd.channel->setLimit(0); 
-	if (cmd.suffix.size() > 0 || args == (int)line.size())
-		cmd.suffix += ":";
-	if (args != (int)line.size())
-		cmd.suffix += line[args] + " ";
-	else
-		cmd.suffix += line[args];
+	cmd.channel->setLimit(0);
 	return (1);
 }
 
@@ -203,7 +194,7 @@ int	Server::addMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 					cmd.prefix += "+";
 				}
 				cmd.prefix += "k";
-				// ret = 1;
+				ret = 1;
 			}
 		}
 		else if (line[2][*i] == 'l')
@@ -298,8 +289,7 @@ int	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 		}
 		else if (line[2][*i] == 'l')
 		{
-			args++;
-			if (this->delChannelLimit(cmd, line, args))
+			if (this->delChannelLimit(cmd))
 			{
 				if (!add)
 				{
@@ -329,7 +319,7 @@ int	Server::delMode(std::vector<std::string> &line, Client &client, t_data &cmd,
 		else if (!strchr("+-ioklt", line[2][*i]))
 			this->createResponse(ERR_UNKNOWNMODE, cmd, ONLY_CLIENT);
 		(*i)++;
-	}	
+	}
 	return (ret);
 }
 
@@ -348,7 +338,6 @@ void	Server::modeCommand(std::string &line, Client &client, t_data &cmd)
 			return ;
 		}
 		cmd.channel->sendModes(cmd, RPL_CHANNELMODEIS);
-
 		return ;
 	}
 	if (parameters.size() < 2)

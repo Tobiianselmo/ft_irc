@@ -52,8 +52,6 @@ void				Server::sendMsgToAllChannels(const Client  & client, t_data &cmd)
 	{
 		if (this->_channels[i].isClient(client) == true)
 		{
-			// if (cmd.channel) revisar leaks
-			// 	cmd.channel
 			cmd.channel = &this->_channels[i];
 			this->createResponse(RPL_NICKSUCCESS, cmd, NOT_ALL_CHANNEL);
 		}
@@ -111,7 +109,7 @@ void	Server::remClientFromServ(Client &client, int i, bool checkQuit)
 	}
 	for (int j = this->_channels.size() - 1; j >= 0; j--)
 	{
-		this->_channels[j].deleteClient(&client);//sera que hay que eliminarlo?? esta duplicado en el quit.
+		this->_channels[j].deleteClient(&client);
 		if (this->_channels[j].getUserSize() == 0)
 			this->_channels.erase(_channels.begin() + j);
 	}
@@ -172,7 +170,7 @@ void Server::setupServer()
 		throw std::runtime_error("Error trying to listen server socket");
 	}
 
-	std::cout << "Server listening in port " << _port << std::endl; // Delete
+	std::cout << "Server listening in port " << _port << std::endl;
 
 	struct pollfd fd;
 
@@ -195,7 +193,7 @@ void Server::handleConnections()
 	while (true)
 	{
 		int ret = poll(&_fds[0], _fds.size(), -1);
-		if (ret == -1)
+		if (ret == -1 && g_global == 0)
 			throw std::runtime_error("Error in poll(): ");
 		for (size_t i = 0; i < _fds.size() ; i++)
 		{
@@ -243,7 +241,6 @@ void Server::newConnections()
 	newPoll.revents = 0;
 	send(newPoll.fd,"Enter the password server(cmd PASS or pass)\n",44,0);
 	_fds.push_back(newPoll);
-	// delete newClient;
 }
 
 void Server::eventMsg(int i, Client &client)
@@ -259,7 +256,7 @@ void Server::eventMsg(int i, Client &client)
 	}
 	else if (bytes == 0)
 	{
-		std::cout << "Client disconected." << std::endl;
+		std::cout << "Client disconnected." << std::endl;
 		remClientFromServ(client, i, false);
 		return ;
 	}

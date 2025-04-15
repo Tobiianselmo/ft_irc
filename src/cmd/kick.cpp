@@ -43,7 +43,7 @@ void Server::kickCommand(std::string line, Client &client, t_data &cmd)
 				cmd.msg += " " + join(arr.begin() + 3 , " ", arr.size() - 3);
 			if (clientTmp->getNickName() == client.getNickName())
 			{
-				std::cout << "You cann't kick yourself.\n";
+				send(client.getClientSocket(), "You can't kick yourself.\r\n", 26, 0);
 				continue ;
 			}
 			this->createResponse(RPL_KICK, cmd, ALL_CHANNEL);
